@@ -8,6 +8,7 @@ It may return:
     elms)
 """
 import enum
+from lxml import etree
 import functools
 
 
@@ -46,13 +47,56 @@ def filter_factory(should_filter):
     return functools.partial(should_filter)
 
 
+def flatten_gen(flatten_children, is_internal, elm):
+    new_children = []
+    # obtain the flatten children
+    for child in elm:
+        new_children += [x for x in flatten_gen(flatten_children, is_internal, child)]
+    # remove the old children
+    for child in elm:
+        elm.remove(child)
+
+    if not flatten_children(elm):
+        # all children should go inside
+        for child in new_children:
+            elm.append(child)
+        yield elm
+    else:
+        # external children pop out
+
+        # remember the current parent
+        parent = elm
+
+        for child in new_children:
+            # decide whether to add the child to the parent of to flatten it
+            if is_internal(child):
+                # we need to pop it at higher level, return current parent and then child
+                if parent is not None:
+                    yield parent
+                    parent = None # we returned it so there is no current parent
+                yield child
+            else:
+                if parent is None:
+                    # copy the element type
+                    parent = etree.Element(elm.tag)
+                parent.append(child)
+
+        #if we still have a parent (i.e. the last child was not flattened or no children, return the parent)
+        if parent is not None:
+            yield parent
+
+
+
+
 class FlattenPolicy:
     DoNotTouch = "do_not_touch"
     FlattenChildren = "flatten_children"
     Flatten = "flatten"
 
 
-def flatten_gen(flatten_policy, elm):
+
+
+def flatten_gen_old(flatten_policy, elm):
     policy = flatten_policy(elm)
 
     if policy ==FlattenPolicy.DoNotTouch:
