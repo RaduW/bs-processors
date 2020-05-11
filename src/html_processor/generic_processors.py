@@ -78,7 +78,14 @@ def flatten_gen(flatten_children, is_internal, elm):
                 # we need to pop it at higher level, return current parent and then child
                 if parent is not None:
                     yield parent
-                    parent = None # we returned it so there is no current parent
+                    parent = None  # we returned it so there is no current parent
+                # deal with the lxml tail nastiness (the tail of an element belongs to the parent)
+                if child.tail is not None:
+                    # the child that we want to pop out has a tail, we'll create a new parent to
+                    # hang the tail in
+                    parent = etree.Element(elm.tag)
+                    parent.text = child.tail
+                    child.tail = None
                 yield child
 
         #if we still have a parent (i.e. the last child was not flattened or no children, return the parent)

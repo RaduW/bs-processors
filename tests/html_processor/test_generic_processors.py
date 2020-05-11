@@ -1,6 +1,7 @@
 import pytest
 from lxml import etree
 from html_processor.generic_processors import flatten_gen, FlattenPolicy
+from utils.pytest.compare_xml import compare_xml
 
 
 def should_flatten(elm):
@@ -16,7 +17,7 @@ def is_internal(elm):
 @pytest.mark.parametrize("file_name", (
     ("simple_flatten", "super_simple")
 ))
-def test_flatten(path_resolver, html_file_loader, dump_xml_file, file_name):
+def test_flatten(path_resolver, html_file_loader, dump_xml_file, result_file_logger, file_name):
     input_file_name = file_name+ ".html"
     output_file_name = file_name+ ".result.xml"
     path = path_resolver(__file__, "../data_fixtures", input_file_name)
@@ -26,4 +27,7 @@ def test_flatten(path_resolver, html_file_loader, dump_xml_file, file_name):
     assert len(result) == 1
 
     output_path = path_resolver(__file__, "../data_fixtures", output_file_name)
-    dump_xml_file(output_path, result[0])
+    result_file_logger(output_path,dump_xml_file, result[0])
+    expected_result = html_file_loader(output_path)
+    error = compare_xml(expected_result, result[0])
+    assert error is None
