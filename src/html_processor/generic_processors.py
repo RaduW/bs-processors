@@ -11,6 +11,8 @@ import enum
 from lxml import etree
 import functools
 
+from html_processor.xml_util import remove_children
+
 
 def filter_gen(should_filter, elm):
     """
@@ -44,7 +46,7 @@ def filter_gen(should_filter, elm):
 
 
 def filter_factory(should_filter):
-    return functools.partial(should_filter)
+    return functools.partial(filter_gen, should_filter)
 
 
 def flatten_gen(flatten_children, is_internal, elm):
@@ -53,8 +55,7 @@ def flatten_gen(flatten_children, is_internal, elm):
     for child in elm:
         new_children += [x for x in flatten_gen(flatten_children, is_internal, child)]
     # remove the old children
-    for child in elm:
-        elm.remove(child)
+    remove_children(elm)
 
     if not flatten_children(elm):
         # all children should go inside
@@ -93,49 +94,8 @@ def flatten_gen(flatten_children, is_internal, elm):
             yield parent
 
 
-
-
-class FlattenPolicy:
-    DoNotTouch = "do_not_touch"
-    FlattenChildren = "flatten_children"
-    Flatten = "flatten"
-
-
-
-
-def flatten_gen_old(flatten_policy, elm):
-    policy = flatten_policy(elm)
-
-    if policy ==FlattenPolicy.DoNotTouch:
-        # do not touch the element or the children
-        yield elm
-        return
-    elif policy == FlattenPolicy.Flatten:
-        # if we should flatten than we will recurse children (no matter what)
-        children_to_flatten = []
-        start_flattening = False
-        for child in elm:
-            # TODO bug
-            if not start_flattening and not flatten_policy(child) != FlattenPolicy.Flatten:
-                [x for x in flatten_gen(flatten_policy, child)]
-                continue
-            start_flattening = True
-            children_to_flatten.append(child)
-            elm.remove(child)
-
-        yield elm
-        for child in children_to_flatten:
-            yield from flatten_gen(flatten_policy, child)
-    else:  # FlattenPolicy.FlattenChildren
-        # only recurse children and re add to elm
-        for child in elm:
-            for new_child in flatten_gen(flatten_policy, child):
-                elm.append(new_child)  # Note I hope that re-appending a child to the parent is OK
-        yield elm
-
-
 def flatten_factory(should_flatten, should_flatten_children):
-    return functools.partial(should_flatten, should_flatten_children)
+    return functools.partial(flatten_gen, should_flatten, should_flatten_children)
 
 
 def local_modify_gen(modify_func, elm):
