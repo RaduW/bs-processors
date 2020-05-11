@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
   <body><p id="1">
-Hello from 1
-</p><p id="2">Hello from 2 </p>
-
+Hello from 1 </p>
+<br/> part 2
 </body>
 </html>

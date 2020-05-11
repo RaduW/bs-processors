@@ -1,22 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-    <body>
-        <p id="1">
-        </p>
-        <p id="2">
-            Hello dear
-        </p>
-        <img src="hello.jpg"/>
-        <p>
-            <br/>
-            Another line
-            <br/>
-            and Another
-        </p>
-        <p id="3">
-            This is p with id 3
-        </p>
+<body>
+<p id="1">
+</p><p id="2">
+    Hello dear </p>
+<img src="hello.jpg"/>
+    <p><br/>
+    Another line
+    <br/>
+    and Another
+</p><p id="3">
+    This is p with id 3
+</p>
 
-        <div/>
-    </body>
+<div/>
+</body>
 </html>

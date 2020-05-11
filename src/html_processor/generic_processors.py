@@ -70,16 +70,16 @@ def flatten_gen(flatten_children, is_internal, elm):
         for child in new_children:
             # decide whether to add the child to the parent of to flatten it
             if is_internal(child):
+                if parent is None:
+                    # copy the element type
+                    parent = etree.Element(elm.tag)
+                parent.append(child)
+            else:
                 # we need to pop it at higher level, return current parent and then child
                 if parent is not None:
                     yield parent
                     parent = None # we returned it so there is no current parent
                 yield child
-            else:
-                if parent is None:
-                    # copy the element type
-                    parent = etree.Element(elm.tag)
-                parent.append(child)
 
         #if we still have a parent (i.e. the last child was not flattened or no children, return the parent)
         if parent is not None:
