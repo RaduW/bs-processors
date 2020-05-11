@@ -129,4 +129,4 @@ def local_modify_gen(modify_func, elm):
 
 
 def local_modify_factory(modify_func):
-    return functools.partial(modify_func)
+    return functools.partial(local_modify_gen, modify_func)
