@@ -44,6 +44,11 @@ def add_text(elm, text):
     return elm
 
 
+def set_new_children(elm, new_children):
+    remove_children(elm)
+    for child in new_children:
+        elm.append(child)
+
 def remove_children(elm):
     """
     Removes all children from an element (maintaining everything else)

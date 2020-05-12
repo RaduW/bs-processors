@@ -8,13 +8,15 @@ It may return:
     elms)
 """
 import enum
+from typing import Any, Callable
+
 from lxml import etree
 import functools
 
-from html_processor.xml_util import remove_children
+from html_processor.xml_util import remove_children, set_new_children
 
 
-def filter_gen(should_filter, elm):
+def filter_gen(should_filter: Callable[[Any], bool], elm):
     """
     Generator for filtering a hierarchical structure.
     It will go deep and apply the filter to the children
@@ -38,10 +40,7 @@ def filter_gen(should_filter, elm):
     new_children = []
     for child in elm:
         new_children += [x for x in filter_gen(should_filter, child)]
-    for child in elm:
-        elm.remove(child)
-    for child in new_children:
-        elm.append(child)
+    set_new_children(elm, new_children)
     yield elm
 
 
@@ -49,7 +48,7 @@ def filter_factory(should_filter):
     return functools.partial(filter_gen, should_filter)
 
 
-def flatten_gen(flatten_children, is_internal, elm):
+def flatten_gen(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm):
     new_children = []
     # obtain the flatten children
     for child in elm:
@@ -98,7 +97,7 @@ def flatten_factory(should_flatten, should_flatten_children):
     return functools.partial(flatten_gen, should_flatten, should_flatten_children)
 
 
-def local_modify_gen(modify_func, elm):
+def local_modify_gen(modify_func: Callable[[Any], bool], elm):
     """
 
     :param modify_func: a function that modifies the current element will be called for
@@ -130,3 +129,42 @@ def local_modify_gen(modify_func, elm):
 
 def local_modify_factory(modify_func):
     return functools.partial(local_modify_gen, modify_func)
+
+
+def unwrap_gen( should_unwrap: Callable[[Any], bool], elm):
+    """
+    Removes an element while inserting the children in to the parent (at the position where
+    the element used to be)
+
+    :param should_unwrap: true if the current element should be deleted and its children pushed up
+    :param elm: the elment to anaylze
+    :return: generator yielding either the element or the children of the element
+    """
+    new_children = []
+    for child in elm:
+        new_children += [x for x in filter_gen(should_unwrap, child)]
+
+    if not should_unwrap(elm):
+        set_new_children(elm,new_children)
+        yield elm
+    else:
+        for child in new_children:
+            yield child
+
+def unwrap_factory(should_unwrap):
+    return functools.partial(unwrap_gen, should_unwrap)
+
+
+def join_children_gen(should_join: Callable[[Any, Any], bool], elm):
+    """
+    Joins to elements
+    :param should_join:
+    :param elm:
+    :return:
+    """
+    # TODO implement
+    raise NotImplementedError("unwrap_gen is not implemented")
+
+
+def join_chidren_factory(should_join):
+    return functools.partial(join_children_gen, should_join)
