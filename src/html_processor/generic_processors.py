@@ -7,7 +7,6 @@ It may return:
     - a generator with multipel elements ( a flatten function that takes the elements out of an element with embedded
     elms)
 """
-import enum
 from typing import Any, Callable
 
 from lxml import etree
@@ -35,7 +34,6 @@ def filter_gen(should_filter: Callable[[Any], bool], elm):
     b'<root><c/><d/><b/></root>'
 
     """
-
     if should_filter(elm):
         return []
     new_children = generate_new_children(lambda child: filter_gen(should_filter, child), elm)
@@ -57,8 +55,7 @@ def flatten_gen(flatten_children: Callable[[Any], bool], is_internal: Callable[[
             elm.append(child)
         yield elm
     else:
-        # external children pop out
-
+        # this element pops out external children
         # remember the current parent
         parent = elm
 
@@ -83,7 +80,7 @@ def flatten_gen(flatten_children: Callable[[Any], bool], is_internal: Callable[[
                     child.tail = None
                 yield child
 
-        #if we still have a parent (i.e. the last child was not flattened or no children, return the parent)
+        #  if we still have a parent (i.e. the last child was not flattened or no children, return the parent)
         if parent is not None:
             yield parent
 
@@ -155,6 +152,8 @@ def join_children_gen(should_join: Callable[[Any, Any], bool], elm):
     :param elm:
     :return:
     """
+    #TODO implement
+    raise NotImplementedError("TODO implement join_children_gen")
 
 
 def join_chidren_factory(should_join):
