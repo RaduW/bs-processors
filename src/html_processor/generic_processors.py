@@ -13,7 +13,7 @@ from typing import Any, Callable
 from lxml import etree
 import functools
 
-from html_processor.xml_util import remove_children, set_new_children
+from html_processor.xml_util import remove_children, set_new_children, generate_new_children
 
 
 def filter_gen(should_filter: Callable[[Any], bool], elm):
@@ -35,11 +35,10 @@ def filter_gen(should_filter: Callable[[Any], bool], elm):
     b'<root><c/><d/><b/></root>'
 
     """
+
     if should_filter(elm):
         return []
-    new_children = []
-    for child in elm:
-        new_children += [x for x in filter_gen(should_filter, child)]
+    new_children = generate_new_children(lambda child: filter_gen(should_filter, child), elm)
     set_new_children(elm, new_children)
     yield elm
 
@@ -49,11 +48,7 @@ def filter_factory(should_filter):
 
 
 def flatten_gen(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm):
-    new_children = []
-    # obtain the flatten children
-    for child in elm:
-        new_children += [x for x in flatten_gen(flatten_children, is_internal, child)]
-    # remove the old children
+    new_children = generate_new_children(lambda child: flatten_gen(flatten_children, is_internal, child), elm)
     remove_children(elm)
 
     if not flatten_children(elm):
@@ -140,16 +135,14 @@ def unwrap_gen( should_unwrap: Callable[[Any], bool], elm):
     :param elm: the elment to anaylze
     :return: generator yielding either the element or the children of the element
     """
-    new_children = []
-    for child in elm:
-        new_children += [x for x in filter_gen(should_unwrap, child)]
-
+    new_children = generate_new_children(lambda child: filter_gen(should_unwrap, child), elm)
     if not should_unwrap(elm):
         set_new_children(elm,new_children)
         yield elm
     else:
         for child in new_children:
             yield child
+
 
 def unwrap_factory(should_unwrap):
     return functools.partial(unwrap_gen, should_unwrap)
@@ -162,8 +155,6 @@ def join_children_gen(should_join: Callable[[Any, Any], bool], elm):
     :param elm:
     :return:
     """
-    # TODO implement
-    raise NotImplementedError("unwrap_gen is not implemented")
 
 
 def join_chidren_factory(should_join):

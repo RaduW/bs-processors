@@ -49,6 +49,14 @@ def set_new_children(elm, new_children):
     for child in new_children:
         elm.append(child)
 
+
+def generate_new_children(new_children_generator, elm):
+    new_children = []
+    for child in elm:
+        new_children += [x for x in generate_new_children(new_children_generator, child)]
+    return new_children
+
+
 def remove_children(elm):
     """
     Removes all children from an element (maintaining everything else)
