@@ -23,11 +23,11 @@ def should_filter(elm):
     return False
 
 @pytest.mark.parametrize("file_name", (
-    ("simple_flatten", "super_simple")
+    ("simple", "super_simple")
 ))
 def test_flatten(path_resolver, html_file_loader, dump_xml_file, result_file_logger, file_name):
     input_file_name = file_name+ ".html"
-    output_file_name = file_name+ ".result.xml"
+    output_file_name = "z-flatten-" + file_name+ ".result.xml"
     path = path_resolver(__file__, "../data_fixtures", input_file_name)
     output_path = path_resolver(__file__, "../data_fixtures", output_file_name)
 
@@ -46,11 +46,11 @@ def test_flatten(path_resolver, html_file_loader, dump_xml_file, result_file_log
 
 
 @pytest.mark.parametrize("file_name", (
-    ("simple_flatten", "super_simple")
+    ("simple", "super_simple")
 ))
 def test_flatten_and_filter(path_resolver, html_file_loader, dump_xml_file, result_file_logger, file_name):
     input_file_name = file_name+ ".html"
-    output_file_name = file_name+ ".clean.result.xml"
+    output_file_name = "z-flatten-filter-" + file_name+ ".result.xml"
     path = path_resolver(__file__, "../data_fixtures", input_file_name)
     output_path = path_resolver(__file__, "../data_fixtures", output_file_name)
 
