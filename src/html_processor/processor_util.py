@@ -31,12 +31,12 @@ def process(elm, processors):
     ...     yield "p3-1 {}".format(elm)
     ...     yield "p3-2 {}".format(elm)
     >>> def p_empty(elm):
-    ...     return []
+    ...     return iter([])
     >>> result = process('xXx', [p1,p2])
-    >>> [x for x in result]
+    >>> list(result)
     ['p2-1 p1-1 xXx', 'p2-2 p1-1 xXx', 'p2-1 p1-2 xXx', 'p2-2 p1-2 xXx']
     >>> result = process('xXx', [p1,p2,p3])
-    >>> pprint([x for x in result])
+    >>> pprint(list(result))
     ['p3-1 p2-1 p1-1 xXx',
      'p3-2 p2-1 p1-1 xXx',
      'p3-1 p2-2 p1-1 xXx',
@@ -46,7 +46,7 @@ def process(elm, processors):
      'p3-1 p2-2 p1-2 xXx',
      'p3-2 p2-2 p1-2 xXx']
     >>> result = process('xXx', [p1,p2,p_empty])
-    >>> [x for x in result]
+    >>> list(result)
     []
 
     """
@@ -70,7 +70,7 @@ def compose_generators(f1, f2):
     ...     yield "p2-2 {}".format(elm)
     ...
     >>> x = compose_generators(p1,p2)
-    >>> [val for val in x("XXX")]
+    >>> list(x("XXX"))
     ['p1-1 p2-1 XXX', 'p1-2 p2-1 XXX', 'p1-1 p2-2 XXX', 'p1-2 p2-2 XXX']
     """
     def composed(x):

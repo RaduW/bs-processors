@@ -1,6 +1,5 @@
 import pytest
-from lxml import etree
-from html_processor.generic_processors import flatten_gen, filter_gen, flatten_factory, filter_factory
+from html_processor.generic_processors import flatten_gen, flatten_factory, filter_factory
 from html_processor.processor_util import process
 from utils.pytest.compare_xml import compare_xml
 
@@ -33,7 +32,7 @@ def test_flatten(path_resolver, html_file_loader, dump_xml_file, result_file_log
 
     root = html_file_loader(path)
 
-    result = [x for x in flatten_gen(should_flatten, is_internal, root)]
+    result = list(flatten_gen(should_flatten, is_internal, root))
     assert len(result) == 1
 
     result_file_logger(output_path,dump_xml_file, result[0])
@@ -59,7 +58,7 @@ def test_flatten_and_filter(path_resolver, html_file_loader, dump_xml_file, resu
     flatten = flatten_factory(should_flatten, is_internal)
     filter_br = filter_factory(should_filter)
 
-    result = [x for x in process(root,(flatten, filter_br))]
+    result = list(process(root,(flatten, filter_br)))
 
     assert len(result) == 1
     result_file_logger(output_path,dump_xml_file, result[0])

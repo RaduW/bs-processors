@@ -27,7 +27,7 @@ def filter_gen(should_filter: Callable[[Any], bool], elm):
     >>> from lxml import etree
     >>> doc = etree.XML('<root><a><b/></a><c><a/></c><d/><b/></root>')
     >>> should_filter= lambda elm: elm.tag == 'a'
-    >>> result = [x for x in filter_gen(should_filter, doc)]
+    >>> result = list(filter_gen(should_filter, doc))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
@@ -105,7 +105,7 @@ def local_modify_gen(modify_func: Callable[[Any], bool], elm):
     ...         elm.attrib['id'] = str(idx[0])
     ...
     >>> elm = etree.XML('<root><p><x><p/></x></p><a/><p></p></root>')
-    >>> result = [x for x in local_modify_gen(add_id_to_p, elm)]
+    >>> result = list(local_modify_gen(add_id_to_p, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
@@ -138,7 +138,7 @@ def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
     ...     return False
     ...
     >>> elm = etree.XML('<root><font><font><p id="1">abc</p><font><p id="2">123</p></font></font></font></root>')
-    >>> result = [x for x in unwrap_gen(should_unwrap_font, elm)]
+    >>> result = list(unwrap_gen(should_unwrap_font, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
@@ -160,10 +160,10 @@ def unwrap_factory(should_unwrap):
 
 def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     """
-    Joins to elements
+    Joins two elements
     :param join_children: A generator that returns the result of joining (or not) two adjacent children
     :param elm: the element whose children should be joined
-    :return: generators that yields the element
+    :return: generator that yields the element
 
     >>> def join(x,y):
     ...     if x.tag == 'p' and y.tag == 'p':
@@ -174,13 +174,13 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     ...         yield y
 
     >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4 </p></root>')
-    >>> result = [x for x in join_children_gen(join, elm)]
+    >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
     b'<root><div/><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4 </p></root>'
     >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></div></root>')
-    >>> result = [x for x in join_children_gen(join, elm)]
+    >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
@@ -191,7 +191,7 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
 
     def reducer(accumulator, new_child):
         if len(accumulator) > 0:
-            result = accumulator[:-1] + [x for x in join_children(accumulator[-1], new_child)]
+            result = accumulator[:-1] + list(join_children(accumulator[-1], new_child))
         else:
             result = [new_child]
         return result
