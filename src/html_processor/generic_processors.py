@@ -201,5 +201,14 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     yield elm
 
 
-def join_chidren_factory(should_join):
+def join_children_factory(should_join):
     return functools.partial(join_children_gen, should_join)
+
+
+def lateral_effect_gen( lateral_effect_func, elm):
+    lateral_effect_func()
+    yield elm
+
+
+def lateral_effect_factory(lateral_effect_func):
+    return functools.partial(lateral_effect_func)

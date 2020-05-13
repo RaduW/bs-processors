@@ -1,7 +1,7 @@
 """
 Utilities for working with lxml Elements
 """
-
+import string
 
 def add_text(elm, text):
     """
@@ -43,6 +43,9 @@ def add_text(elm, text):
             last_child.tail += text
     return elm
 
+
+def is_empty( s):
+    return s is None or len(s) == 0 or s.isspace()
 
 def set_new_children(elm, new_children):
     remove_children(elm)
