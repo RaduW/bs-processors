@@ -18,7 +18,7 @@ def _is_unwanted_element(elm):
         return True
 
     if elm.tag in _remove_empty_elements:
-        if is_empty(elm.text) and is_empty(elm.tail):
+        if is_empty(elm.text) and is_empty(elm.tail) and len(elm) == 0:
             return True
     return False
 
@@ -56,9 +56,6 @@ def _index_generator():
         idx[0] = 1
 
     return add_index_to_p, reset_index
-
-
-
 
 
 def join_p_with_ul_inside(elm_l, elm_r):
