@@ -123,7 +123,7 @@ def local_modify_factory(modify_func):
     return functools.partial(local_modify_gen, modify_func)
 
 
-def unwrap_gen( should_unwrap: Callable[[Any], bool], elm):
+def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
     """
     Removes an element while inserting the children in to the parent (at the position where
     the element used to be)
@@ -131,10 +131,23 @@ def unwrap_gen( should_unwrap: Callable[[Any], bool], elm):
     :param should_unwrap: true if the current element should be deleted and its children pushed up
     :param elm: the elment to anaylze
     :return: generator yielding either the element or the children of the element
+
+    >>> def should_unwrap_font(elm):
+    ...     if elm.tag in ['f', 'font', 'fnt']:
+    ...         return True
+    ...     return False
+    ...
+    >>> elm = etree.XML('<root><font><font><p id="1">abc</p><font><p id="2">123</p></font></font></font></root>')
+    >>> result = [x for x in unwrap_gen(should_unwrap_font, elm)]
+    >>> len(result)
+    1
+    >>> etree.tostring(result[0])
+    b'<root><p id="1">abc</p><p id="2">123</p></root>'
+
     """
-    new_children = generate_new_children(lambda child: filter_gen(should_unwrap, child), elm)
+    new_children = generate_new_children(lambda child: unwrap_gen(should_unwrap, child), elm)
     if not should_unwrap(elm):
-        set_new_children(elm,new_children)
+        set_new_children(elm, new_children)
         yield elm
     else:
         for child in new_children:
@@ -145,15 +158,47 @@ def unwrap_factory(should_unwrap):
     return functools.partial(unwrap_gen, should_unwrap)
 
 
-def join_children_gen(should_join: Callable[[Any, Any], bool], elm):
+def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     """
     Joins to elements
-    :param should_join:
-    :param elm:
-    :return:
+    :param join_children: A generator that returns the result of joining (or not) two adjacent children
+    :param elm: the element whose children should be joined
+    :return: generators that yields the element
+
+    >>> def join(x,y):
+    ...     if x.tag == 'p' and y.tag == 'p':
+    ...         x.text = x.text + y.text
+    ...         yield x
+    ...     else:
+    ...         yield x
+    ...         yield y
+
+    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4 </p></root>')
+    >>> result = [x for x in join_children_gen(join, elm)]
+    >>> len(result)
+    1
+    >>> etree.tostring(result[0])
+    b'<root><div/><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4 </p></root>'
+    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></div></root>')
+    >>> result = [x for x in join_children_gen(join, elm)]
+    >>> len(result)
+    1
+    >>> etree.tostring(result[0])
+    b'<root><div><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4</p></div></root>'
     """
-    #TODO implement
-    raise NotImplementedError("TODO implement join_children_gen")
+    new_children = generate_new_children(lambda child: join_children_gen(join_children, child), elm)
+    remove_children(elm)
+
+    def reducer(accumulator, new_child):
+        if len(accumulator) > 0:
+            result = accumulator[:-1] + [x for x in join_children(accumulator[-1], new_child)]
+        else:
+            result = [new_child]
+        return result
+
+    joined_children = functools.reduce(reducer, new_children, [])
+    set_new_children(elm,  joined_children)
+    yield elm
 
 
 def join_chidren_factory(should_join):
