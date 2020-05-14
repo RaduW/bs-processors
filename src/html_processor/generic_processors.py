@@ -211,4 +211,4 @@ def lateral_effect_gen( lateral_effect_func, elm):
 
 
 def lateral_effect_factory(lateral_effect_func):
-    return functools.partial(lateral_effect_func)
+    return functools.partial(lateral_effect_gen, lateral_effect_func)
