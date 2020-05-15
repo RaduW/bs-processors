@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<body>
+<p id="1">
+    Hello dear <img src="hello.jpg"/>
+    </p>
+<p id="2">
+    Another line
+    </p><p id="3">
+    and Another
+</p><p id="4">
+    This is p with id 3
+</p>
+
+</body>
+</html>
