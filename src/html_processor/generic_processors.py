@@ -128,8 +128,6 @@ def local_modify_gen(modify_func: Callable[[Any], bool], elm):
 def local_modify_factory(modify_func):
     return functools.partial(local_modify_gen, modify_func)
 
-
-### BUG !!! Loses
 def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
     """
     Removes an element while inserting the children in to the parent (at the position where
@@ -165,7 +163,6 @@ UnwrapResult = namedtuple("UnwrapResult", "head, elms")
 
 def _unwrap_internal(should_unwrap, elm):
     """
-
     :param shoud_unwrap:
     :param elm:
     :return:
@@ -175,27 +172,85 @@ def _unwrap_internal(should_unwrap, elm):
     for child in elm:
         unwrapped_children.append(_unwrap_internal(should_unwrap, child))
 
-    joined_children = functools.reduce(_joined_unwrapped, unwrapped_children)
+    if len(unwrapped_children) == 0:
+        joined_children = UnwrapResult(None, [])
+    elif len(unwrapped_children) == 1:
+        joined_children = unwrapped_children[0]
+    else:
+        joined_children = functools.reduce(_join_unwrapped, unwrapped_children)
 
     if should_unwrap(elm):
         # get rid of elm ( keeping its text and tail
         new_children = joined_children.elms
-        if len(new_children) == 0:
+        if new_children is None or len(new_children) == 0:
             # we return only text
             head = join_strings(elm.text, join_strings(joined_children.head, elm.tail))
             return UnwrapResult(head, new_children)
         else:
             # we return some children
             new_children[-1].tail = join_strings(new_children[-1].tail, elm.tail)
-            head = join_strings(elm.text, new_children.head)
+            head = join_strings(elm.text, joined_children.head)
             return UnwrapResult(head, new_children)
     else:
         # keep elm, join the text of the joined_children to the text of elm
         elm.text = join_strings(elm.text, joined_children.head)
+        set_new_children(elm, joined_children.elms)
         return UnwrapResult( None, [elm])
 
 
-def _joined_unwrapped(left, right):
+def _join_unwrapped(left, right):
+    """
+
+    :param left:
+    :param right:
+    :return:
+
+    >>> elm = etree.XML("<root>a<x>b</x>c<y>d</y>e</root>")
+    >>> x = elm[0]
+    >>> y =elm[1]
+    >>> l = UnwrapResult('1', [elm[0]])
+    >>> r = UnwrapResult('2', [elm[1]])
+    >>> result = _join_unwrapped(l,r)
+    >>> result.head
+    '1'
+    >>> len(result.elms)
+    2
+    >>> etree.tostring(result.elms[0])
+    b'<x>b</x>c 2'
+    >>> etree.tostring(result.elms[1])
+    b'<y>d</y>e'
+
+    >>> elm = etree.XML("<root>a<x>b</x>c<y>d</y>e</root>")
+    >>> x = elm[0]
+    >>> y =elm[1]
+    >>> l = UnwrapResult(None, [elm[0]])
+    >>> r = UnwrapResult(None, [elm[1]])
+    >>> result = _join_unwrapped(l,r)
+    >>> result.head is None
+    True
+    >>> len(result.elms)
+    2
+    >>> etree.tostring(result.elms[0])
+    b'<x>b</x>c'
+    >>> etree.tostring(result.elms[1])
+    b'<y>d</y>e'
+
+    >>> elm = etree.XML("<root><x>a</x><y>b</y></root>")
+    >>> x = elm[0]
+    >>> y =elm[1]
+    >>> l = UnwrapResult(None, [elm[0]])
+    >>> r = UnwrapResult(None, [elm[1]])
+    >>> result = _join_unwrapped(l,r)
+    >>> result.head is None
+    True
+    >>> len(result.elms)
+    2
+    >>> etree.tostring(result.elms[0])
+    b'<x>a</x>'
+    >>> etree.tostring(result.elms[1])
+    b'<y>b</y>'
+
+    """
     head_l, elms_l = left.head, left.elms
     head_r, elms_r = right.head, right.elms
 
@@ -229,15 +284,13 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     ...         yield x
     ...         yield y
 
-    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4
-    </p></root>')
+    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></root>')
     >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
-    b'<root><div/><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4 </p></root>'
-    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p
-    id="4">p_4</p></div></root>')
+    b'<root><div/><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4</p></root>'
+    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></div></root>')
     >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1

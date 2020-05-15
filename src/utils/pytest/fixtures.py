@@ -4,11 +4,6 @@ from lxml import etree
 
 
 @pytest.fixture
-def get_val():
-    return 22
-
-
-@pytest.fixture
 def path_resolver():
     def inner(*args):
         return path.abspath(path.join(*args))
@@ -36,18 +31,20 @@ def dump_xml_file():
 
     return inner
 
+
 @pytest.fixture
 def result_file_logger(request):
     params = {}
+
     def inner(file_name, file_generator, *args, **kwargs):
         # if we don't yet have a result create one
         if not path.exists(file_name):
             file_generator(file_name, *args, **kwargs)
 
-        dir, f_name =path.split(file_name)
-        components = f_name.split('.',1)
-        if len(components) > 1 :
-            f_name = components[0]+"_."+components[1]
+        dir, f_name = path.split(file_name)
+        components = f_name.split('.', 1)
+        if len(components) > 1:
+            f_name = components[0] + "_." + components[1]
         else:
             f_name += "_"
         error_file_name = path.join(dir, f_name)
@@ -58,7 +55,8 @@ def result_file_logger(request):
         params['error_file_name'] = error_file_name
         params['file_generator'] = file_generator
         params['args'] = args
-        params['kwargs'] =kwargs
+        params['kwargs'] = kwargs
+
     yield inner
     if request.node.rep_setup.passed and request.node.rep_call.failed:
         # we have a failed test
@@ -68,4 +66,3 @@ def result_file_logger(request):
             kwargs = params['kwargs']
             error_file_name = params['error_file_name']
             fun(error_file_name, *args, **kwargs)
-
