@@ -7,12 +7,18 @@ It may return:
     - a generator with multipel elements ( a flatten function that takes the elements out of an element with embedded
     elms)
 """
+import string
+from collections import namedtuple
 from typing import Any, Callable
 
 from lxml import etree
 import functools
 
-from html_processor.xml_util import remove_children, set_new_children, generate_new_children
+import logging
+
+_log = logging.getLogger(__name__)
+
+from html_processor.xml_util import remove_children, set_new_children, generate_new_children, is_empty, join_strings
 
 
 def filter_gen(should_filter: Callable[[Any], bool], elm):
@@ -123,6 +129,7 @@ def local_modify_factory(modify_func):
     return functools.partial(local_modify_gen, modify_func)
 
 
+### BUG !!! Loses
 def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
     """
     Removes an element while inserting the children in to the parent (at the position where
@@ -145,13 +152,62 @@ def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
     b'<root><p id="1">abc</p><p id="2">123</p></root>'
 
     """
-    new_children = generate_new_children(lambda child: unwrap_gen(should_unwrap, child), elm)
-    if not should_unwrap(elm):
-        set_new_children(elm, new_children)
-        yield elm
+    head, elms = _unwrap_internal(should_unwrap, elm)
+
+    if not is_empty(head):
+        _log.error(f"unwrap losing text info: '{head}'")
+
+    return iter(elms)
+
+
+UnwrapResult = namedtuple("UnwrapResult", "head, elms")
+
+
+def _unwrap_internal(should_unwrap, elm):
+    """
+
+    :param shoud_unwrap:
+    :param elm:
+    :return:
+    """
+
+    unwrapped_children = []
+    for child in elm:
+        unwrapped_children.append(_unwrap_internal(should_unwrap, child))
+
+    joined_children = functools.reduce(_joined_unwrapped, unwrapped_children)
+
+    if should_unwrap(elm):
+        # get rid of elm ( keeping its text and tail
+        new_children = joined_children.elms
+        if len(new_children) == 0:
+            # we return only text
+            head = join_strings(elm.text, join_strings(joined_children.head, elm.tail))
+            return UnwrapResult(head, new_children)
+        else:
+            # we return some children
+            new_children[-1].tail = join_strings(new_children[-1].tail, elm.tail)
+            head = join_strings(elm.text, new_children.head)
+            return UnwrapResult(head, new_children)
     else:
-        for child in new_children:
-            yield child
+        # keep elm, join the text of the joined_children to the text of elm
+        elm.text = join_strings(elm.text, joined_children.head)
+        return UnwrapResult( None, [elm])
+
+
+def _joined_unwrapped(left, right):
+    head_l, elms_l = left.head, left.elms
+    head_r, elms_r = right.head, right.elms
+
+    if is_empty(head_r):
+        return UnwrapResult(head=head_l, elms=elms_l + elms_r)
+
+    if len(elms_l) == 0:
+        return UnwrapResult(head=join_strings(head_l, head_r), elms=elms_r)
+
+    elms_l[-1].tail = join_strings(elms_l[-1].tail, head_r)
+
+    return UnwrapResult(head=head_l, elms=elms_l + elms_r)
 
 
 def unwrap_factory(should_unwrap):
@@ -173,13 +229,15 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     ...         yield x
     ...         yield y
 
-    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4 </p></root>')
+    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4
+    </p></root>')
     >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
     b'<root><div/><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4 </p></root>'
-    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></div></root>')
+    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p
+    id="4">p_4</p></div></root>')
     >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
@@ -197,7 +255,7 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
         return result
 
     joined_children = functools.reduce(reducer, new_children, [])
-    set_new_children(elm,  joined_children)
+    set_new_children(elm, joined_children)
     yield elm
 
 
@@ -205,7 +263,7 @@ def join_children_factory(should_join):
     return functools.partial(join_children_gen, should_join)
 
 
-def lateral_effect_gen( lateral_effect_func, elm):
+def lateral_effect_gen(lateral_effect_func, elm):
     lateral_effect_func()
     yield elm
 

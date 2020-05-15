@@ -30,15 +30,15 @@ def _should_unwrap_element(elm):
 
 
 def should_flatten(elm):
-    if elm in _elements_who_hold_all_children:
+    if elm.tag in _elements_who_hold_all_children:
         return False
-    if elm in _block_elements_that_pop_out:
+    if elm.tag in _block_elements_that_pop_out:
         return True
     return False
 
 
 def stays_inside_parent(elm):
-    if elm not in _block_elements_that_pop_out:
+    if elm.tag not in _block_elements_that_pop_out:
         return True
     else:
         return False
@@ -49,7 +49,7 @@ def _index_generator():
 
     def add_index_to_p(elm):
         if elm.tag == "p":
-            elm.attrib['idx'] = str(idx[0])
+            elm.attrib['id'] = str(idx[0])
             idx[0] += 1
 
     def reset_index():

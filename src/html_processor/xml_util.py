@@ -47,13 +47,23 @@ def add_text(elm, text):
 def is_empty( s):
     return s is None or len(s) == 0 or s.isspace()
 
+
+def join_strings( left, right):
+    if left is None and right is None:
+        return None
+    if right is None:
+        return left
+    if left is None:
+        return right
+    return left + " " + right
+
 def set_new_children(elm, new_children):
     remove_children(elm)
     for child in new_children:
         elm.append(child)
 
 
-def generate_new_children(new_children_generator, elm):
+def generate_new_children(new_children_generator: object, elm: object) -> object:
     new_children = []
     for child in elm:
         new_children += list(new_children_generator(child))
