@@ -5,7 +5,7 @@ from utils.pytest.compare_xml import compare_xml
 
 
 @pytest.mark.parametrize("file_name", (
-    ("simple", "super_simple", "with_font")
+    ("simple", "super_simple", "with_font", "simple_with_ul")
 ))
 def test_clean_html(path_resolver, html_file_loader, dump_xml_file, result_file_logger, file_name):
     input_file_name = file_name + ".html"
