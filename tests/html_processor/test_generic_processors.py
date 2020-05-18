@@ -23,23 +23,6 @@ def should_filter(elm):
     return False
 
 
-def join_p_with_ul_inside(elm_l, elm_r):
-    if (
-        elm_l.tag == "p" and elm_r.tag == "p" and  # join p elements
-        len(elm_l) == 1 and len(elm_r) == 1 and  # that have only one child each
-        elm_l[0].tag == 'ul' and elm_r[0].tag == 'ul'  # and the children are ul
-        # also test tail, and text for p and maybe ul (just to handle weird stuff)
-    ):
-        # put inside ul the children from ul left and ul right
-        set_new_children(elm_l, list(elm_l[0]) + list(elm_r[0]))
-        # joined left and right, return the joined element (the left elm)
-        yield elm_l
-    else:
-        # do NOT join, just return the existing elements
-        yield elm_l
-        yield elm_r
-
-
 @pytest.mark.parametrize("file_name", (
     ("simple", "super_simple")
 ))
@@ -93,7 +76,7 @@ def should_unwrap(elm):
 @pytest.mark.parametrize("file_name", (
     ("font_simple", "font_complex")
 ))
-def test_flatten_and_filter(path_resolver, html_file_loader, dump_xml_file, result_file_logger, file_name):
+def test_unwrap(path_resolver, html_file_loader, dump_xml_file, result_file_logger, file_name):
     input_file_name = file_name + ".html"
     output_file_name = "z-unwrap-" + file_name + ".result.xml"
     path = path_resolver(__file__, "../data_fixtures", input_file_name)

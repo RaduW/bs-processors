@@ -2,6 +2,8 @@
 Utilities for working with lxml Elements
 """
 import string
+from typing import Optional
+
 
 def add_text(elm, text):
     """
@@ -44,11 +46,25 @@ def add_text(elm, text):
     return elm
 
 
-def is_empty( s):
+def is_empty(s):
     return s is None or len(s) == 0 or s.isspace()
 
 
-def join_strings( left, right):
+def join_strings(left: Optional[str], right: Optional[str]) -> Optional[str]:
+    """
+    :param left:
+    :param right:
+    :return:
+
+    >>> join_strings( None , 'abc')
+    'abc'
+    >>> join_strings( None , None) is None
+    True
+    >>> join_strings( 'abc' , None)
+    'abc'
+    >>> join_strings( 'abc' , 'cde')
+    'abc cde'
+    """
     if left is None and right is None:
         return None
     if right is None:
@@ -56,6 +72,62 @@ def join_strings( left, right):
     if left is None:
         return right
     return left + " " + right
+
+
+def join_children(left_parent, right_parent, level):
+    """
+    Joins the ancestors of two nodes placing them in the left node.
+    The ancestors are joined at the specified level (1 = children, 2 grand_children...)
+    :return: a generator containing the left parent
+    """
+    children = collect_children([left_parent, right_parent], level)
+    set_new_children(left_parent, children)
+    yield left_parent
+
+
+def collect_children(elms, level: int = 1):
+    """
+    Collects the children at the specified depth.
+
+    level: the specified child level ( 1: children of elms, 2: grand children of elms,...)
+
+    >>> from lxml import etree
+    >>> from pprint import pprint
+    >>> elm = etree.XML("<root><a><b><c>1</c><c>2</c></b><b><c>3</c><c>4</c></b></a>"+
+    ... "<a><b><c>5</c><c>6</c></b><b><c>7</c><c>8</c></b></a></root>")
+
+    >>> c = list(collect_children(([elm]), 1))
+    >>> pprint([etree.tostring(x) for x in c])
+    [b'<a><b><c>1</c><c>2</c></b><b><c>3</c><c>4</c></b></a>',
+     b'<a><b><c>5</c><c>6</c></b><b><c>7</c><c>8</c></b></a>']
+
+    >>> c = list(collect_children((elm[0], elm[1]), 1))
+    >>> pprint([etree.tostring(x) for x in c])
+    [b'<b><c>1</c><c>2</c></b>',
+     b'<b><c>3</c><c>4</c></b>',
+     b'<b><c>5</c><c>6</c></b>',
+     b'<b><c>7</c><c>8</c></b>']
+
+    >>> c = list(collect_children((elm[0], elm[1]), 2))
+    >>> pprint([etree.tostring(x) for x in c])
+    [b'<c>1</c>',
+     b'<c>2</c>',
+     b'<c>3</c>',
+     b'<c>4</c>',
+     b'<c>5</c>',
+     b'<c>6</c>',
+     b'<c>7</c>',
+     b'<c>8</c>']
+    """
+    if level < 1:
+        raise ValueError("Collect children called with invalid level. Level must be grater than 0", level)
+    if level == 1:
+        for elm in elms:
+            yield from elm
+    else:
+        for elm in elms:
+            yield from collect_children(elm, level - 1)
+
 
 def set_new_children(elm, new_children):
     remove_children(elm)

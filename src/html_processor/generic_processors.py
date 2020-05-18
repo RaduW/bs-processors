@@ -128,6 +128,7 @@ def local_modify_gen(modify_func: Callable[[Any], bool], elm):
 def local_modify_factory(modify_func):
     return functools.partial(local_modify_gen, modify_func)
 
+
 def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
     """
     Removes an element while inserting the children in to the parent (at the position where
@@ -161,9 +162,9 @@ def unwrap_gen(should_unwrap: Callable[[Any], bool], elm):
 UnwrapResult = namedtuple("UnwrapResult", "head, elms")
 
 
-def _unwrap_internal(should_unwrap, elm):
+def _unwrap_internal(should_unwrap: Callable[[Any], bool], elm) -> UnwrapResult:
     """
-    :param shoud_unwrap:
+    :param should_unwrap:
     :param elm:
     :return:
     """
@@ -195,7 +196,7 @@ def _unwrap_internal(should_unwrap, elm):
         # keep elm, join the text of the joined_children to the text of elm
         elm.text = join_strings(elm.text, joined_children.head)
         set_new_children(elm, joined_children.elms)
-        return UnwrapResult( None, [elm])
+        return UnwrapResult(None, [elm])
 
 
 def _join_unwrapped(left, right):
@@ -284,13 +285,15 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     ...         yield x
     ...         yield y
 
-    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></root>')
+    >>> elm = etree.XML('<root><div/><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p>'+
+    ... '<p id="4">p_4</p></root>')
     >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
     b'<root><div/><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4</p></root>'
-    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p><p id="4">p_4</p></div></root>')
+    >>> elm = etree.XML('<root><div><p id="1">abc</p><div/><p id="2">p_2 </p><p id="3">p_3 </p>'+
+    ... '<p id="4">p_4</p></div></root>')
     >>> result = list(join_children_gen(join, elm))
     >>> len(result)
     1
