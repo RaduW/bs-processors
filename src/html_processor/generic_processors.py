@@ -300,16 +300,19 @@ def join_children_gen(join_children: Callable[[Any, Any], Any], elm):
     >>> etree.tostring(result[0])
     b'<root><div><p id="1">abc</p><div/><p id="2">p_2 p_3 p_4</p></div></root>'
     """
+    # calculate the new children by recursively applying the join to them
     new_children = generate_new_children(lambda child: join_children_gen(join_children, child), elm)
-    remove_children(elm)
 
     def reducer(accumulator, new_child):
         if len(accumulator) > 0:
+            # try to see if we can join the last child with the new child
             result = accumulator[:-1] + list(join_children(accumulator[-1], new_child))
         else:
+            # this is the first element just store it (noting to join it to)
             result = [new_child]
         return result
 
+    # try to join adjacent children
     joined_children = functools.reduce(reducer, new_children, [])
     set_new_children(elm, joined_children)
     yield elm

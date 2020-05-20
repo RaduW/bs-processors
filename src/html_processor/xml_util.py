@@ -136,6 +136,16 @@ def set_new_children(elm, new_children):
 
 
 def generate_new_children(new_children_generator: object, elm: object) -> object:
+    """
+    Applies a transformer to the children of an element and returns the result as a  list
+
+    >>> new_gen = lambda x: [x+1]
+    >>> generate_new_children(new_gen , [1,2,3])
+    [2, 3, 4]
+    >>> new_gen = lambda x: [x,x]
+    >>> generate_new_children(new_gen , [1,2,3])
+    [1, 1, 2, 2, 3, 3]
+    """
     new_children = []
     for child in elm:
         new_children += list(new_children_generator(child))

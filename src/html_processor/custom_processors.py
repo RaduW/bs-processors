@@ -163,7 +163,7 @@ def join_p_with_ul_inside(elm_l, elm_r):
     b'<root><p id="1"><ul id="2"><li>third</li><li>fourth</li></ul></p><p id="11"><ul id="12"/></p></root>'
     """
     if (
-        elm_l.tag == "p" and elm_r.tag == "p" and  # join p elements
+        elm_l.tag == "div" and elm_r.tag == "div" and  # join p elements
         len(elm_l) == 1 and len(elm_r) == 1 and  # that have only one child each
         elm_l[0].tag == 'ul' and elm_r[0].tag == 'ul' and  # and the children are ul
         is_empty(elm_l.tail) and is_empty(elm_r.text) and  # no text between p
@@ -173,7 +173,7 @@ def join_p_with_ul_inside(elm_l, elm_r):
         p_r = elm_r
         ul_l = elm_l[0]
         # get the li elements
-        li_elms = collect_children([p_l,p_r], 2)
+        li_elms = list(collect_children([p_l,p_r], 2))
         # set all the li elements inside the ul left element
         set_new_children(ul_l, li_elms)
         # joined left and right, return the joined element (the left elm)
