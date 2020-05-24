@@ -1,7 +1,8 @@
 import functools
+import itertools
 import re
 import string
-from typing import Optional
+from typing import Optional, Any, Sequence, List, Iterable
 
 
 def is_empty(s):
@@ -57,3 +58,14 @@ def normalize_string(val: Optional[str]):
         return ""
 
     return _whitespace.sub(' ', val)
+
+
+def flatten( val: Iterable[Iterable[Any]]) -> List[Any]:
+    """
+    Flatens a list of list into a list
+
+    >>> flatten( [['abc','def'],[12,34,46],[3.14, 2.22]])
+    ['abc', 'def', 12, 34, 46, 3.14, 2.22]
+    """
+    return list(itertools.chain(*val))
+

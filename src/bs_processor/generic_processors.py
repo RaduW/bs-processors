@@ -1,0 +1,165 @@
+import functools
+from typing import Callable, Any, List, Sequence
+
+from bs_processor.processor_util import single_to_multiple
+from bs_processor.xml_util import set_new_children, process_children, copy_element_type
+from utils.util import flatten
+
+
+def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
+    """
+    Conditionally filters an element based on the passed predicate
+    :param should_filter: predicate that returns True if the element should be filtered
+    :param elm: the element to check
+    :return: an empty array if the element should be filtered or an array with the passed element
+    """
+    if should_filter(elm):
+        return []
+    else:
+        new_children = process_children(lambda child: single_filter_proc(should_filter, child), elm)
+        set_new_children(elm, new_children)
+
+        return [elm]
+
+
+filter_proc = single_to_multiple(single_filter_proc)
+
+
+def filter_factory(should_filter):
+    return functools.partial(filter_proc, should_filter)
+
+
+def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -> List[Any]:
+    """
+    Conditionally unwraps an element and pushes all its unwrapped children to its parent
+
+    :param should_unwrap: predicate that returns true if the element should be unwrapped
+    :param elm: the element to be conditionally unwrapped
+    :return: either a list containing the element (if it wasn't unwrapped) or a list with all
+     the unwrapped children
+
+    >>> from bs4 import BeautifulSoup
+    >>> def should_unwrap(elm):
+    ...     return elm.name == "x"
+    ...
+
+    >>> doc = "<root><x >hello</x> after x <b> in b</b></root>"
+    >>> elm = BeautifulSoup(doc, "xml")
+    >>> # single_unwrap_proc(should_unwrap, elm.root)
+    [<root>hello after x <b> in b</b></root>]
+
+    >>> doc = "<root><x >hello <a> in a</a></x></root>"
+    >>> elm = BeautifulSoup(doc, "xml")
+    >>> single_unwrap_proc(should_unwrap, elm.root)
+    [<root>hello <a> in a</a></root>]
+
+    >>> doc = "<root><x >hello <a> in a <x>in x2</x> after</a></x> 22 <b>in b</b> end</root>"
+    >>> elm = BeautifulSoup(doc, "xml")
+    >>> single_unwrap_proc(should_unwrap, elm.root)
+    [<root>hello <a> in a in x2 after</a> 22 <b>in b</b> end</root>]
+    """
+
+    # Note: elm.unwrap() would do the job but the return value is not
+    # what I need (it is the node that was unwrapped instead of the
+    # children) so we need to do it manually
+    new_children = process_children(lambda child: single_unwrap_proc(should_unwrap, child), elm)
+
+    if not should_unwrap(elm):
+        set_new_children(elm, new_children)
+        return [elm]
+
+    # insert the new children in the parent
+    current = elm
+    for child in new_children:
+        current.insert_after(child)
+        current = child
+    elm.extract()  # remove current element
+    return new_children
+
+
+unwrap_proc = single_to_multiple(single_unwrap_proc)
+
+
+def unwrap_factory(should_unwrap):
+    return functools.partial(unwrap_proc, should_unwrap)
+
+
+def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -> List[Any]:
+    new_children = process_children(lambda child: single_flatten_proc(flatten_children, is_internal, child), elm)
+
+    if not flatten_children(elm):
+        # all children should go inside
+        set_new_children(elm, new_children)
+        return [elm]
+
+    # this element pops out external children
+    # remember the current parent
+    parent = elm
+
+    result = []
+    for child in new_children(elm):
+        if is_internal(child):
+            if parent is None:
+                # we need a new element like elm
+                parent = copy_element_type(elm)
+            parent.append(child)
+        else:
+            # we need to pop the element at a higher level, if we have a valid parent
+            # append it first
+            if parent is not None:
+                result.append(parent)
+                parent = None
+            result.append(child)
+
+    if parent is not None:
+        result.append(parent)
+
+    return result
+
+
+flatten_proc = single_to_multiple(single_flatten_proc)
+
+
+def flatten_factory(flatten_children, is_internal):
+    return functools.partial(flatten_proc, flatten_children, is_internal)
+
+
+def single_local_modify(modify_func: Callable[[Any], bool], elm):
+    modify_func(elm)
+    process_children(lambda child: single_local_modify(modify_func, child), elm)
+
+    return [elm]
+
+
+local_modify = single_to_multiple(single_local_modify)
+
+
+def local_modify_factory(modify_func):
+    return functools.partial(local_modify, modify_func)
+
+
+def single_join_children(join_children: Callable[[Any, Any], Any], elm):
+    new_children = process_children( join_children, elm)
+
+    def reducer(accumulator, new_child):
+        if len(accumulator) > 0:
+            # try to see if we can join the last child with the new child
+            result = accumulator[:-1] + list(join_children(accumulator[-1], new_child))
+        else:
+            # this is the first element just store it (noting to join it to)
+            result = [new_child]
+        return result
+
+    # try to join adjacent children
+    joined_children = functools.reduce(reducer, new_children, [])
+    set_new_children(elm, joined_children)
+    return [elm]
+
+
+def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -> Sequence[Any]:
+    lateral_effect_func()
+    return elms
+
+
+def lateral_effect_factory(lateral_effect_func):
+    return functools.partial(lateral_effect, lateral_effect_func)
