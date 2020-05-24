@@ -100,7 +100,7 @@ def test_unwrap(path_resolver, html_file_loader, dump_xml_file, result_file_logg
 
 def _mini_join_p(elm_l, elm_r):
     if (
-        elm_l.tag == "div" and elm_r.tag == "div" and  # join p elements
+        elm_l.tag == "div" and elm_r.tag == "div" and  # join div elements
         len(elm_l) == 1 and len(elm_r) == 1 and  # that have only one child each
         elm_l[0].tag == 'ul' and elm_r[0].tag == 'ul'  # and the children are ul
     ):

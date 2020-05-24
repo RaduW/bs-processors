@@ -144,7 +144,7 @@ def _index_generator() -> Tuple[Callable[[Any], int], Callable[[], None]]:
     return add_index_to_p, reset_index
 
 
-def join_p_with_ul_inside(elm_l, elm_r):
+def join_div_with_ul_inside(elm_l, elm_r):
     """
     Tries to join two elements
     :param elm_l: left child
@@ -152,15 +152,16 @@ def join_p_with_ul_inside(elm_l, elm_r):
     :return: the result of joining (iterator with either 1 or 2 elm)
 
     >>> from lxml import etree
-    >>> elm = etree.XML("<root><p id='1'><ul id='2'><li>first</li><li>second</li></ul></p>" +
-    ... "<p id='11'><ul id='12'><li>third</li><li>fourth</li></ul></p></root>")
-    >>> result = list(join_p_with_ul_inside(elm[0],elm[1]))
+    >>> elm = etree.XML("<root><div id='1'><ul id='2'><li>first</li><li>second</li></ul></div>" +
+    ... "<div id='11'><ul id='12'><li>third</li><li>fourth</li></ul></div></root>")
+    >>> result = list(join_div_with_ul_inside(elm[0],elm[1]))
     >>> len(result)
     1
     >>> etree.tostring(result[0])
-    b'<p id="1"><ul id="2"><li>third</li><li>fourth</li></ul></p>'
+    b'<div id="1"><ul id="2"><li>first</li><li>second</li><li>third</li><li>fourth</li></ul></div>'
     >>> etree.tostring(elm)
-    b'<root><p id="1"><ul id="2"><li>third</li><li>fourth</li></ul></p><p id="11"><ul id="12"/></p></root>'
+    b'<root><div id="1"><ul id="2"><li>first</li><li>second</li><li>third</li><li>fourth</li></ul></div>\
+<div id="11"><ul id="12"/></div></root>'
     """
     if (
         elm_l.tag == "div" and elm_r.tag == "div" and  # join p elements
@@ -187,7 +188,7 @@ def join_p_with_ul_inside(elm_l, elm_r):
 unwrap_unwanted_elements = unwrap_factory(_should_unwrap_element)
 remove_unwanted_elements = filter_factory(_is_unwanted_element)
 flatten_block_elements = flatten_factory(should_flatten, stays_inside_parent)
-join_lists = join_children_factory(join_p_with_ul_inside)
+join_lists = join_children_factory(join_div_with_ul_inside)
 
 
 def clean_html(elm):
