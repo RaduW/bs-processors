@@ -1,4 +1,4 @@
-from lxml_processor.xml_util import normalize_string
+from utils.util import normalize_string
 
 
 def compare_xml(left, right, error_context = None):

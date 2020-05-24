@@ -5,7 +5,8 @@ from lxml_processor.generic_processors import (
     lateral_effect_factory, join_children_factory,
 )
 from lxml_processor.processor_util import process
-from lxml_processor.xml_util import is_empty, set_new_children, join_children, collect_children
+from lxml_processor.xml_util import set_new_children, join_children, collect_children
+from utils.util import is_empty
 
 _remove_empty_elements = frozenset(['p', 'div', 'br'])
 _unwrap_elements = frozenset(['font'])

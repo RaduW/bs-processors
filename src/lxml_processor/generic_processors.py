@@ -18,7 +18,8 @@ import logging
 
 _log = logging.getLogger(__name__)
 
-from lxml_processor.xml_util import remove_children, set_new_children, generate_new_children, is_empty, join_strings
+from lxml_processor.xml_util import remove_children, set_new_children, generate_new_children
+from utils.util import is_empty, join_strings
 
 
 def filter_gen(should_filter: Callable[[Any], bool], elm):
