@@ -1,11 +1,11 @@
 from typing import Tuple, Callable, Any
 
-from html_processor.generic_processors import (
+from lxml_processor.generic_processors import (
     filter_factory, unwrap_factory, flatten_factory, local_modify_factory,
     lateral_effect_factory, join_children_factory,
 )
-from html_processor.processor_util import process
-from html_processor.xml_util import is_empty, set_new_children, join_children, collect_children
+from lxml_processor.processor_util import process
+from lxml_processor.xml_util import is_empty, set_new_children, join_children, collect_children
 
 _remove_empty_elements = frozenset(['p', 'div', 'br'])
 _unwrap_elements = frozenset(['font'])

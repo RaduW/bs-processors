@@ -1,10 +1,10 @@
 import pytest
-from html_processor.generic_processors import (
+from lxml_processor.generic_processors import (
     flatten_gen, flatten_factory, filter_factory, unwrap_factory,
     join_children_factory,
 )
-from html_processor.processor_util import process
-from html_processor.xml_util import set_new_children, collect_children
+from lxml_processor.processor_util import process
+from lxml_processor.xml_util import set_new_children, collect_children
 from utils.pytest.compare_xml import compare_xml
 
 

@@ -1,3 +1,5 @@
+from lxml_processor.xml_util import normalize_string
+
 
 def compare_xml(left, right, error_context = None):
     if error_context is None:
@@ -23,14 +25,14 @@ def compare_xml(left, right, error_context = None):
     if left.attrib != right.attrib:
         return "Different attributes at: {}".format(error_context)
 
-    text_left = left.text or ''
-    text_right = right.text or ''
+    text_left = normalize_string(left.text)
+    text_right = normalize_string(right.text)
 
     if text_left.strip() != text_right.strip():
         return "Different text at: {}".format(error_context)
 
-    tail_left = left.text or ''
-    tail_right = right.text or ''
+    tail_left = normalize_string(left.text)
+    tail_right = normalize_string(right.text)
 
     if tail_left.strip() != tail_right.strip():
         return "Different tail at: {}".format(error_context)
