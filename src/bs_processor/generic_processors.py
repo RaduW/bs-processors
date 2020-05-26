@@ -69,6 +69,7 @@ def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -> List[Any]:
         return [elm]
 
     # insert the new children in the parent
+    # TODO see if I need to do it this way !!!
     current = elm
     for child in new_children:
         current.insert_after(child)
@@ -117,25 +118,19 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
     return result
 
 
-flatten_proc = single_to_multiple(single_flatten_proc)
-
 
 def flatten_factory(flatten_children, is_internal):
-    return functools.partial(flatten_proc, flatten_children, is_internal)
+    return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
 
 
 def single_local_modify(modify_func: Callable[[Any], bool], elm):
     modify_func(elm)
     process_children(lambda child: single_local_modify(modify_func, child), elm)
-
     return [elm]
 
 
-local_modify = single_to_multiple(single_local_modify)
-
-
 def local_modify_factory(modify_func):
-    return functools.partial(local_modify, modify_func)
+    return single_to_multiple(functools.partial(single_local_modify, modify_func))
 
 
 def single_join_children(join_children: Callable[[Any, Any], Any], elm):

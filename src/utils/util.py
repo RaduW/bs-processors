@@ -1,6 +1,7 @@
 import functools
 import itertools
 import re
+from os import path
 import string
 from typing import Optional, Any, Sequence, List, Iterable
 
@@ -60,7 +61,7 @@ def normalize_string(val: Optional[str]):
     return _whitespace.sub(' ', val)
 
 
-def flatten( val: Iterable[Iterable[Any]]) -> List[Any]:
+def flatten(val: Iterable[Iterable[Any]]) -> List[Any]:
     """
     Flatens a list of list into a list
 
@@ -69,3 +70,6 @@ def flatten( val: Iterable[Iterable[Any]]) -> List[Any]:
     """
     return list(itertools.chain(*val))
 
+
+def path_resolver(*args):
+    return path.abspath(path.join(*args))

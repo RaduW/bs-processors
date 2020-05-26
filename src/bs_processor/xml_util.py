@@ -45,9 +45,21 @@ def process_children(processor, elm):
 
 
 def is_tag(elm):
-    if hasattr(elm, "children"):
-        return True
-    return False
+    """
+    >>> from bs4 import BeautifulSoup as bs
+    >>> doc = bs("<span></span><p>bubu</p>", "html.parser")
+    >>> span = doc.span
+    >>> is_tag(doc.span)
+    True
+    >>> is_tag(doc.p)
+    True
+    >>> is_tag(list(doc.p.children)[0])
+    False
+
+    :param elm:
+    :return:
+    """
+    return elm.name is not None
 
 
 _bs = BeautifulSoup("<a/>", "xml")

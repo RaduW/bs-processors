@@ -47,7 +47,7 @@ def _is_unwanted_element(elm) -> bool:
 
 def _should_unwrap_element(elm) -> bool:
     """
-    Returns True if the elment should be remove and its contents pushed into the parent
+    Returns True if the elment should be removed and its contents pushed into the parent
 
     >>> from lxml import etree
     >>> elm = etree.XML('<root><br id="1"/>abc <font id="2">with text</font></root>')
