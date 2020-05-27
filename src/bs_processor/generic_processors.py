@@ -22,11 +22,8 @@ def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
         return [elm]
 
 
-filter_proc = single_to_multiple(single_filter_proc)
-
-
 def filter_factory(should_filter):
-    return functools.partial(filter_proc, should_filter)
+    return single_to_multiple(functools.partial(single_filter_proc, should_filter))
 
 
 def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -> List[Any]:
@@ -78,11 +75,8 @@ def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -> List[Any]:
     return new_children
 
 
-unwrap_proc = single_to_multiple(single_unwrap_proc)
-
-
 def unwrap_factory(should_unwrap):
-    return functools.partial(unwrap_proc, should_unwrap)
+    return single_to_multiple(functools.partial(single_unwrap_proc, should_unwrap))
 
 
 def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -> List[Any]:
@@ -118,7 +112,6 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
     return result
 
 
-
 def flatten_factory(flatten_children, is_internal):
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
 
@@ -149,6 +142,10 @@ def single_join_children(join_children: Callable[[Any, Any], Any], elm):
     joined_children = functools.reduce(reducer, new_children, [])
     set_new_children(elm, joined_children)
     return [elm]
+
+
+def join_children_factory(join_children):
+    return single_to_multiple(functools.partial(single_join_children, join_children))
 
 
 def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -> Sequence[Any]:
