@@ -61,7 +61,8 @@ def single_to_multiple(processor: Callable[[Any], List[Any]])->Callable[[List[An
     def inner( elms: List[Any])-> List[Any]:
         result = []
         for elm in elms:
-            result += processor(elm)
+            if elm is not None:
+                result += processor(elm)
         return result
 
     return inner

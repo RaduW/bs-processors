@@ -3,7 +3,6 @@ from typing import Callable, Any, List, Sequence
 
 from bs_processor.processor_util import single_to_multiple
 from bs_processor.xml_util import set_new_children, process_children, copy_element_type
-from utils.util import flatten
 
 
 def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
@@ -80,6 +79,57 @@ def unwrap_factory(should_unwrap):
 
 
 def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -> List[Any]:
+    """
+    Flattens an element pulling out 'block' like elements that 'want' to be top level
+
+    :param flatten_children: Predicate that specifies whether the direct children of the current element can be
+        flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
+        outside)
+    :param is_internal: Predicate that specifies whether a child 'wants' to stay inside its parent or not (i.e.
+        whether a child behaves like a block and wants out or an inline and stays in)
+    :param elm: the element to be flatten
+    :return: a list of flattened elements
+
+    >>> from bs4 import BeautifulSoup
+    >>> def flatten_children(elm):
+    ...     if elm.name is None or elm.name in {'a', 'body', 'html'}:
+    ...         return False
+    ...     return True
+    ...
+    >>> def is_internal(elm):
+    ...     if elm.name is None:
+    ...         return True
+    ...     if elm.name in { 'div', 'p', 'br'}:
+    ...         return False
+    ...     if elm.name == 'a' and "block_a" in elm['class']:
+    ...         return False
+    ...     return True
+    ...
+
+    >>> doc = '<div id="1"> a <br id="2"> b</div>'
+    >>> s = BeautifulSoup(doc, "html.parser")
+    >>> elm = s.div
+    >>> single_flatten_proc(flatten_children, is_internal, elm)
+    [<div id="1"> a </div>, <br id="2"/>, <div> b</div>]
+
+    >>> doc = '<div id="1"><i>it</i><br id="2"><b></b></div>'
+    >>> s = BeautifulSoup(doc, "html.parser")
+    >>> elm = s.div
+    >>> single_flatten_proc(flatten_children, is_internal, elm)
+    [<div id="1"><i>it</i></div>, <br id="2"/>, <div><b></b></div>]
+
+    >>> doc = '<div id="1">a<a class="block_a">b</a>c</div>'
+    >>> s = BeautifulSoup(doc, "html.parser")
+    >>> elm = s.div
+    >>> single_flatten_proc(flatten_children, is_internal, elm)
+    [<div id="1">a</div>, <a class="block_a">b</a>, <div>c</div>]
+
+    >>> doc = '<div id="1"><a class="block_a"><div>inside a</div></a></div>'
+    >>> s = BeautifulSoup(doc, "html.parser")
+    >>> elm = s.div
+    >>> single_flatten_proc(flatten_children, is_internal, elm)
+    [<div id="1"></div>, <a class="block_a"><div>inside a</div></a>]
+    """
     new_children = process_children(lambda child: single_flatten_proc(flatten_children, is_internal, child), elm)
 
     if not flatten_children(elm):
@@ -87,12 +137,13 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
         set_new_children(elm, new_children)
         return [elm]
 
+    elm.clear()
     # this element pops out external children
     # remember the current parent
     parent = elm
 
     result = []
-    for child in new_children(elm):
+    for child in new_children:
         if is_internal(child):
             if parent is None:
                 # we need a new element like elm

@@ -59,7 +59,7 @@ def is_tag(elm):
     :param elm:
     :return:
     """
-    return elm.name is not None
+    return elm is not None and elm.name is not None
 
 
 _bs = BeautifulSoup("<a/>", "xml")
