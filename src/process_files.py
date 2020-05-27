@@ -33,6 +33,9 @@ def process(file_name):
         mark_block_a,
         flatten_proc,
     ])
+    # TODO do *NOT* pass the Soup in ... I fixed it to work but it is an ugly hack.
+    # Check if the soup has a top level child called <html> and if not create one and
+    # add everything else under html... then pass the html tag .
     result = processor([doc])
     assert len(result) == 1
     result = result[0]
