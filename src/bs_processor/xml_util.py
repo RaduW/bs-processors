@@ -3,6 +3,8 @@ Useful utilities for working with BeautifulSoup trees
 
 
 """
+from typing import Any, Callable, List
+
 from bs4 import BeautifulSoup
 
 
@@ -34,7 +36,22 @@ def set_new_children(elm, children):
     return elm
 
 
-def process_children(processor, elm):
+def process_children(processor: Callable[[Any], List[Any]], elm):
+    """
+    Processes the children of an element
+    :param processor: A processor that takes an element and returns a list of elements
+    :param elm: the element to process
+    :return: A list with the joined results of processing each child with the provided processor
+
+    >>> doc = BeautifulSoup("<div>a<span>b</span>c<p>d<span>e</span>f<a/>g</p>h</div>", "html.parser")
+    >>> counter = [0]
+    >>> def processor(elm):
+    ...     counter[0] +=1
+    ...     elm['id'] = str(counter[0])
+    ...     return [elm]
+    >>> process_children(processor, doc.div)
+    ['a', <span id="1">b</span>, 'c', <p id="2">d<span>e</span>f<a></a>g</p>, 'h']
+    """
     result = []
     for child in elm.children:
         if is_tag(child):
