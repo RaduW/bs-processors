@@ -1,8 +1,8 @@
 import functools
 from typing import Callable, Any, List, Sequence
 
-from bs_processor.processor_util import single_to_multiple
-from bs_processor.xml_util import set_new_children, process_children, copy_element_type
+from processors.processor_util import single_to_multiple
+from processors.xml_util import set_new_children, process_children, copy_element_type
 
 
 def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:

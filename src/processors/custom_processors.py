@@ -1,6 +1,6 @@
 from typing import Tuple, Callable, Any
 
-from bs_processor.xml_util import is_tag
+from processors.xml_util import is_tag
 from utils.util import is_empty
 
 _remove_empty_elements = frozenset(['p', 'div', 'br'])
