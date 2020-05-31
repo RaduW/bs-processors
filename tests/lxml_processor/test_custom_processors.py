@@ -1,7 +1,7 @@
 import pytest
 
 from lxml_processor.custom_processors import clean_html, join_lists
-from utils.pytest.compare_xml import compare_xml
+from utils.pytest.compare_lxml import compare_xml
 
 
 @pytest.mark.parametrize("file_name",  ("super_simple_ul",))

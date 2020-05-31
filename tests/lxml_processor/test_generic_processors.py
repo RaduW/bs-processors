@@ -5,7 +5,7 @@ from lxml_processor.generic_processors import (
 )
 from lxml_processor.processor_util import process
 from lxml_processor.xml_util import set_new_children, collect_children
-from utils.pytest.compare_xml import compare_xml
+from utils.pytest.compare_lxml import compare_xml
 
 
 def should_flatten(elm):

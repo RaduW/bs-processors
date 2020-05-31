@@ -5,11 +5,7 @@ from utils.util import path_resolver
 from bs4 import BeautifulSoup
 
 
-def to_full_name(file_name):
-    """
-    >>> def to_full_name(file_name):
-   '/Users/raduw/dev/examples/clean-html/samples/1.xml'
-    """
+def _to_full_name(file_name):
     return path_resolver(__name__, '../..', "samples", file_name)
 
 
@@ -19,12 +15,12 @@ mark_block_a = local_modify_factory(set_is_block_a)
 
 def save_elm(doc, file_name):
     html = doc.prettify("utf-8")
-    path = to_full_name("output"+file_name)
+    path = _to_full_name("output" + file_name)
     with open(path, "wb") as f:
         f.write(html)
 
 def process(file_name):
-    path = to_full_name(file_name)
+    path = _to_full_name(file_name)
 
     with open(path, 'r') as f:
         doc = BeautifulSoup(f, features='html.parser')

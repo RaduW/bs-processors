@@ -13,17 +13,17 @@ def should_flatten(elm) -> bool:
     """
     Returns True if the element should be flattened (i.e. the children should be pulled out)
 
-    >>> from lxml import etree
-    >>> elm = etree.XML('<html><p id="1">abc</p> <span id="2">with text</span></html>')
-    >>> html = elm
+    >>> from bs4 import BeautifulSoup
+    >>> doc = BeautifulSoup('<html><p id="1">abc</p> <span id="2">with text</span></html>', "html.parser")
+    >>> html = doc.html
     >>> should_flatten(html)
     False
-    >>> p = elm[0]
+    >>> p = html.p
     >>> should_flatten(p)
     True
-    >>> span = elm[1]
+    >>> span = html.span
     >>> should_flatten(span)
-    False
+    True
     """
     if elm.name in _elements_who_hold_all_children or not is_tag(elm):
         return False
@@ -34,17 +34,17 @@ def is_internal(elm) -> bool:
     """
     Returns True if the element pops out when flatten (if the element is a block element)
 
-    >>> from lxml import etree
-    >>> elm = etree.XML('<html><p id="1">abc</p> <span id="2">with text</span></html>')
-    >>> p = elm[0]
+    >>> from bs4 import BeautifulSoup
+    >>> doc = BeautifulSoup('<html><p id="1">abc</p> <span id="2">with text</span></html>', 'html.parser')
+    >>> p = doc.html.p
     >>> is_internal(p)
     False
-    >>> span = elm[1]
+    >>> span = doc.html.span
     >>> is_internal(span)
     True
 
     """
-    if is_tag(elm) and elm.tag in _block_elements_that_pop_out:
+    if is_tag(elm) and elm.name in _block_elements_that_pop_out:
         return False
     if elm.name == 'a' and "block_a" in elm.get('class',[]):
         return False
