@@ -25,16 +25,26 @@ setup-venv: .venv/bin/python
 	$(PIP) install -U -r requirements.txt
 
 
-create-docs:
+create-docs: prose-docs api-docs
+
+api-docs:
 	@echo creating docs
-	pdoc --force --html src
+	pdoc --force --html src/bs_processors
+
+prose-docs:
+	$(PIP) install -U -r requirements-doc.txt
+	.venv/bin/mkdocs build
+
+
 
 
 upload-docs: create-docs
 	# Use this for hotfixing docs, prefer a new release
-	.venv/bin/pip install -U ghp-import
-	.venv/bin/ghp-import -pf html/src
+	$(PIP) install -U ghp-import
+	.venv/bin/ghp-import -pf html
 
+doc-server: create-docs
+	.venv/bin/mkdocs serve html
+.PHONY: docserver
 
-
-.PHONY: dist publish config setup-venv upload-docs create-docs
+.PHONY: dist publish config setup-venv upload-docs create-docs prose-docs api-docs

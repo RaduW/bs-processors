@@ -1,0 +1,32 @@
+site_name: bs-processors
+repo_url: https://github.com/RaduW/bs-processors
+site_author: RaduW
+theme:
+  name: material
+
+docs_dir: docs
+site_dir: html
+
+nav:
+  - index.md
+  - how_to.md
+
+
+markdown_extensions:
+  - admonition: {}
+  - tables: {}
+  - codehilite: {}
+
+  # Config for diagrams
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+
+extra_css:
+  # Config for diagrams
+  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.css
+extra_javascript:
+  # Config for diagrams
+  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js

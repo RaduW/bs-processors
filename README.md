@@ -5,4 +5,4 @@ Library with utilities for easy html & xml processing using
 
  
 ## The api documentation can be found at:
-[bs-processors documentation](https://raduw.github.io/bs-processors/bs_processors/)
+[bs-processors documentation](https://raduw.github.io/bs-processors/)
