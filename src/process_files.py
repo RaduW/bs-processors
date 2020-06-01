@@ -1,7 +1,7 @@
-from processors.custom_processors import should_flatten, is_internal, set_is_block_a
-from processors.generic_processors import flatten_factory, local_modify_factory
-from processors.processor_util import join_proc
-from utils.util import path_resolver
+from bs_processors.custom_processors import should_flatten, is_internal, set_is_block_a
+from bs_processors.generic_processors import flatten_factory, local_modify_factory
+from bs_processors.processor_util import join
+from bs_processors.utils import path_resolver
 from bs4 import BeautifulSoup
 
 
@@ -25,7 +25,7 @@ def process(file_name):
     with open(path, 'r') as f:
         doc = BeautifulSoup(f, features='html.parser')
 
-    processor = join_proc([
+    processor = join([
         mark_block_a,
         flatten_proc,
     ])

@@ -1,8 +1,8 @@
 import functools
 from typing import Callable, Any, List, Sequence
 
-from processors.processor_util import single_to_multiple
-from processors.xml_util import set_new_children, process_children, copy_element_type
+from bs_processors.processor_util import single_to_multiple
+from bs_processors.xml_util import set_new_children, process_children, copy_element_type
 
 
 def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
@@ -11,6 +11,18 @@ def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
     :param should_filter: predicate that returns True if the element should be filtered
     :param elm: the element to check
     :return: an empty array if the element should be filtered or an array with the passed element
+
+    >>> def should_filter(elm):
+    ...     if elm.name in ['span', 'a']:
+    ...         return True
+    ...     return False
+    ...
+    >>> from bs4 import BeautifulSoup as bs
+    >>> doc = bs('<html><div>a<span>b</span> <a></div> <p><span>x</span></p><a></html>')
+    >>> filtered = single_filter_proc(should_filter, doc.html)
+    >>> filtered
+    [<html><body><div>a </div> <p></p></body></html>]
+
     """
     if should_filter(elm):
         return []
@@ -168,6 +180,12 @@ def flatten_factory(flatten_children, is_internal):
 
 
 def single_local_modify(modify_func: Callable[[Any], bool], elm):
+    """
+
+    :param modify_func:
+    :param elm:
+    :return:
+    """
     modify_func(elm)
     process_children(lambda child: single_local_modify(modify_func, child), elm)
     return [elm]

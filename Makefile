@@ -24,4 +24,4 @@ setup-venv: .venv/bin/python
 	virtualenv -p $$PYTHON_VERSION .venv
 	$(PIP) install -U -r requirements.txt
 
-.PHONY: distribute config setup-venv
+.PHONY: dist publish config setup-venv

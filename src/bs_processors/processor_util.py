@@ -4,7 +4,7 @@ Generic util for processors
 from typing import Sequence, Callable, Any, List
 
 
-def join_proc(processors: Sequence[Callable[[List[Any]],List[Any]]])-> Callable[[List[Any]],List[Any]]:
+def join(processors: Sequence[Callable[[List[Any]], List[Any]]])-> Callable[[List[Any]], List[Any]]:
     """
     Creates a processor from a list of processor.
     The processor created is equivalent to applying each of the passed processor
@@ -25,13 +25,13 @@ def join_proc(processors: Sequence[Callable[[List[Any]],List[Any]]])-> Callable[
     ...         result.append(elm + 1)
     ...     return result
     ...
-    >>> pr = join_proc([add_one, double])
+    >>> pr = join([add_one, double])
     >>> pr( [1,100])
     [2, 2, 101, 101]
-    >>> pr = join_proc([double, add_one])
+    >>> pr = join([double, add_one])
     >>> pr([1, 100])
     [2, 2, 101, 101]
-    >>> pr = join_proc([double, add_one, double])
+    >>> pr = join([double, add_one, double])
     >>> pr([1, 100])
     [2, 2, 2, 2, 101, 101, 101, 101]
     """
