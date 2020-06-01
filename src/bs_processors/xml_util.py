@@ -79,7 +79,7 @@ def is_tag(elm):
     return elm is not None and elm.name is not None
 
 
-_bs = BeautifulSoup("<a/>", "xml")
+_bs = BeautifulSoup("<a/>", "html.parser")
 
 
 def copy_element_type(elm):
