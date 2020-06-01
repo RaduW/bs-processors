@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.bs_processors.generic_processors API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.bs_processors.generic_processors</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import functools
+from typing import Callable, Any, List, Sequence
+
+from .processor_util import single_to_multiple
+from .xml_util import set_new_children, process_children, copy_element_type
+
+
+def single_filter_proc(should_filter: Callable[[Any], bool], elm) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Conditionally filters an element based on the passed predicate
+    :param should_filter: predicate that returns True if the element should be filtered
+    :param elm: the element to check
+    :return: an empty array if the element should be filtered or an array with the passed element
+
+    &gt;&gt;&gt; def should_filter(elm):
+    ...     if elm.name in [&#39;span&#39;, &#39;a&#39;]:
+    ...         return True
+    ...     return False
+    ...
+    &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+    &gt;&gt;&gt; doc = bs(&#39;&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;&#39;)
+    &gt;&gt;&gt; filtered = single_filter_proc(should_filter, doc.html)
+    &gt;&gt;&gt; filtered
+    [&lt;html&gt;&lt;body&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;]
+
+    &#34;&#34;&#34;
+    if should_filter(elm):
+        return []
+    else:
+        new_children = process_children(lambda child: single_filter_proc(should_filter, child), elm)
+        set_new_children(elm, new_children)
+
+        return [elm]
+
+
+def filter_factory(should_filter):
+    return single_to_multiple(functools.partial(single_filter_proc, should_filter))
+
+
+def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Conditionally unwraps an element and pushes all its unwrapped children to its parent
+
+    :param should_unwrap: predicate that returns true if the element should be unwrapped
+    :param elm: the element to be conditionally unwrapped
+    :return: either a list containing the element (if it wasn&#39;t unwrapped) or a list with all
+     the unwrapped children
+
+    &gt;&gt;&gt; from bs4 import BeautifulSoup
+    &gt;&gt;&gt; def should_unwrap(elm):
+    ...     return elm.name == &#34;x&#34;
+    ...
+
+    &gt;&gt;&gt; doc = &#34;&lt;root&gt;&lt;x &gt;hello&lt;/x&gt; after x &lt;b&gt; in b&lt;/b&gt;&lt;/root&gt;&#34;
+    &gt;&gt;&gt; elm = BeautifulSoup(doc, &#34;xml&#34;)
+    &gt;&gt;&gt; # single_unwrap_proc(should_unwrap, elm.root)
+    [&lt;root&gt;hello after x &lt;b&gt; in b&lt;/b&gt;&lt;/root&gt;]
+
+    &gt;&gt;&gt; doc = &#34;&lt;root&gt;&lt;x &gt;hello &lt;a&gt; in a&lt;/a&gt;&lt;/x&gt;&lt;/root&gt;&#34;
+    &gt;&gt;&gt; elm = BeautifulSoup(doc, &#34;xml&#34;)
+    &gt;&gt;&gt; single_unwrap_proc(should_unwrap, elm.root)
+    [&lt;root&gt;hello &lt;a&gt; in a&lt;/a&gt;&lt;/root&gt;]
+
+    &gt;&gt;&gt; doc = &#34;&lt;root&gt;&lt;x &gt;hello &lt;a&gt; in a &lt;x&gt;in x2&lt;/x&gt; after&lt;/a&gt;&lt;/x&gt; 22 &lt;b&gt;in b&lt;/b&gt; end&lt;/root&gt;&#34;
+    &gt;&gt;&gt; elm = BeautifulSoup(doc, &#34;xml&#34;)
+    &gt;&gt;&gt; single_unwrap_proc(should_unwrap, elm.root)
+    [&lt;root&gt;hello &lt;a&gt; in a in x2 after&lt;/a&gt; 22 &lt;b&gt;in b&lt;/b&gt; end&lt;/root&gt;]
+    &#34;&#34;&#34;
+
+    # Note: elm.unwrap() would do the job but the return value is not
+    # what I need (it is the node that was unwrapped instead of the
+    # children) so we need to do it manually
+    new_children = process_children(lambda child: single_unwrap_proc(should_unwrap, child), elm)
+
+    if not should_unwrap(elm):
+        set_new_children(elm, new_children)
+        return [elm]
+
+    # insert the new children in the parent
+    # TODO see if I need to do it this way !!!
+    current = elm
+    for child in new_children:
+        current.insert_after(child)
+        current = child
+    elm.extract()  # remove current element
+    return new_children
+
+
+def unwrap_factory(should_unwrap):
+    return single_to_multiple(functools.partial(single_unwrap_proc, should_unwrap))
+
+
+def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Flattens an element pulling out &#39;block&#39; like elements that &#39;want&#39; to be top level
+
+    :param flatten_children: Predicate that specifies whether the direct children of the current element can be
+        flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
+        outside)
+    :param is_internal: Predicate that specifies whether a child &#39;wants&#39; to stay inside its parent or not (i.e.
+        whether a child behaves like a block and wants out or an inline and stays in)
+    :param elm: the element to be flatten
+    :return: a list of flattened elements
+
+    &gt;&gt;&gt; from bs4 import BeautifulSoup
+    &gt;&gt;&gt; def flatten_children(elm):
+    ...     if elm.name is None or elm.name in {&#39;a&#39;, &#39;body&#39;, &#39;html&#39;}:
+    ...         return False
+    ...     return True
+    ...
+    &gt;&gt;&gt; def is_internal(elm):
+    ...     if elm.name is None:
+    ...         return True
+    ...     if elm.name in { &#39;div&#39;, &#39;p&#39;, &#39;br&#39;}:
+    ...         return False
+    ...     if elm.name == &#39;a&#39; and &#34;block_a&#34; in elm[&#39;class&#39;]:
+    ...         return False
+    ...     return True
+    ...
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt; a &lt;br id=&#34;2&#34;&gt; b&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt; a &lt;/div&gt;, &lt;br id=&#34;2&#34;/&gt;, &lt;div&gt; b&lt;/div&gt;]
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt;&lt;i&gt;it&lt;/i&gt;&lt;br id=&#34;2&#34;&gt;&lt;b&gt;&lt;/b&gt;&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt;&lt;i&gt;it&lt;/i&gt;&lt;/div&gt;, &lt;br id=&#34;2&#34;/&gt;, &lt;div&gt;&lt;b&gt;&lt;/b&gt;&lt;/div&gt;]
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt;a&lt;a class=&#34;block_a&#34;&gt;b&lt;/a&gt;c&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt;a&lt;/div&gt;, &lt;a class=&#34;block_a&#34;&gt;b&lt;/a&gt;, &lt;div&gt;c&lt;/div&gt;]
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt;&lt;a class=&#34;block_a&#34;&gt;&lt;div&gt;inside a&lt;/div&gt;&lt;/a&gt;&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt;&lt;/div&gt;, &lt;a class=&#34;block_a&#34;&gt;&lt;div&gt;inside a&lt;/div&gt;&lt;/a&gt;]
+    &#34;&#34;&#34;
+    new_children = process_children(lambda child: single_flatten_proc(flatten_children, is_internal, child), elm)
+
+    if not flatten_children(elm):
+        # all children should go inside
+        set_new_children(elm, new_children)
+        return [elm]
+
+    elm.clear()
+    # this element pops out external children
+    # remember the current parent
+    parent = elm
+
+    result = []
+    for child in new_children:
+        if is_internal(child):
+            if parent is None:
+                # we need a new element like elm
+                parent = copy_element_type(elm)
+            parent.append(child)
+        else:
+            # we need to pop the element at a higher level, if we have a valid parent
+            # append it first
+            if parent is not None:
+                result.append(parent)
+                parent = None
+            result.append(child)
+
+    if parent is not None:
+        result.append(parent)
+
+    return result
+
+
+def flatten_factory(flatten_children, is_internal):
+    return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
+
+
+def single_local_modify(modify_func: Callable[[Any], bool], elm):
+    &#34;&#34;&#34;
+
+    :param modify_func:
+    :param elm:
+    :return:
+    &#34;&#34;&#34;
+    modify_func(elm)
+    process_children(lambda child: single_local_modify(modify_func, child), elm)
+    return [elm]
+
+
+def local_modify_factory(modify_func):
+    return single_to_multiple(functools.partial(single_local_modify, modify_func))
+
+
+def single_join_children(join_children: Callable[[Any, Any], Any], elm):
+    new_children = process_children( join_children, elm)
+
+    def reducer(accumulator, new_child):
+        if len(accumulator) &gt; 0:
+            # try to see if we can join the last child with the new child
+            result = accumulator[:-1] + list(join_children(accumulator[-1], new_child))
+        else:
+            # this is the first element just store it (noting to join it to)
+            result = [new_child]
+        return result
+
+    # try to join adjacent children
+    joined_children = functools.reduce(reducer, new_children, [])
+    set_new_children(elm, joined_children)
+    return [elm]
+
+
+def join_children_factory(join_children):
+    return single_to_multiple(functools.partial(single_join_children, join_children))
+
+
+def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -&gt; Sequence[Any]:
+    lateral_effect_func()
+    return elms
+
+
+def lateral_effect_factory(lateral_effect_func):
+    return functools.partial(lateral_effect, lateral_effect_func)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.bs_processors.generic_processors.filter_factory"><code class="name flex">
+<span>def <span class="ident">filter_factory</span></span>(<span>should_filter)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def filter_factory(should_filter):
+    return single_to_multiple(functools.partial(single_filter_proc, should_filter))</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.flatten_factory"><code class="name flex">
+<span>def <span class="ident">flatten_factory</span></span>(<span>flatten_children, is_internal)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flatten_factory(flatten_children, is_internal):
+    return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.join_children_factory"><code class="name flex">
+<span>def <span class="ident">join_children_factory</span></span>(<span>join_children)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def join_children_factory(join_children):
+    return single_to_multiple(functools.partial(single_join_children, join_children))</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.lateral_effect"><code class="name flex">
+<span>def <span class="ident">lateral_effect</span></span>(<span>lateral_effect_func, elms: Sequence[Any]) -> Sequence[Any]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -&gt; Sequence[Any]:
+    lateral_effect_func()
+    return elms</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.lateral_effect_factory"><code class="name flex">
+<span>def <span class="ident">lateral_effect_factory</span></span>(<span>lateral_effect_func)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lateral_effect_factory(lateral_effect_func):
+    return functools.partial(lateral_effect, lateral_effect_func)</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.local_modify_factory"><code class="name flex">
+<span>def <span class="ident">local_modify_factory</span></span>(<span>modify_func)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def local_modify_factory(modify_func):
+    return single_to_multiple(functools.partial(single_local_modify, modify_func))</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.single_filter_proc"><code class="name flex">
+<span>def <span class="ident">single_filter_proc</span></span>(<span>should_filter: Callable[[Any], bool], elm) -> List[Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Conditionally filters an element based on the passed predicate
+:param should_filter: predicate that returns True if the element should be filtered
+:param elm: the element to check
+:return: an empty array if the element should be filtered or an array with the passed element</p>
+<pre><code class="python">&gt;&gt;&gt; def should_filter(elm):
+...     if elm.name in ['span', 'a']:
+...         return True
+...     return False
+...
+&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+&gt;&gt;&gt; doc = bs('&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;')
+&gt;&gt;&gt; filtered = single_filter_proc(should_filter, doc.html)
+&gt;&gt;&gt; filtered
+[&lt;html&gt;&lt;body&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def single_filter_proc(should_filter: Callable[[Any], bool], elm) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Conditionally filters an element based on the passed predicate
+    :param should_filter: predicate that returns True if the element should be filtered
+    :param elm: the element to check
+    :return: an empty array if the element should be filtered or an array with the passed element
+
+    &gt;&gt;&gt; def should_filter(elm):
+    ...     if elm.name in [&#39;span&#39;, &#39;a&#39;]:
+    ...         return True
+    ...     return False
+    ...
+    &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+    &gt;&gt;&gt; doc = bs(&#39;&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;&#39;)
+    &gt;&gt;&gt; filtered = single_filter_proc(should_filter, doc.html)
+    &gt;&gt;&gt; filtered
+    [&lt;html&gt;&lt;body&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;]
+
+    &#34;&#34;&#34;
+    if should_filter(elm):
+        return []
+    else:
+        new_children = process_children(lambda child: single_filter_proc(should_filter, child), elm)
+        set_new_children(elm, new_children)
+
+        return [elm]</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.single_flatten_proc"><code class="name flex">
+<span>def <span class="ident">single_flatten_proc</span></span>(<span>flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -> List[Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Flattens an element pulling out 'block' like elements that 'want' to be top level</p>
+<p>:param flatten_children: Predicate that specifies whether the direct children of the current element can be
+flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
+outside)
+:param is_internal: Predicate that specifies whether a child 'wants' to stay inside its parent or not (i.e.
+whether a child behaves like a block and wants out or an inline and stays in)
+:param elm: the element to be flatten
+:return: a list of flattened elements</p>
+<pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
+&gt;&gt;&gt; def flatten_children(elm):
+...     if elm.name is None or elm.name in {'a', 'body', 'html'}:
+...         return False
+...     return True
+...
+&gt;&gt;&gt; def is_internal(elm):
+...     if elm.name is None:
+...         return True
+...     if elm.name in { 'div', 'p', 'br'}:
+...         return False
+...     if elm.name == 'a' and &quot;block_a&quot; in elm['class']:
+...         return False
+...     return True
+...
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = '&lt;div id=&quot;1&quot;&gt; a &lt;br id=&quot;2&quot;&gt; b&lt;/div&gt;'
+&gt;&gt;&gt; s = BeautifulSoup(doc, &quot;html.parser&quot;)
+&gt;&gt;&gt; elm = s.div
+&gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+[&lt;div id=&quot;1&quot;&gt; a &lt;/div&gt;, &lt;br id=&quot;2&quot;/&gt;, &lt;div&gt; b&lt;/div&gt;]
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = '&lt;div id=&quot;1&quot;&gt;&lt;i&gt;it&lt;/i&gt;&lt;br id=&quot;2&quot;&gt;&lt;b&gt;&lt;/b&gt;&lt;/div&gt;'
+&gt;&gt;&gt; s = BeautifulSoup(doc, &quot;html.parser&quot;)
+&gt;&gt;&gt; elm = s.div
+&gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+[&lt;div id=&quot;1&quot;&gt;&lt;i&gt;it&lt;/i&gt;&lt;/div&gt;, &lt;br id=&quot;2&quot;/&gt;, &lt;div&gt;&lt;b&gt;&lt;/b&gt;&lt;/div&gt;]
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = '&lt;div id=&quot;1&quot;&gt;a&lt;a class=&quot;block_a&quot;&gt;b&lt;/a&gt;c&lt;/div&gt;'
+&gt;&gt;&gt; s = BeautifulSoup(doc, &quot;html.parser&quot;)
+&gt;&gt;&gt; elm = s.div
+&gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+[&lt;div id=&quot;1&quot;&gt;a&lt;/div&gt;, &lt;a class=&quot;block_a&quot;&gt;b&lt;/a&gt;, &lt;div&gt;c&lt;/div&gt;]
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = '&lt;div id=&quot;1&quot;&gt;&lt;a class=&quot;block_a&quot;&gt;&lt;div&gt;inside a&lt;/div&gt;&lt;/a&gt;&lt;/div&gt;'
+&gt;&gt;&gt; s = BeautifulSoup(doc, &quot;html.parser&quot;)
+&gt;&gt;&gt; elm = s.div
+&gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+[&lt;div id=&quot;1&quot;&gt;&lt;/div&gt;, &lt;a class=&quot;block_a&quot;&gt;&lt;div&gt;inside a&lt;/div&gt;&lt;/a&gt;]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Flattens an element pulling out &#39;block&#39; like elements that &#39;want&#39; to be top level
+
+    :param flatten_children: Predicate that specifies whether the direct children of the current element can be
+        flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
+        outside)
+    :param is_internal: Predicate that specifies whether a child &#39;wants&#39; to stay inside its parent or not (i.e.
+        whether a child behaves like a block and wants out or an inline and stays in)
+    :param elm: the element to be flatten
+    :return: a list of flattened elements
+
+    &gt;&gt;&gt; from bs4 import BeautifulSoup
+    &gt;&gt;&gt; def flatten_children(elm):
+    ...     if elm.name is None or elm.name in {&#39;a&#39;, &#39;body&#39;, &#39;html&#39;}:
+    ...         return False
+    ...     return True
+    ...
+    &gt;&gt;&gt; def is_internal(elm):
+    ...     if elm.name is None:
+    ...         return True
+    ...     if elm.name in { &#39;div&#39;, &#39;p&#39;, &#39;br&#39;}:
+    ...         return False
+    ...     if elm.name == &#39;a&#39; and &#34;block_a&#34; in elm[&#39;class&#39;]:
+    ...         return False
+    ...     return True
+    ...
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt; a &lt;br id=&#34;2&#34;&gt; b&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt; a &lt;/div&gt;, &lt;br id=&#34;2&#34;/&gt;, &lt;div&gt; b&lt;/div&gt;]
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt;&lt;i&gt;it&lt;/i&gt;&lt;br id=&#34;2&#34;&gt;&lt;b&gt;&lt;/b&gt;&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt;&lt;i&gt;it&lt;/i&gt;&lt;/div&gt;, &lt;br id=&#34;2&#34;/&gt;, &lt;div&gt;&lt;b&gt;&lt;/b&gt;&lt;/div&gt;]
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt;a&lt;a class=&#34;block_a&#34;&gt;b&lt;/a&gt;c&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt;a&lt;/div&gt;, &lt;a class=&#34;block_a&#34;&gt;b&lt;/a&gt;, &lt;div&gt;c&lt;/div&gt;]
+
+    &gt;&gt;&gt; doc = &#39;&lt;div id=&#34;1&#34;&gt;&lt;a class=&#34;block_a&#34;&gt;&lt;div&gt;inside a&lt;/div&gt;&lt;/a&gt;&lt;/div&gt;&#39;
+    &gt;&gt;&gt; s = BeautifulSoup(doc, &#34;html.parser&#34;)
+    &gt;&gt;&gt; elm = s.div
+    &gt;&gt;&gt; single_flatten_proc(flatten_children, is_internal, elm)
+    [&lt;div id=&#34;1&#34;&gt;&lt;/div&gt;, &lt;a class=&#34;block_a&#34;&gt;&lt;div&gt;inside a&lt;/div&gt;&lt;/a&gt;]
+    &#34;&#34;&#34;
+    new_children = process_children(lambda child: single_flatten_proc(flatten_children, is_internal, child), elm)
+
+    if not flatten_children(elm):
+        # all children should go inside
+        set_new_children(elm, new_children)
+        return [elm]
+
+    elm.clear()
+    # this element pops out external children
+    # remember the current parent
+    parent = elm
+
+    result = []
+    for child in new_children:
+        if is_internal(child):
+            if parent is None:
+                # we need a new element like elm
+                parent = copy_element_type(elm)
+            parent.append(child)
+        else:
+            # we need to pop the element at a higher level, if we have a valid parent
+            # append it first
+            if parent is not None:
+                result.append(parent)
+                parent = None
+            result.append(child)
+
+    if parent is not None:
+        result.append(parent)
+
+    return result</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.single_join_children"><code class="name flex">
+<span>def <span class="ident">single_join_children</span></span>(<span>join_children: Callable[[Any, Any], Any], elm)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def single_join_children(join_children: Callable[[Any, Any], Any], elm):
+    new_children = process_children( join_children, elm)
+
+    def reducer(accumulator, new_child):
+        if len(accumulator) &gt; 0:
+            # try to see if we can join the last child with the new child
+            result = accumulator[:-1] + list(join_children(accumulator[-1], new_child))
+        else:
+            # this is the first element just store it (noting to join it to)
+            result = [new_child]
+        return result
+
+    # try to join adjacent children
+    joined_children = functools.reduce(reducer, new_children, [])
+    set_new_children(elm, joined_children)
+    return [elm]</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.single_local_modify"><code class="name flex">
+<span>def <span class="ident">single_local_modify</span></span>(<span>modify_func: Callable[[Any], bool], elm)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>:param modify_func:
+:param elm:
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def single_local_modify(modify_func: Callable[[Any], bool], elm):
+    &#34;&#34;&#34;
+
+    :param modify_func:
+    :param elm:
+    :return:
+    &#34;&#34;&#34;
+    modify_func(elm)
+    process_children(lambda child: single_local_modify(modify_func, child), elm)
+    return [elm]</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.single_unwrap_proc"><code class="name flex">
+<span>def <span class="ident">single_unwrap_proc</span></span>(<span>should_unwrap: Callable[[Any], bool], elm) -> List[Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Conditionally unwraps an element and pushes all its unwrapped children to its parent</p>
+<p>:param should_unwrap: predicate that returns true if the element should be unwrapped
+:param elm: the element to be conditionally unwrapped
+:return: either a list containing the element (if it wasn't unwrapped) or a list with all
+the unwrapped children</p>
+<pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
+&gt;&gt;&gt; def should_unwrap(elm):
+...     return elm.name == &quot;x&quot;
+...
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = &quot;&lt;root&gt;&lt;x &gt;hello&lt;/x&gt; after x &lt;b&gt; in b&lt;/b&gt;&lt;/root&gt;&quot;
+&gt;&gt;&gt; elm = BeautifulSoup(doc, &quot;xml&quot;)
+&gt;&gt;&gt; # single_unwrap_proc(should_unwrap, elm.root)
+[&lt;root&gt;hello after x &lt;b&gt; in b&lt;/b&gt;&lt;/root&gt;]
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = &quot;&lt;root&gt;&lt;x &gt;hello &lt;a&gt; in a&lt;/a&gt;&lt;/x&gt;&lt;/root&gt;&quot;
+&gt;&gt;&gt; elm = BeautifulSoup(doc, &quot;xml&quot;)
+&gt;&gt;&gt; single_unwrap_proc(should_unwrap, elm.root)
+[&lt;root&gt;hello &lt;a&gt; in a&lt;/a&gt;&lt;/root&gt;]
+</code></pre>
+<pre><code class="python">&gt;&gt;&gt; doc = &quot;&lt;root&gt;&lt;x &gt;hello &lt;a&gt; in a &lt;x&gt;in x2&lt;/x&gt; after&lt;/a&gt;&lt;/x&gt; 22 &lt;b&gt;in b&lt;/b&gt; end&lt;/root&gt;&quot;
+&gt;&gt;&gt; elm = BeautifulSoup(doc, &quot;xml&quot;)
+&gt;&gt;&gt; single_unwrap_proc(should_unwrap, elm.root)
+[&lt;root&gt;hello &lt;a&gt; in a in x2 after&lt;/a&gt; 22 &lt;b&gt;in b&lt;/b&gt; end&lt;/root&gt;]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -&gt; List[Any]:
+    &#34;&#34;&#34;
+    Conditionally unwraps an element and pushes all its unwrapped children to its parent
+
+    :param should_unwrap: predicate that returns true if the element should be unwrapped
+    :param elm: the element to be conditionally unwrapped
+    :return: either a list containing the element (if it wasn&#39;t unwrapped) or a list with all
+     the unwrapped children
+
+    &gt;&gt;&gt; from bs4 import BeautifulSoup
+    &gt;&gt;&gt; def should_unwrap(elm):
+    ...     return elm.name == &#34;x&#34;
+    ...
+
+    &gt;&gt;&gt; doc = &#34;&lt;root&gt;&lt;x &gt;hello&lt;/x&gt; after x &lt;b&gt; in b&lt;/b&gt;&lt;/root&gt;&#34;
+    &gt;&gt;&gt; elm = BeautifulSoup(doc, &#34;xml&#34;)
+    &gt;&gt;&gt; # single_unwrap_proc(should_unwrap, elm.root)
+    [&lt;root&gt;hello after x &lt;b&gt; in b&lt;/b&gt;&lt;/root&gt;]
+
+    &gt;&gt;&gt; doc = &#34;&lt;root&gt;&lt;x &gt;hello &lt;a&gt; in a&lt;/a&gt;&lt;/x&gt;&lt;/root&gt;&#34;
+    &gt;&gt;&gt; elm = BeautifulSoup(doc, &#34;xml&#34;)
+    &gt;&gt;&gt; single_unwrap_proc(should_unwrap, elm.root)
+    [&lt;root&gt;hello &lt;a&gt; in a&lt;/a&gt;&lt;/root&gt;]
+
+    &gt;&gt;&gt; doc = &#34;&lt;root&gt;&lt;x &gt;hello &lt;a&gt; in a &lt;x&gt;in x2&lt;/x&gt; after&lt;/a&gt;&lt;/x&gt; 22 &lt;b&gt;in b&lt;/b&gt; end&lt;/root&gt;&#34;
+    &gt;&gt;&gt; elm = BeautifulSoup(doc, &#34;xml&#34;)
+    &gt;&gt;&gt; single_unwrap_proc(should_unwrap, elm.root)
+    [&lt;root&gt;hello &lt;a&gt; in a in x2 after&lt;/a&gt; 22 &lt;b&gt;in b&lt;/b&gt; end&lt;/root&gt;]
+    &#34;&#34;&#34;
+
+    # Note: elm.unwrap() would do the job but the return value is not
+    # what I need (it is the node that was unwrapped instead of the
+    # children) so we need to do it manually
+    new_children = process_children(lambda child: single_unwrap_proc(should_unwrap, child), elm)
+
+    if not should_unwrap(elm):
+        set_new_children(elm, new_children)
+        return [elm]
+
+    # insert the new children in the parent
+    # TODO see if I need to do it this way !!!
+    current = elm
+    for child in new_children:
+        current.insert_after(child)
+        current = child
+    elm.extract()  # remove current element
+    return new_children</code></pre>
+</details>
+</dd>
+<dt id="src.bs_processors.generic_processors.unwrap_factory"><code class="name flex">
+<span>def <span class="ident">unwrap_factory</span></span>(<span>should_unwrap)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unwrap_factory(should_unwrap):
+    return single_to_multiple(functools.partial(single_unwrap_proc, should_unwrap))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.bs_processors" href="index.html">src.bs_processors</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.bs_processors.generic_processors.filter_factory" href="#src.bs_processors.generic_processors.filter_factory">filter_factory</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.flatten_factory" href="#src.bs_processors.generic_processors.flatten_factory">flatten_factory</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.join_children_factory" href="#src.bs_processors.generic_processors.join_children_factory">join_children_factory</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.lateral_effect" href="#src.bs_processors.generic_processors.lateral_effect">lateral_effect</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.lateral_effect_factory" href="#src.bs_processors.generic_processors.lateral_effect_factory">lateral_effect_factory</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.local_modify_factory" href="#src.bs_processors.generic_processors.local_modify_factory">local_modify_factory</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.single_filter_proc" href="#src.bs_processors.generic_processors.single_filter_proc">single_filter_proc</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.single_flatten_proc" href="#src.bs_processors.generic_processors.single_flatten_proc">single_flatten_proc</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.single_join_children" href="#src.bs_processors.generic_processors.single_join_children">single_join_children</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.single_local_modify" href="#src.bs_processors.generic_processors.single_local_modify">single_local_modify</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.single_unwrap_proc" href="#src.bs_processors.generic_processors.single_unwrap_proc">single_unwrap_proc</a></code></li>
+<li><code><a title="src.bs_processors.generic_processors.unwrap_factory" href="#src.bs_processors.generic_processors.unwrap_factory">unwrap_factory</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
