@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>src.bs_processors.utils.util API documentation</title>
+<title>bs_processors.utils.util API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.bs_processors.utils.util</code></h1>
+<h1 class="title">Module <code>bs_processors.utils.util</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -158,7 +158,7 @@ def path_resolver(*args):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="src.bs_processors.utils.util.flatten"><code class="name flex">
+<dt id="bs_processors.utils.util.flatten"><code class="name flex">
 <span>def <span class="ident">flatten</span></span>(<span>val: Iterable[Iterable[Any]]) -> List[Any]</span>
 </code></dt>
 <dd>
@@ -180,7 +180,7 @@ def path_resolver(*args):
     return list(itertools.chain(*val))</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.utils.util.is_empty"><code class="name flex">
+<dt id="bs_processors.utils.util.is_empty"><code class="name flex">
 <span>def <span class="ident">is_empty</span></span>(<span>s)</span>
 </code></dt>
 <dd>
@@ -207,7 +207,7 @@ True
     return s is None or len(s) == 0 or s.isspace()</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.utils.util.is_non_empty_child"><code class="name flex">
+<dt id="bs_processors.utils.util.is_non_empty_child"><code class="name flex">
 <span>def <span class="ident">is_non_empty_child</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -289,7 +289,7 @@ True
     return not is_empty(elm)</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.utils.util.join_strings"><code class="name flex">
+<dt id="bs_processors.utils.util.join_strings"><code class="name flex">
 <span>def <span class="ident">join_strings</span></span>(<span>left: Union[str, NoneType], right: Union[str, NoneType]) -> Union[str, NoneType]</span>
 </code></dt>
 <dd>
@@ -333,7 +333,7 @@ True
     return left + &#34; &#34; + right</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.utils.util.normalize_string"><code class="name flex">
+<dt id="bs_processors.utils.util.normalize_string"><code class="name flex">
 <span>def <span class="ident">normalize_string</span></span>(<span>val: Union[str, NoneType])</span>
 </code></dt>
 <dd>
@@ -360,7 +360,7 @@ has all sequences of whitespaces reduced to one single space</p>
     return _whitespace.sub(&#39; &#39;, val)</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.utils.util.path_resolver"><code class="name flex">
+<dt id="bs_processors.utils.util.path_resolver"><code class="name flex">
 <span>def <span class="ident">path_resolver</span></span>(<span>*args)</span>
 </code></dt>
 <dd>
@@ -386,17 +386,17 @@ has all sequences of whitespaces reduced to one single space</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.bs_processors.utils" href="index.html">src.bs_processors.utils</a></code></li>
+<li><code><a title="bs_processors.utils" href="index.html">bs_processors.utils</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="two-column">
-<li><code><a title="src.bs_processors.utils.util.flatten" href="#src.bs_processors.utils.util.flatten">flatten</a></code></li>
-<li><code><a title="src.bs_processors.utils.util.is_empty" href="#src.bs_processors.utils.util.is_empty">is_empty</a></code></li>
-<li><code><a title="src.bs_processors.utils.util.is_non_empty_child" href="#src.bs_processors.utils.util.is_non_empty_child">is_non_empty_child</a></code></li>
-<li><code><a title="src.bs_processors.utils.util.join_strings" href="#src.bs_processors.utils.util.join_strings">join_strings</a></code></li>
-<li><code><a title="src.bs_processors.utils.util.normalize_string" href="#src.bs_processors.utils.util.normalize_string">normalize_string</a></code></li>
-<li><code><a title="src.bs_processors.utils.util.path_resolver" href="#src.bs_processors.utils.util.path_resolver">path_resolver</a></code></li>
+<li><code><a title="bs_processors.utils.util.flatten" href="#bs_processors.utils.util.flatten">flatten</a></code></li>
+<li><code><a title="bs_processors.utils.util.is_empty" href="#bs_processors.utils.util.is_empty">is_empty</a></code></li>
+<li><code><a title="bs_processors.utils.util.is_non_empty_child" href="#bs_processors.utils.util.is_non_empty_child">is_non_empty_child</a></code></li>
+<li><code><a title="bs_processors.utils.util.join_strings" href="#bs_processors.utils.util.join_strings">join_strings</a></code></li>
+<li><code><a title="bs_processors.utils.util.normalize_string" href="#bs_processors.utils.util.normalize_string">normalize_string</a></code></li>
+<li><code><a title="bs_processors.utils.util.path_resolver" href="#bs_processors.utils.util.path_resolver">path_resolver</a></code></li>
 </ul>
 </li>
 </ul>

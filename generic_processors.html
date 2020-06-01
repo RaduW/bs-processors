@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>src.bs_processors.generic_processors API documentation</title>
+<title>bs_processors.generic_processors API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.bs_processors.generic_processors</code></h1>
+<h1 class="title">Module <code>bs_processors.generic_processors</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -259,7 +259,7 @@ def lateral_effect_factory(lateral_effect_func):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="src.bs_processors.generic_processors.filter_factory"><code class="name flex">
+<dt id="bs_processors.generic_processors.filter_factory"><code class="name flex">
 <span>def <span class="ident">filter_factory</span></span>(<span>should_filter)</span>
 </code></dt>
 <dd>
@@ -272,7 +272,7 @@ def lateral_effect_factory(lateral_effect_func):
     return single_to_multiple(functools.partial(single_filter_proc, should_filter))</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.flatten_factory"><code class="name flex">
+<dt id="bs_processors.generic_processors.flatten_factory"><code class="name flex">
 <span>def <span class="ident">flatten_factory</span></span>(<span>flatten_children, is_internal)</span>
 </code></dt>
 <dd>
@@ -285,7 +285,7 @@ def lateral_effect_factory(lateral_effect_func):
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.join_children_factory"><code class="name flex">
+<dt id="bs_processors.generic_processors.join_children_factory"><code class="name flex">
 <span>def <span class="ident">join_children_factory</span></span>(<span>join_children)</span>
 </code></dt>
 <dd>
@@ -298,7 +298,7 @@ def lateral_effect_factory(lateral_effect_func):
     return single_to_multiple(functools.partial(single_join_children, join_children))</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.lateral_effect"><code class="name flex">
+<dt id="bs_processors.generic_processors.lateral_effect"><code class="name flex">
 <span>def <span class="ident">lateral_effect</span></span>(<span>lateral_effect_func, elms: Sequence[Any]) -> Sequence[Any]</span>
 </code></dt>
 <dd>
@@ -312,7 +312,7 @@ def lateral_effect_factory(lateral_effect_func):
     return elms</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.lateral_effect_factory"><code class="name flex">
+<dt id="bs_processors.generic_processors.lateral_effect_factory"><code class="name flex">
 <span>def <span class="ident">lateral_effect_factory</span></span>(<span>lateral_effect_func)</span>
 </code></dt>
 <dd>
@@ -325,7 +325,7 @@ def lateral_effect_factory(lateral_effect_func):
     return functools.partial(lateral_effect, lateral_effect_func)</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.local_modify_factory"><code class="name flex">
+<dt id="bs_processors.generic_processors.local_modify_factory"><code class="name flex">
 <span>def <span class="ident">local_modify_factory</span></span>(<span>modify_func)</span>
 </code></dt>
 <dd>
@@ -338,7 +338,7 @@ def lateral_effect_factory(lateral_effect_func):
     return single_to_multiple(functools.partial(single_local_modify, modify_func))</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.single_filter_proc"><code class="name flex">
+<dt id="bs_processors.generic_processors.single_filter_proc"><code class="name flex">
 <span>def <span class="ident">single_filter_proc</span></span>(<span>should_filter: Callable[[Any], bool], elm) -> List[Any]</span>
 </code></dt>
 <dd>
@@ -389,7 +389,7 @@ def lateral_effect_factory(lateral_effect_func):
         return [elm]</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.single_flatten_proc"><code class="name flex">
+<dt id="bs_processors.generic_processors.single_flatten_proc"><code class="name flex">
 <span>def <span class="ident">single_flatten_proc</span></span>(<span>flatten_children: Callable[[Any], bool], is_internal: Callable[[Any], bool], elm) -> List[Any]</span>
 </code></dt>
 <dd>
@@ -530,7 +530,7 @@ whether a child behaves like a block and wants out or an inline and stays in)
     return result</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.single_join_children"><code class="name flex">
+<dt id="bs_processors.generic_processors.single_join_children"><code class="name flex">
 <span>def <span class="ident">single_join_children</span></span>(<span>join_children: Callable[[Any, Any], Any], elm)</span>
 </code></dt>
 <dd>
@@ -557,7 +557,7 @@ whether a child behaves like a block and wants out or an inline and stays in)
     return [elm]</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.single_local_modify"><code class="name flex">
+<dt id="bs_processors.generic_processors.single_local_modify"><code class="name flex">
 <span>def <span class="ident">single_local_modify</span></span>(<span>modify_func: Callable[[Any], bool], elm)</span>
 </code></dt>
 <dd>
@@ -580,7 +580,7 @@ whether a child behaves like a block and wants out or an inline and stays in)
     return [elm]</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.single_unwrap_proc"><code class="name flex">
+<dt id="bs_processors.generic_processors.single_unwrap_proc"><code class="name flex">
 <span>def <span class="ident">single_unwrap_proc</span></span>(<span>should_unwrap: Callable[[Any], bool], elm) -> List[Any]</span>
 </code></dt>
 <dd>
@@ -662,7 +662,7 @@ the unwrapped children</p>
     return new_children</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.generic_processors.unwrap_factory"><code class="name flex">
+<dt id="bs_processors.generic_processors.unwrap_factory"><code class="name flex">
 <span>def <span class="ident">unwrap_factory</span></span>(<span>should_unwrap)</span>
 </code></dt>
 <dd>
@@ -688,23 +688,23 @@ the unwrapped children</p>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.bs_processors" href="index.html">src.bs_processors</a></code></li>
+<li><code><a title="bs_processors" href="index.html">bs_processors</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="src.bs_processors.generic_processors.filter_factory" href="#src.bs_processors.generic_processors.filter_factory">filter_factory</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.flatten_factory" href="#src.bs_processors.generic_processors.flatten_factory">flatten_factory</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.join_children_factory" href="#src.bs_processors.generic_processors.join_children_factory">join_children_factory</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.lateral_effect" href="#src.bs_processors.generic_processors.lateral_effect">lateral_effect</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.lateral_effect_factory" href="#src.bs_processors.generic_processors.lateral_effect_factory">lateral_effect_factory</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.local_modify_factory" href="#src.bs_processors.generic_processors.local_modify_factory">local_modify_factory</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.single_filter_proc" href="#src.bs_processors.generic_processors.single_filter_proc">single_filter_proc</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.single_flatten_proc" href="#src.bs_processors.generic_processors.single_flatten_proc">single_flatten_proc</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.single_join_children" href="#src.bs_processors.generic_processors.single_join_children">single_join_children</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.single_local_modify" href="#src.bs_processors.generic_processors.single_local_modify">single_local_modify</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.single_unwrap_proc" href="#src.bs_processors.generic_processors.single_unwrap_proc">single_unwrap_proc</a></code></li>
-<li><code><a title="src.bs_processors.generic_processors.unwrap_factory" href="#src.bs_processors.generic_processors.unwrap_factory">unwrap_factory</a></code></li>
+<li><code><a title="bs_processors.generic_processors.filter_factory" href="#bs_processors.generic_processors.filter_factory">filter_factory</a></code></li>
+<li><code><a title="bs_processors.generic_processors.flatten_factory" href="#bs_processors.generic_processors.flatten_factory">flatten_factory</a></code></li>
+<li><code><a title="bs_processors.generic_processors.join_children_factory" href="#bs_processors.generic_processors.join_children_factory">join_children_factory</a></code></li>
+<li><code><a title="bs_processors.generic_processors.lateral_effect" href="#bs_processors.generic_processors.lateral_effect">lateral_effect</a></code></li>
+<li><code><a title="bs_processors.generic_processors.lateral_effect_factory" href="#bs_processors.generic_processors.lateral_effect_factory">lateral_effect_factory</a></code></li>
+<li><code><a title="bs_processors.generic_processors.local_modify_factory" href="#bs_processors.generic_processors.local_modify_factory">local_modify_factory</a></code></li>
+<li><code><a title="bs_processors.generic_processors.single_filter_proc" href="#bs_processors.generic_processors.single_filter_proc">single_filter_proc</a></code></li>
+<li><code><a title="bs_processors.generic_processors.single_flatten_proc" href="#bs_processors.generic_processors.single_flatten_proc">single_flatten_proc</a></code></li>
+<li><code><a title="bs_processors.generic_processors.single_join_children" href="#bs_processors.generic_processors.single_join_children">single_join_children</a></code></li>
+<li><code><a title="bs_processors.generic_processors.single_local_modify" href="#bs_processors.generic_processors.single_local_modify">single_local_modify</a></code></li>
+<li><code><a title="bs_processors.generic_processors.single_unwrap_proc" href="#bs_processors.generic_processors.single_unwrap_proc">single_unwrap_proc</a></code></li>
+<li><code><a title="bs_processors.generic_processors.unwrap_factory" href="#bs_processors.generic_processors.unwrap_factory">unwrap_factory</a></code></li>
 </ul>
 </li>
 </ul>

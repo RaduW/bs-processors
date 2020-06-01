@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>src.bs_processors.utils.pytest API documentation</title>
+<title>bs_processors.util API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,22 +17,49 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.bs_processors.utils.pytest</code></h1>
+<h1 class="title">Module <code>bs_processors.util</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from bs4 import BeautifulSoup
+from os import path
+
+
+# todo remove (just a util func to help with running tests in the console)
+def load_fixture(fname):
+    fname = path.abspath(path.join(__file__, &#34;../../..&#34;, &#34;tests/html_processor/data_fixtures&#34;, fname + &#34;.html&#34;))
+    with open(fname, &#39;r&#39;) as f:
+        soup = BeautifulSoup(f)
+    return soup</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="src.bs_processors.utils.pytest.fixtures" href="fixtures.html">src.bs_processors.utils.pytest.fixtures</a></code></dt>
+<dt id="bs_processors.util.load_fixture"><code class="name flex">
+<span>def <span class="ident">load_fixture</span></span>(<span>fname)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_fixture(fname):
+    fname = path.abspath(path.join(__file__, &#34;../../..&#34;, &#34;tests/html_processor/data_fixtures&#34;, fname + &#34;.html&#34;))
+    with open(fname, &#39;r&#39;) as f:
+        soup = BeautifulSoup(f)
+    return soup</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -45,12 +72,12 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.bs_processors.utils" href="../index.html">src.bs_processors.utils</a></code></li>
+<li><code><a title="bs_processors" href="index.html">bs_processors</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="src.bs_processors.utils.pytest.fixtures" href="fixtures.html">src.bs_processors.utils.pytest.fixtures</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="bs_processors.util.load_fixture" href="#bs_processors.util.load_fixture">load_fixture</a></code></li>
 </ul>
 </li>
 </ul>

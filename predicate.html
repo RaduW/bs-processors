@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>src.bs_processors.predicate API documentation</title>
+<title>bs_processors.predicate API documentation</title>
 <meta name="description" content="Contains generally useful predicates to be used with Beautiful Soup objects (i.e. strings, tags, BeautifulSoup" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.bs_processors.predicate</code></h1>
+<h1 class="title">Module <code>bs_processors.predicate</code></h1>
 </header>
 <section id="section-intro">
 <p>Contains generally useful predicates to be used with Beautiful Soup objects (i.e. strings, tags, BeautifulSoup</p>
@@ -538,7 +538,7 @@ def to_string_compare_predicate(pred, ignore_case=True):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="src.bs_processors.predicate.and_pf"><code class="name flex">
+<dt id="bs_processors.predicate.and_pf"><code class="name flex">
 <span>def <span class="ident">and_pf</span></span>(<span>*args: Callable[[Any], bool])</span>
 </code></dt>
 <dd>
@@ -600,7 +600,7 @@ True
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.false_p"><code class="name flex">
+<dt id="bs_processors.predicate.false_p"><code class="name flex">
 <span>def <span class="ident">false_p</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -626,7 +626,7 @@ False
     return False</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.has_attribute_pf"><code class="name flex">
+<dt id="bs_processors.predicate.has_attribute_pf"><code class="name flex">
 <span>def <span class="ident">has_attribute_pf</span></span>(<span>attr_p)</span>
 </code></dt>
 <dd>
@@ -701,7 +701,7 @@ True
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.has_attribute_value_pf"><code class="name flex">
+<dt id="bs_processors.predicate.has_attribute_value_pf"><code class="name flex">
 <span>def <span class="ident">has_attribute_value_pf</span></span>(<span>attr_p, value_p, ignore_case_value=False)</span>
 </code></dt>
 <dd>
@@ -782,7 +782,7 @@ True
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.has_children_of_type_pf"><code class="name flex">
+<dt id="bs_processors.predicate.has_children_of_type_pf"><code class="name flex">
 <span>def <span class="ident">has_children_of_type_pf</span></span>(<span>name_p, ignore_case=True)</span>
 </code></dt>
 <dd>
@@ -850,7 +850,7 @@ False
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.has_class_pf"><code class="name flex">
+<dt id="bs_processors.predicate.has_class_pf"><code class="name flex">
 <span>def <span class="ident">has_class_pf</span></span>(<span>class_p)</span>
 </code></dt>
 <dd>
@@ -921,7 +921,7 @@ False
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.has_descendents_of_type_pf"><code class="name flex">
+<dt id="bs_processors.predicate.has_descendents_of_type_pf"><code class="name flex">
 <span>def <span class="ident">has_descendents_of_type_pf</span></span>(<span>name_p, ignore_case=True)</span>
 </code></dt>
 <dd>
@@ -971,7 +971,7 @@ satisfies name_p (it will go deep looking for the elements).
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.has_name_pf"><code class="name flex">
+<dt id="bs_processors.predicate.has_name_pf"><code class="name flex">
 <span>def <span class="ident">has_name_pf</span></span>(<span>name_p, ignore_case=True)</span>
 </code></dt>
 <dd>
@@ -1047,7 +1047,7 @@ False
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.is_soup_p"><code class="name flex">
+<dt id="bs_processors.predicate.is_soup_p"><code class="name flex">
 <span>def <span class="ident">is_soup_p</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -1070,7 +1070,7 @@ not None name that is the string '[doc]'.
     return elm is not None and elm.name is not None and elm.name == &#34;[doc]&#34;</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.is_string"><code class="name flex">
+<dt id="bs_processors.predicate.is_string"><code class="name flex">
 <span>def <span class="ident">is_string</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -1092,7 +1092,7 @@ It checks by verifying that the element has a None name
     return elm is not None and elm.name is None</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.is_tag_or_soup"><code class="name flex">
+<dt id="bs_processors.predicate.is_tag_or_soup"><code class="name flex">
 <span>def <span class="ident">is_tag_or_soup</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -1114,7 +1114,7 @@ It checks by verifying that the element has a non None name.
     return elm is not None and elm.name is not None</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.is_tag_p"><code class="name flex">
+<dt id="bs_processors.predicate.is_tag_p"><code class="name flex">
 <span>def <span class="ident">is_tag_p</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -1139,7 +1139,7 @@ not None name that is not the string '[doc]'.
     return False</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.not_pf"><code class="name flex">
+<dt id="bs_processors.predicate.not_pf"><code class="name flex">
 <span>def <span class="ident">not_pf</span></span>(<span>predicate: Callable[[Any], bool])</span>
 </code></dt>
 <dd>
@@ -1178,7 +1178,7 @@ True
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.or_pf"><code class="name flex">
+<dt id="bs_processors.predicate.or_pf"><code class="name flex">
 <span>def <span class="ident">or_pf</span></span>(<span>*args: Callable[[Any], bool])</span>
 </code></dt>
 <dd>
@@ -1240,7 +1240,7 @@ False
     return internal</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.to_string_compare_predicate"><code class="name flex">
+<dt id="bs_processors.predicate.to_string_compare_predicate"><code class="name flex">
 <span>def <span class="ident">to_string_compare_predicate</span></span>(<span>pred, ignore_case=True)</span>
 </code></dt>
 <dd>
@@ -1422,7 +1422,7 @@ False
     return ret_val</code></pre>
 </details>
 </dd>
-<dt id="src.bs_processors.predicate.true_p"><code class="name flex">
+<dt id="bs_processors.predicate.true_p"><code class="name flex">
 <span>def <span class="ident">true_p</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
@@ -1461,27 +1461,27 @@ True
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.bs_processors" href="index.html">src.bs_processors</a></code></li>
+<li><code><a title="bs_processors" href="index.html">bs_processors</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="src.bs_processors.predicate.and_pf" href="#src.bs_processors.predicate.and_pf">and_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.false_p" href="#src.bs_processors.predicate.false_p">false_p</a></code></li>
-<li><code><a title="src.bs_processors.predicate.has_attribute_pf" href="#src.bs_processors.predicate.has_attribute_pf">has_attribute_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.has_attribute_value_pf" href="#src.bs_processors.predicate.has_attribute_value_pf">has_attribute_value_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.has_children_of_type_pf" href="#src.bs_processors.predicate.has_children_of_type_pf">has_children_of_type_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.has_class_pf" href="#src.bs_processors.predicate.has_class_pf">has_class_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.has_descendents_of_type_pf" href="#src.bs_processors.predicate.has_descendents_of_type_pf">has_descendents_of_type_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.has_name_pf" href="#src.bs_processors.predicate.has_name_pf">has_name_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.is_soup_p" href="#src.bs_processors.predicate.is_soup_p">is_soup_p</a></code></li>
-<li><code><a title="src.bs_processors.predicate.is_string" href="#src.bs_processors.predicate.is_string">is_string</a></code></li>
-<li><code><a title="src.bs_processors.predicate.is_tag_or_soup" href="#src.bs_processors.predicate.is_tag_or_soup">is_tag_or_soup</a></code></li>
-<li><code><a title="src.bs_processors.predicate.is_tag_p" href="#src.bs_processors.predicate.is_tag_p">is_tag_p</a></code></li>
-<li><code><a title="src.bs_processors.predicate.not_pf" href="#src.bs_processors.predicate.not_pf">not_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.or_pf" href="#src.bs_processors.predicate.or_pf">or_pf</a></code></li>
-<li><code><a title="src.bs_processors.predicate.to_string_compare_predicate" href="#src.bs_processors.predicate.to_string_compare_predicate">to_string_compare_predicate</a></code></li>
-<li><code><a title="src.bs_processors.predicate.true_p" href="#src.bs_processors.predicate.true_p">true_p</a></code></li>
+<li><code><a title="bs_processors.predicate.and_pf" href="#bs_processors.predicate.and_pf">and_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.false_p" href="#bs_processors.predicate.false_p">false_p</a></code></li>
+<li><code><a title="bs_processors.predicate.has_attribute_pf" href="#bs_processors.predicate.has_attribute_pf">has_attribute_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.has_attribute_value_pf" href="#bs_processors.predicate.has_attribute_value_pf">has_attribute_value_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.has_children_of_type_pf" href="#bs_processors.predicate.has_children_of_type_pf">has_children_of_type_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.has_class_pf" href="#bs_processors.predicate.has_class_pf">has_class_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.has_descendents_of_type_pf" href="#bs_processors.predicate.has_descendents_of_type_pf">has_descendents_of_type_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.has_name_pf" href="#bs_processors.predicate.has_name_pf">has_name_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.is_soup_p" href="#bs_processors.predicate.is_soup_p">is_soup_p</a></code></li>
+<li><code><a title="bs_processors.predicate.is_string" href="#bs_processors.predicate.is_string">is_string</a></code></li>
+<li><code><a title="bs_processors.predicate.is_tag_or_soup" href="#bs_processors.predicate.is_tag_or_soup">is_tag_or_soup</a></code></li>
+<li><code><a title="bs_processors.predicate.is_tag_p" href="#bs_processors.predicate.is_tag_p">is_tag_p</a></code></li>
+<li><code><a title="bs_processors.predicate.not_pf" href="#bs_processors.predicate.not_pf">not_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.or_pf" href="#bs_processors.predicate.or_pf">or_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.to_string_compare_predicate" href="#bs_processors.predicate.to_string_compare_predicate">to_string_compare_predicate</a></code></li>
+<li><code><a title="bs_processors.predicate.true_p" href="#bs_processors.predicate.true_p">true_p</a></code></li>
 </ul>
 </li>
 </ul>
