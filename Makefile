@@ -24,4 +24,17 @@ setup-venv: .venv/bin/python
 	virtualenv -p $$PYTHON_VERSION .venv
 	$(PIP) install -U -r requirements.txt
 
-.PHONY: dist publish config setup-venv
+
+create-docs:
+	@echo creating docs
+	pdoc --force --html src
+
+
+upload-docs: create-docs
+	# Use this for hotfixing docs, prefer a new release
+	.venv/bin/pip install -U ghp-import
+	.venv/bin/ghp-import -pf html/src
+
+
+
+.PHONY: dist publish config setup-venv upload-docs create-docs

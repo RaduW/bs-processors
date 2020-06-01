@@ -3,7 +3,7 @@ Contains generally useful predicates to be used with Beautiful Soup objects (i.e
 """
 from typing import Callable, Any, Sequence
 
-from bs_processors.xml_util import is_tag
+from .xml_util import is_tag
 
 
 def true_p(elm):

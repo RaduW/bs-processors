@@ -1,4 +1,4 @@
-from bs_processors.xml_util import is_tag
+from .xml_util import is_tag
 
 _remove_empty_elements = frozenset(['p', 'div', 'br'])
 _unwrap_elements = frozenset(['font'])

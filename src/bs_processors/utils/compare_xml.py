@@ -1,5 +1,5 @@
 
-from bs_processors.utils import normalize_string, is_non_empty_child
+from .util import normalize_string, is_non_empty_child
 
 
 def compare_xml(left, right, error_context = None):

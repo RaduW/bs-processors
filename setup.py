@@ -5,12 +5,17 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bs-processors",
-    version="0.0.1pre03",
+    version="0.0.1pre05",
     author="RaduW",
     description="html/xml processors for using with BeautifulSoup",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url=" https://github.com/RaduW/bs-processors.git",
+    url="https://raduw.github.io/bs-processors/",
+    project_urls = {
+        "Documentation": "https://raduw.github.io/bs-processors/",
+        "Source Code": "https://github.com/RaduW/bs-processors.git",
+        "Bug Tracker": "https://github.com/RaduW/bs-processors/issues",
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
