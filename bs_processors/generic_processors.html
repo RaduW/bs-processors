@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>bs_processors.generic_processors API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Generic processor factories …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,23 +20,37 @@
 <h1 class="title">Module <code>bs_processors.generic_processors</code></h1>
 </header>
 <section id="section-intro">
+<p>Generic processor factories</p>
+<p>This module contains basic types of processor factories that can be used to
+generate typical processors ( like filter, flatten, local_modify &hellip; )</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import functools
+<pre><code class="python">&#34;&#34;&#34;
+Generic processor factories
+
+This module contains basic types of processor factories that can be used to
+generate typical processors ( like filter, flatten, local_modify ... )
+&#34;&#34;&#34;
+
+import functools
 from typing import Callable, Any, List, Sequence
 
 from .processor_util import single_to_multiple
 from .xml_util import set_new_children, process_children, copy_element_type
 
+# configure the documented entities
+__pdoc__={}
+
 
 def single_filter_proc(should_filter: Callable[[Any], bool], elm) -&gt; List[Any]:
     &#34;&#34;&#34;
     Conditionally filters an element based on the passed predicate
-    :param should_filter: predicate that returns True if the element should be filtered
-    :param elm: the element to check
-    :return: an empty array if the element should be filtered or an array with the passed element
+
+    * **should_filter**: predicate that returns True if the element should be filtered
+    * **elm**: the element to check
+    * **return**: an empty array if the element should be filtered or an array with the passed element
 
     &gt;&gt;&gt; def should_filter(elm):
     ...     if elm.name in [&#39;span&#39;, &#39;a&#39;]:
@@ -60,6 +74,9 @@ def single_filter_proc(should_filter: Callable[[Any], bool], elm) -&gt; List[Any
 
 
 def filter_factory(should_filter):
+    &#34;&#34;&#34;
+    Adaptor for single_filter_proc to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_filter_proc, should_filter))
 
 
@@ -67,9 +84,9 @@ def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -&gt; List[Any
     &#34;&#34;&#34;
     Conditionally unwraps an element and pushes all its unwrapped children to its parent
 
-    :param should_unwrap: predicate that returns true if the element should be unwrapped
-    :param elm: the element to be conditionally unwrapped
-    :return: either a list containing the element (if it wasn&#39;t unwrapped) or a list with all
+    * **should_unwrap**: predicate that returns true if the element should be unwrapped
+    * **elm**: the element to be conditionally unwrapped
+    * **return**: either a list containing the element (if it wasn&#39;t unwrapped) or a list with all
      the unwrapped children
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
@@ -113,6 +130,9 @@ def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -&gt; List[Any
 
 
 def unwrap_factory(should_unwrap):
+    &#34;&#34;&#34;
+    Adaptor for single_unwrap_proc to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_unwrap_proc, should_unwrap))
 
 
@@ -120,13 +140,13 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
     &#34;&#34;&#34;
     Flattens an element pulling out &#39;block&#39; like elements that &#39;want&#39; to be top level
 
-    :param flatten_children: Predicate that specifies whether the direct children of the current element can be
+    * **flatten_children**: Predicate that specifies whether the direct children of the current element can be
         flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
         outside)
-    :param is_internal: Predicate that specifies whether a child &#39;wants&#39; to stay inside its parent or not (i.e.
+    * **is_internal**: Predicate that specifies whether a child &#39;wants&#39; to stay inside its parent or not (i.e.
         whether a child behaves like a block and wants out or an inline and stays in)
-    :param elm: the element to be flatten
-    :return: a list of flattened elements
+    * **elm**: the element to be flatten
+    * **return**: a list of flattened elements
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; def flatten_children(elm):
@@ -202,15 +222,21 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
 
 
 def flatten_factory(flatten_children, is_internal):
+    &#34;&#34;&#34;
+    Adaptor for single_filter_proc to accept multiple elements
+    &#34;&#34;&#34;
+    return single_to_multiple(functools.partial(single_filter_proc, should_filter))
+
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
 
 
 def single_local_modify(modify_func: Callable[[Any], bool], elm):
     &#34;&#34;&#34;
+    Runs a modification function on each element and all tag children
 
-    :param modify_func:
-    :param elm:
-    :return:
+    * **modify_func**: the modification function
+    * **elm**: the top level element
+    * **return**: an array containing the original element
     &#34;&#34;&#34;
     modify_func(elm)
     process_children(lambda child: single_local_modify(modify_func, child), elm)
@@ -218,10 +244,23 @@ def single_local_modify(modify_func: Callable[[Any], bool], elm):
 
 
 def local_modify_factory(modify_func):
+    &#34;&#34;&#34;
+    Adaptor for single_local_modify to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_local_modify, modify_func))
 
 
-def single_join_children(join_children: Callable[[Any, Any], Any], elm):
+def single_join_children(join_children: Callable[[Any, Any], Any], elm)-&gt; [Any]:
+    &#34;&#34;&#34;
+    Processor that joins children
+    * **join_children**: a function that may join two children. If the children are
+    joined the function should return an array containing the joined element, if the
+    children are not joined the function should return an array containing the passed
+    children.
+    
+    * **elm**: the root element
+    * **return**: a sequence of elements
+    &#34;&#34;&#34;
     new_children = process_children( join_children, elm)
 
     def reducer(accumulator, new_child):
@@ -240,6 +279,9 @@ def single_join_children(join_children: Callable[[Any, Any], Any], elm):
 
 
 def join_children_factory(join_children):
+    &#34;&#34;&#34;
+    Adaptor for single_join_children to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_join_children, join_children))
 
 
@@ -248,7 +290,14 @@ def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -&gt; Sequence[Any]
     return elms
 
 
+__pdoc__[&#34;lateral_effect&#34;] = False  # do not document 
+
+
 def lateral_effect_factory(lateral_effect_func):
+    &#34;&#34;&#34;
+    A processor factory that runs a lateral effect ( provided function) and the returns the
+    passed argument
+    &#34;&#34;&#34;
     return functools.partial(lateral_effect, lateral_effect_func)</code></pre>
 </details>
 </section>
@@ -263,12 +312,15 @@ def lateral_effect_factory(lateral_effect_func):
 <span>def <span class="ident">filter_factory</span></span>(<span>should_filter)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adaptor for single_filter_proc to accept multiple elements</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def filter_factory(should_filter):
+    &#34;&#34;&#34;
+    Adaptor for single_filter_proc to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_filter_proc, should_filter))</code></pre>
 </details>
 </dd>
@@ -276,12 +328,17 @@ def lateral_effect_factory(lateral_effect_func):
 <span>def <span class="ident">flatten_factory</span></span>(<span>flatten_children, is_internal)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adaptor for single_filter_proc to accept multiple elements</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def flatten_factory(flatten_children, is_internal):
+    &#34;&#34;&#34;
+    Adaptor for single_filter_proc to accept multiple elements
+    &#34;&#34;&#34;
+    return single_to_multiple(functools.partial(single_filter_proc, should_filter))
+
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))</code></pre>
 </details>
 </dd>
@@ -289,39 +346,33 @@ def lateral_effect_factory(lateral_effect_func):
 <span>def <span class="ident">join_children_factory</span></span>(<span>join_children)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adaptor for single_join_children to accept multiple elements</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def join_children_factory(join_children):
+    &#34;&#34;&#34;
+    Adaptor for single_join_children to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_join_children, join_children))</code></pre>
-</details>
-</dd>
-<dt id="bs_processors.generic_processors.lateral_effect"><code class="name flex">
-<span>def <span class="ident">lateral_effect</span></span>(<span>lateral_effect_func, elms: Sequence[Any]) -> Sequence[Any]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -&gt; Sequence[Any]:
-    lateral_effect_func()
-    return elms</code></pre>
 </details>
 </dd>
 <dt id="bs_processors.generic_processors.lateral_effect_factory"><code class="name flex">
 <span>def <span class="ident">lateral_effect_factory</span></span>(<span>lateral_effect_func)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A processor factory that runs a lateral effect ( provided function) and the returns the
+passed argument</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def lateral_effect_factory(lateral_effect_func):
+    &#34;&#34;&#34;
+    A processor factory that runs a lateral effect ( provided function) and the returns the
+    passed argument
+    &#34;&#34;&#34;
     return functools.partial(lateral_effect, lateral_effect_func)</code></pre>
 </details>
 </dd>
@@ -329,12 +380,15 @@ def lateral_effect_factory(lateral_effect_func):
 <span>def <span class="ident">local_modify_factory</span></span>(<span>modify_func)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adaptor for single_local_modify to accept multiple elements</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def local_modify_factory(modify_func):
+    &#34;&#34;&#34;
+    Adaptor for single_local_modify to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_local_modify, modify_func))</code></pre>
 </details>
 </dd>
@@ -342,10 +396,12 @@ def lateral_effect_factory(lateral_effect_func):
 <span>def <span class="ident">single_filter_proc</span></span>(<span>should_filter: Callable[[Any], bool], elm) -> List[Any]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Conditionally filters an element based on the passed predicate
-:param should_filter: predicate that returns True if the element should be filtered
-:param elm: the element to check
-:return: an empty array if the element should be filtered or an array with the passed element</p>
+<div class="desc"><p>Conditionally filters an element based on the passed predicate</p>
+<ul>
+<li><strong>should_filter</strong>: predicate that returns True if the element should be filtered</li>
+<li><strong>elm</strong>: the element to check</li>
+<li><strong>return</strong>: an empty array if the element should be filtered or an array with the passed element</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; def should_filter(elm):
 ...     if elm.name in ['span', 'a']:
 ...         return True
@@ -364,9 +420,10 @@ def lateral_effect_factory(lateral_effect_func):
 <pre><code class="python">def single_filter_proc(should_filter: Callable[[Any], bool], elm) -&gt; List[Any]:
     &#34;&#34;&#34;
     Conditionally filters an element based on the passed predicate
-    :param should_filter: predicate that returns True if the element should be filtered
-    :param elm: the element to check
-    :return: an empty array if the element should be filtered or an array with the passed element
+
+    * **should_filter**: predicate that returns True if the element should be filtered
+    * **elm**: the element to check
+    * **return**: an empty array if the element should be filtered or an array with the passed element
 
     &gt;&gt;&gt; def should_filter(elm):
     ...     if elm.name in [&#39;span&#39;, &#39;a&#39;]:
@@ -394,13 +451,15 @@ def lateral_effect_factory(lateral_effect_func):
 </code></dt>
 <dd>
 <div class="desc"><p>Flattens an element pulling out 'block' like elements that 'want' to be top level</p>
-<p>:param flatten_children: Predicate that specifies whether the direct children of the current element can be
+<ul>
+<li><strong>flatten_children</strong>: Predicate that specifies whether the direct children of the current element can be
 flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
-outside)
-:param is_internal: Predicate that specifies whether a child 'wants' to stay inside its parent or not (i.e.
-whether a child behaves like a block and wants out or an inline and stays in)
-:param elm: the element to be flatten
-:return: a list of flattened elements</p>
+outside)</li>
+<li><strong>is_internal</strong>: Predicate that specifies whether a child 'wants' to stay inside its parent or not (i.e.
+whether a child behaves like a block and wants out or an inline and stays in)</li>
+<li><strong>elm</strong>: the element to be flatten</li>
+<li><strong>return</strong>: a list of flattened elements</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; def flatten_children(elm):
 ...     if elm.name is None or elm.name in {'a', 'body', 'html'}:
@@ -449,13 +508,13 @@ whether a child behaves like a block and wants out or an inline and stays in)
     &#34;&#34;&#34;
     Flattens an element pulling out &#39;block&#39; like elements that &#39;want&#39; to be top level
 
-    :param flatten_children: Predicate that specifies whether the direct children of the current element can be
+    * **flatten_children**: Predicate that specifies whether the direct children of the current element can be
         flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
         outside)
-    :param is_internal: Predicate that specifies whether a child &#39;wants&#39; to stay inside its parent or not (i.e.
+    * **is_internal**: Predicate that specifies whether a child &#39;wants&#39; to stay inside its parent or not (i.e.
         whether a child behaves like a block and wants out or an inline and stays in)
-    :param elm: the element to be flatten
-    :return: a list of flattened elements
+    * **elm**: the element to be flatten
+    * **return**: a list of flattened elements
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; def flatten_children(elm):
@@ -531,15 +590,33 @@ whether a child behaves like a block and wants out or an inline and stays in)
 </details>
 </dd>
 <dt id="bs_processors.generic_processors.single_join_children"><code class="name flex">
-<span>def <span class="ident">single_join_children</span></span>(<span>join_children: Callable[[Any, Any], Any], elm)</span>
+<span>def <span class="ident">single_join_children</span></span>(<span>join_children: Callable[[Any, Any], Any], elm) -> [typing.Any]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Processor that joins children
+* <strong>join_children</strong>: a function that may join two children. If the children are
+joined the function should return an array containing the joined element, if the
+children are not joined the function should return an array containing the passed
+children.</p>
+<ul>
+<li><strong>elm</strong>: the root element</li>
+<li><strong>return</strong>: a sequence of elements</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def single_join_children(join_children: Callable[[Any, Any], Any], elm):
+<pre><code class="python">def single_join_children(join_children: Callable[[Any, Any], Any], elm)-&gt; [Any]:
+    &#34;&#34;&#34;
+    Processor that joins children
+    * **join_children**: a function that may join two children. If the children are
+    joined the function should return an array containing the joined element, if the
+    children are not joined the function should return an array containing the passed
+    children.
+    
+    * **elm**: the root element
+    * **return**: a sequence of elements
+    &#34;&#34;&#34;
     new_children = process_children( join_children, elm)
 
     def reducer(accumulator, new_child):
@@ -561,19 +638,23 @@ whether a child behaves like a block and wants out or an inline and stays in)
 <span>def <span class="ident">single_local_modify</span></span>(<span>modify_func: Callable[[Any], bool], elm)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>:param modify_func:
-:param elm:
-:return:</p></div>
+<div class="desc"><p>Runs a modification function on each element and all tag children</p>
+<ul>
+<li><strong>modify_func</strong>: the modification function</li>
+<li><strong>elm</strong>: the top level element</li>
+<li><strong>return</strong>: an array containing the original element</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def single_local_modify(modify_func: Callable[[Any], bool], elm):
     &#34;&#34;&#34;
+    Runs a modification function on each element and all tag children
 
-    :param modify_func:
-    :param elm:
-    :return:
+    * **modify_func**: the modification function
+    * **elm**: the top level element
+    * **return**: an array containing the original element
     &#34;&#34;&#34;
     modify_func(elm)
     process_children(lambda child: single_local_modify(modify_func, child), elm)
@@ -585,10 +666,12 @@ whether a child behaves like a block and wants out or an inline and stays in)
 </code></dt>
 <dd>
 <div class="desc"><p>Conditionally unwraps an element and pushes all its unwrapped children to its parent</p>
-<p>:param should_unwrap: predicate that returns true if the element should be unwrapped
-:param elm: the element to be conditionally unwrapped
-:return: either a list containing the element (if it wasn't unwrapped) or a list with all
-the unwrapped children</p>
+<ul>
+<li><strong>should_unwrap</strong>: predicate that returns true if the element should be unwrapped</li>
+<li><strong>elm</strong>: the element to be conditionally unwrapped</li>
+<li><strong>return</strong>: either a list containing the element (if it wasn't unwrapped) or a list with all
+the unwrapped children</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; def should_unwrap(elm):
 ...     return elm.name == &quot;x&quot;
@@ -617,9 +700,9 @@ the unwrapped children</p>
     &#34;&#34;&#34;
     Conditionally unwraps an element and pushes all its unwrapped children to its parent
 
-    :param should_unwrap: predicate that returns true if the element should be unwrapped
-    :param elm: the element to be conditionally unwrapped
-    :return: either a list containing the element (if it wasn&#39;t unwrapped) or a list with all
+    * **should_unwrap**: predicate that returns true if the element should be unwrapped
+    * **elm**: the element to be conditionally unwrapped
+    * **return**: either a list containing the element (if it wasn&#39;t unwrapped) or a list with all
      the unwrapped children
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
@@ -666,12 +749,15 @@ the unwrapped children</p>
 <span>def <span class="ident">unwrap_factory</span></span>(<span>should_unwrap)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Adaptor for single_unwrap_proc to accept multiple elements</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def unwrap_factory(should_unwrap):
+    &#34;&#34;&#34;
+    Adaptor for single_unwrap_proc to accept multiple elements
+    &#34;&#34;&#34;
     return single_to_multiple(functools.partial(single_unwrap_proc, should_unwrap))</code></pre>
 </details>
 </dd>
@@ -696,7 +782,6 @@ the unwrapped children</p>
 <li><code><a title="bs_processors.generic_processors.filter_factory" href="#bs_processors.generic_processors.filter_factory">filter_factory</a></code></li>
 <li><code><a title="bs_processors.generic_processors.flatten_factory" href="#bs_processors.generic_processors.flatten_factory">flatten_factory</a></code></li>
 <li><code><a title="bs_processors.generic_processors.join_children_factory" href="#bs_processors.generic_processors.join_children_factory">join_children_factory</a></code></li>
-<li><code><a title="bs_processors.generic_processors.lateral_effect" href="#bs_processors.generic_processors.lateral_effect">lateral_effect</a></code></li>
 <li><code><a title="bs_processors.generic_processors.lateral_effect_factory" href="#bs_processors.generic_processors.lateral_effect_factory">lateral_effect_factory</a></code></li>
 <li><code><a title="bs_processors.generic_processors.local_modify_factory" href="#bs_processors.generic_processors.local_modify_factory">local_modify_factory</a></code></li>
 <li><code><a title="bs_processors.generic_processors.single_filter_proc" href="#bs_processors.generic_processors.single_filter_proc">single_filter_proc</a></code></li>

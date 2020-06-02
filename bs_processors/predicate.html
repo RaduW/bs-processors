@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>bs_processors.predicate API documentation</title>
-<meta name="description" content="Contains generally useful predicates to be used with Beautiful Soup objects (i.e. strings, tags, BeautifulSoup" />
+<meta name="description" content="Generally useful predicates to be used when building and configuring processors …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,13 +20,38 @@
 <h1 class="title">Module <code>bs_processors.predicate</code></h1>
 </header>
 <section id="section-intro">
-<p>Contains generally useful predicates to be used with Beautiful Soup objects (i.e. strings, tags, BeautifulSoup</p>
+<p>Generally useful predicates to be used when building and configuring processors.</p>
+<p>This modules contains both predicates and predicate factories ( functions that take configuration
+parameters and return predicates).</p>
+<p>A predicate name is terminated in <code>_p</code>
+(e.g. <code><a title="bs_processors.predicate.true_p" href="#bs_processors.predicate.true_p">true_p()</a></code>).</p>
+<p>A predicate factory is terminated in '_pg' (e.g. 'not_pf').</p>
+<p>A predicate factory generates predicates.</p>
+<p>For example, although the <code><a title="bs_processors.predicate.false_p" href="#bs_processors.predicate.false_p">false_p()</a></code> is already defined, one could define a functional <code><a title="bs_processors.predicate.false_p" href="#bs_processors.predicate.false_p">false_p()</a></code> predicate
+by using the <code><a title="bs_processors.predicate.not_pf" href="#bs_processors.predicate.not_pf">not_pf()</a></code> and the <code><a title="bs_processors.predicate.true_p" href="#bs_processors.predicate.true_p">true_p()</a></code> predicate like this:</p>
+<pre><code>my_true_p = not_pf(true_p)
+</code></pre>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Contains generally useful predicates to be used with Beautiful Soup objects (i.e. strings, tags, BeautifulSoup
+Generally useful predicates to be used when building and configuring processors.
+
+This modules contains both predicates and predicate factories ( functions that take configuration
+parameters and return predicates).
+
+A predicate name is terminated in `_p`  (e.g. `true_p`).
+
+A predicate factory is terminated in &#39;_pg&#39; (e.g. &#39;not_pf&#39;).
+
+A predicate factory generates predicates.
+
+For example, although the `false_p` is already defined, one could define a functional `false_p` predicate
+by using the `not_pf` and the `true_p` predicate like this:
+
+    my_true_p = not_pf(true_p)
+
 &#34;&#34;&#34;
 from typing import Callable, Any, Sequence
 
@@ -60,8 +85,9 @@ def false_p(elm):
 def not_pf(predicate: Callable[[Any], bool]):
     &#34;&#34;&#34;
     Negates the predicate
-    :param predicate: predicate to be tested
-    :return: the negated value returned by the predicate
+
+    * **predicate**: predicate to be tested
+    * **return**: a predicate that is the negation of the passed predicate
 
     &gt;&gt;&gt; p = not_pf(true_p)
     &gt;&gt;&gt; p(1)
@@ -82,8 +108,9 @@ def or_pf(*args: Callable[[Any], bool]):
     &#34;&#34;&#34;
     Does a logical or of the results of the predicates, it shortcuts the processing (returns True as
     soon as one predicate succeeds). If no predicate is passed it returns False
-    :param args: the predicates
-    :return: a logical or of the results of the predicates applied on the passed elment
+
+    * **args**: the predicates
+    * **return**: a logical or of the results of the predicates applied on the passed elment
 
     &gt;&gt;&gt; p = or_pf(true_p, true_p)
     &gt;&gt;&gt; p(1)
@@ -116,8 +143,9 @@ def and_pf(*args: Callable[[Any], bool]):
     &#34;&#34;&#34;
     Does a logical and of the results of the predicates, it shortcuts the processing (returns False as
     soon as one predicate fails). If no predicate is passed it returns True
-    :param args: the predicates
-    :return: a logical or of the results of the predicates applied on the passed elment
+
+    * **args**: the predicates
+    * **return**: a logical or of the results of the predicates applied on the passed elment
 
     &gt;&gt;&gt; p = and_pf(true_p, true_p)
     &gt;&gt;&gt; p(1)
@@ -150,8 +178,9 @@ def is_tag_p(elm):
     &#34;&#34;&#34;
     Tries to check if the element is a tag
     It checks by verifying that the element has a  not None name that is not the string &#39;[doc]&#39;.
-    :param elm: the element to be checked
-    :return: True if the element looks like a tag
+
+    * **elm**: the element to be checked
+    * **return**: True if the element looks like a tag
     &#34;&#34;&#34;
     if elm is not None and elm.name is not None and elm.name != &#34;[doc]&#34;:
         return True
@@ -162,8 +191,9 @@ def is_soup_p(elm):
     &#34;&#34;&#34;
     Tries to check if the element is a tag
     It checks by verifying that the element has a  not None name that is the string &#39;[doc]&#39;.
-    :param elm: the element to be checked
-    :return: True if the element looks like a BeautifulSoup object
+
+    * **elm**: the element to be checked
+    * **return**: True if the element looks like a BeautifulSoup object
     &#34;&#34;&#34;
     return elm is not None and elm.name is not None and elm.name == &#34;[doc]&#34;
 
@@ -172,8 +202,9 @@ def is_tag_or_soup(elm):
     &#34;&#34;&#34;
     Tries to check if the element is either a Tag or a BeautifulSoup element
     It checks by verifying that the element has a non None name.
-    :param elm: the element
-    :return: True if the element is either a Tag or a BeautifulSoup element
+
+    * **elm**: the element
+    * **return**: True if the element is either a Tag or a BeautifulSoup element
     &#34;&#34;&#34;
     return elm is not None and elm.name is not None
 
@@ -182,8 +213,9 @@ def is_string(elm):
     &#34;&#34;&#34;
     Tries to check if the element is a NavigableString
     It checks by verifying that the element has a None name
-    :param elm: the element
-    :return: True if the element looks like a NavigableString
+
+    * **elm**: the element
+    * **return**: True if the element looks like a NavigableString
     &#34;&#34;&#34;
     return elm is not None and elm.name is None
 
@@ -191,10 +223,10 @@ def is_string(elm):
 def has_name_pf(name_p, ignore_case=True):
     &#34;&#34;&#34;
     Predicate factory, returns true if the element name matches the pred parameter
-    :param name_p: something that can be converted into a string compare predicate
 
-    :param ignore_case: should the comparison be case sensitive (default: ignore case)
-    :return:
+    * **name_p**: something that can be converted into a string compare predicate
+    * **ignore_case**: should the comparison be case sensitive (default: ignore case)
+    * **return**:
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = &#39;&lt;html&gt;&lt;span&gt;s1&lt;/span&gt;&lt;SPAN&gt;s2&lt;/SPAN&gt;&lt;/html&gt;&#39;
@@ -233,8 +265,9 @@ def has_name_pf(name_p, ignore_case=True):
 def has_attribute_pf(attr_p):
     &#34;&#34;&#34;
     Predicate factory that checks that the element has a particular attribute
-    :param attr_p: something that can be converted to a string compare predicate
-    :return: a predicate that checks if the current element has the required attribute
+
+    * **attr_p**: something that can be converted to a string compare predicate
+    * **return**: a predicate that checks if the current element has the required attribute
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span id=&#34;s1&#34; class=&#34;c1 c2 c3&#34; style=&#34;margin: 3&#34;&gt;s1&lt;/span&gt;&#39;+
@@ -276,9 +309,10 @@ def has_attribute_value_pf(attr_p, value_p, ignore_case_value=False):
     &#34;&#34;&#34;
     Predicate factory that checks that the element has an attribute that passes
     the predicate attr_p(&lt;attribute_name&gt;) and attr_v(&lt;attribute_value)
-    :param attr_p: something that can be converted to a string compare predicate
-    :param value_p:  something that can be converted to a string compare predicate
-    :return: a predicate that checks if the current element has an attribute with a specific value
+
+    * **attr_p**: something that can be converted to a string compare predicate
+    * **value_p**:  something that can be converted to a string compare predicate
+    * **return**: a predicate that checks if the current element has an attribute with a specific value
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span id=&#34;s1&#34; class=&#34;c1 c2 c3&#34; style=&#34;margin: 3&#34;&gt;s1&lt;/span&gt;&#39;+
@@ -320,8 +354,9 @@ def has_attribute_value_pf(attr_p, value_p, ignore_case_value=False):
 def has_class_pf( class_p):
     &#34;&#34;&#34;
     A predicate factory that checks that an element has the desired class
-    :param class_p: something that can be converted to a string predicate
-    :return: a predicate that returns True for elements that have classes that satisfy class_p
+
+    * **class_p**: something that can be converted to a string predicate
+    * **return**: a predicate that returns True for elements that have classes that satisfy class_p
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span class=&#34;c1 c2 c3&#34; &gt;s1&lt;/span&gt;&lt;div id=&#34;d1&#34;&gt;d1&lt;/div&gt;&lt;/html&gt;&#39;)
@@ -362,8 +397,9 @@ def has_children_of_type_pf(name_p, ignore_case=True):
     &#34;&#34;&#34;
     Creates a predicate that checks if the immediate descendents of the element have a name that
     satisfies name_p
-    :param name_p: something that can be converted into a string predicate
-    :return: true if the current element has children that satisfy the predicate
+
+    * **name_p**: something that can be converted into a string predicate
+    * **return**: true if the current element has children that satisfy the predicate
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = &#39;&lt;html&gt;&lt;span&gt;s1&lt;/span&gt;&lt;div&gt;d1 &lt;p&gt;hello&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#39;
@@ -401,8 +437,9 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
     &#34;&#34;&#34;
     Creates a predicate that checks if the descendents of the element have a name that
     satisfies name_p (it will go deep looking for the elements).
-    :param name_p: something that can be converted into a string predicate
-    :return: true if the current element has children that satisfy the predicate
+
+    * **name_p**: something that can be converted into a string predicate
+    * **return**: true if the current element has children that satisfy the predicate
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span id=&#34;s1&#34; class=&#34;c1 c2 c3&#34; style=&#34;margin: 3&#34;&gt;s1&lt;/span&gt;&#39;+
@@ -431,15 +468,16 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
 def to_string_compare_predicate(pred, ignore_case=True):
     &#34;&#34;&#34;
     Turns the passed parameter into a string compare predicate
-    :param name_p: can be one of:
+
+    * **name_p**: can be one of:
         - a string ( will compare to the string) (e.g. has_name_pf( &#39;div&#39;) ... predicate checking if the tag is a &lt;div&gt;
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
             (e.g.  has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;) checks if the tag is one of &lt;div&gt;,&lt;span&gt;,&lt;p&gt;)
         - a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
             where the second parameter is the ignore_case param from the factory.
 
-    :param ignore_case: should the comparison be case sensitive (default: ignore case)
-    :return: a predicate that expects a string like object
+    * **ignore_case**: should the comparison be case sensitive (default: ignore case)
+    * **return**: a predicate that expects a string like object
 
     &gt;&gt;&gt; e1 = &#39;span&#39;
     &gt;&gt;&gt; e2 = &#39;SPAN&#39;
@@ -543,9 +581,11 @@ def to_string_compare_predicate(pred, ignore_case=True):
 </code></dt>
 <dd>
 <div class="desc"><p>Does a logical and of the results of the predicates, it shortcuts the processing (returns False as
-soon as one predicate fails). If no predicate is passed it returns True
-:param args: the predicates
-:return: a logical or of the results of the predicates applied on the passed elment</p>
+soon as one predicate fails). If no predicate is passed it returns True</p>
+<ul>
+<li><strong>args</strong>: the predicates</li>
+<li><strong>return</strong>: a logical or of the results of the predicates applied on the passed elment</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; p = and_pf(true_p, true_p)
 &gt;&gt;&gt; p(1)
 True
@@ -570,8 +610,9 @@ True
     &#34;&#34;&#34;
     Does a logical and of the results of the predicates, it shortcuts the processing (returns False as
     soon as one predicate fails). If no predicate is passed it returns True
-    :param args: the predicates
-    :return: a logical or of the results of the predicates applied on the passed elment
+
+    * **args**: the predicates
+    * **return**: a logical or of the results of the predicates applied on the passed elment
 
     &gt;&gt;&gt; p = and_pf(true_p, true_p)
     &gt;&gt;&gt; p(1)
@@ -630,9 +671,11 @@ False
 <span>def <span class="ident">has_attribute_pf</span></span>(<span>attr_p)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Predicate factory that checks that the element has a particular attribute
-:param attr_p: something that can be converted to a string compare predicate
-:return: a predicate that checks if the current element has the required attribute</p>
+<div class="desc"><p>Predicate factory that checks that the element has a particular attribute</p>
+<ul>
+<li><strong>attr_p</strong>: something that can be converted to a string compare predicate</li>
+<li><strong>return</strong>: a predicate that checks if the current element has the required attribute</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; doc = ('&lt;html&gt;&lt;span id=&quot;s1&quot; class=&quot;c1 c2 c3&quot; style=&quot;margin: 3&quot;&gt;s1&lt;/span&gt;'+
 ... '&lt;div data-x=&quot;abc&quot; id=&quot;d1&quot;&gt;d1&lt;/div&gt;&lt;/html&gt;')
@@ -662,8 +705,9 @@ True
 <pre><code class="python">def has_attribute_pf(attr_p):
     &#34;&#34;&#34;
     Predicate factory that checks that the element has a particular attribute
-    :param attr_p: something that can be converted to a string compare predicate
-    :return: a predicate that checks if the current element has the required attribute
+
+    * **attr_p**: something that can be converted to a string compare predicate
+    * **return**: a predicate that checks if the current element has the required attribute
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span id=&#34;s1&#34; class=&#34;c1 c2 c3&#34; style=&#34;margin: 3&#34;&gt;s1&lt;/span&gt;&#39;+
@@ -706,11 +750,13 @@ True
 </code></dt>
 <dd>
 <div class="desc"><p>Predicate factory that checks that the element has an attribute that passes
-the predicate attr_p(<attribute_name>) and attr_v(&lt;attribute_value)
-:param attr_p: something that can be converted to a string compare predicate
-:param value_p:
-something that can be converted to a string compare predicate
-:return: a predicate that checks if the current element has an attribute with a specific value</p>
+the predicate attr_p(<attribute_name>) and attr_v(&lt;attribute_value)</p>
+<ul>
+<li><strong>attr_p</strong>: something that can be converted to a string compare predicate</li>
+<li><strong>value_p</strong>:
+something that can be converted to a string compare predicate</li>
+<li><strong>return</strong>: a predicate that checks if the current element has an attribute with a specific value</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; doc = ('&lt;html&gt;&lt;span id=&quot;s1&quot; class=&quot;c1 c2 c3&quot; style=&quot;margin: 3&quot;&gt;s1&lt;/span&gt;'+
 ... '&lt;div data-x=&quot;abc&quot; id=&quot;d1&quot;&gt;d1&lt;/div&gt;&lt;/html&gt;')
@@ -741,9 +787,10 @@ True
     &#34;&#34;&#34;
     Predicate factory that checks that the element has an attribute that passes
     the predicate attr_p(&lt;attribute_name&gt;) and attr_v(&lt;attribute_value)
-    :param attr_p: something that can be converted to a string compare predicate
-    :param value_p:  something that can be converted to a string compare predicate
-    :return: a predicate that checks if the current element has an attribute with a specific value
+
+    * **attr_p**: something that can be converted to a string compare predicate
+    * **value_p**:  something that can be converted to a string compare predicate
+    * **return**: a predicate that checks if the current element has an attribute with a specific value
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span id=&#34;s1&#34; class=&#34;c1 c2 c3&#34; style=&#34;margin: 3&#34;&gt;s1&lt;/span&gt;&#39;+
@@ -787,9 +834,11 @@ True
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a predicate that checks if the immediate descendents of the element have a name that
-satisfies name_p
-:param name_p: something that can be converted into a string predicate
-:return: true if the current element has children that satisfy the predicate</p>
+satisfies name_p</p>
+<ul>
+<li><strong>name_p</strong>: something that can be converted into a string predicate</li>
+<li><strong>return</strong>: true if the current element has children that satisfy the predicate</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; doc = '&lt;html&gt;&lt;span&gt;s1&lt;/span&gt;&lt;div&gt;d1 &lt;p&gt;hello&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;'
 &gt;&gt;&gt; s = BeautifulSoup(doc, 'html.parser')
@@ -815,8 +864,9 @@ False
     &#34;&#34;&#34;
     Creates a predicate that checks if the immediate descendents of the element have a name that
     satisfies name_p
-    :param name_p: something that can be converted into a string predicate
-    :return: true if the current element has children that satisfy the predicate
+
+    * **name_p**: something that can be converted into a string predicate
+    * **return**: true if the current element has children that satisfy the predicate
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = &#39;&lt;html&gt;&lt;span&gt;s1&lt;/span&gt;&lt;div&gt;d1 &lt;p&gt;hello&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#39;
@@ -854,9 +904,11 @@ False
 <span>def <span class="ident">has_class_pf</span></span>(<span>class_p)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A predicate factory that checks that an element has the desired class
-:param class_p: something that can be converted to a string predicate
-:return: a predicate that returns True for elements that have classes that satisfy class_p</p>
+<div class="desc"><p>A predicate factory that checks that an element has the desired class</p>
+<ul>
+<li><strong>class_p</strong>: something that can be converted to a string predicate</li>
+<li><strong>return</strong>: a predicate that returns True for elements that have classes that satisfy class_p</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; doc = ('&lt;html&gt;&lt;span class=&quot;c1 c2 c3&quot; &gt;s1&lt;/span&gt;&lt;div id=&quot;d1&quot;&gt;d1&lt;/div&gt;&lt;/html&gt;')
 &gt;&gt;&gt; s = BeautifulSoup(doc, 'html.parser')
@@ -883,8 +935,9 @@ False
 <pre><code class="python">def has_class_pf( class_p):
     &#34;&#34;&#34;
     A predicate factory that checks that an element has the desired class
-    :param class_p: something that can be converted to a string predicate
-    :return: a predicate that returns True for elements that have classes that satisfy class_p
+
+    * **class_p**: something that can be converted to a string predicate
+    * **return**: a predicate that returns True for elements that have classes that satisfy class_p
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span class=&#34;c1 c2 c3&#34; &gt;s1&lt;/span&gt;&lt;div id=&#34;d1&#34;&gt;d1&lt;/div&gt;&lt;/html&gt;&#39;)
@@ -926,9 +979,11 @@ False
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a predicate that checks if the descendents of the element have a name that
-satisfies name_p (it will go deep looking for the elements).
-:param name_p: something that can be converted into a string predicate
-:return: true if the current element has children that satisfy the predicate</p>
+satisfies name_p (it will go deep looking for the elements).</p>
+<ul>
+<li><strong>name_p</strong>: something that can be converted into a string predicate</li>
+<li><strong>return</strong>: true if the current element has children that satisfy the predicate</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; doc = ('&lt;html&gt;&lt;span id=&quot;s1&quot; class=&quot;c1 c2 c3&quot; style=&quot;margin: 3&quot;&gt;s1&lt;/span&gt;'+
 ... '&lt;div data-x=&quot;abc&quot; id=&quot;d1&quot;&gt;d1&lt;/div&gt;&lt;/html&gt;')
@@ -944,8 +999,9 @@ satisfies name_p (it will go deep looking for the elements).
     &#34;&#34;&#34;
     Creates a predicate that checks if the descendents of the element have a name that
     satisfies name_p (it will go deep looking for the elements).
-    :param name_p: something that can be converted into a string predicate
-    :return: true if the current element has children that satisfy the predicate
+
+    * **name_p**: something that can be converted into a string predicate
+    * **return**: true if the current element has children that satisfy the predicate
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = (&#39;&lt;html&gt;&lt;span id=&#34;s1&#34; class=&#34;c1 c2 c3&#34; style=&#34;margin: 3&#34;&gt;s1&lt;/span&gt;&#39;+
@@ -975,10 +1031,12 @@ satisfies name_p (it will go deep looking for the elements).
 <span>def <span class="ident">has_name_pf</span></span>(<span>name_p, ignore_case=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Predicate factory, returns true if the element name matches the pred parameter
-:param name_p: something that can be converted into a string compare predicate</p>
-<p>:param ignore_case: should the comparison be case sensitive (default: ignore case)
-:return:</p>
+<div class="desc"><p>Predicate factory, returns true if the element name matches the pred parameter</p>
+<ul>
+<li><strong>name_p</strong>: something that can be converted into a string compare predicate</li>
+<li><strong>ignore_case</strong>: should the comparison be case sensitive (default: ignore case)</li>
+<li><strong>return</strong>:</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; doc = '&lt;html&gt;&lt;span&gt;s1&lt;/span&gt;&lt;SPAN&gt;s2&lt;/SPAN&gt;&lt;/html&gt;'
 &gt;&gt;&gt; s = BeautifulSoup(doc, 'xml')
@@ -1008,10 +1066,10 @@ False
 <pre><code class="python">def has_name_pf(name_p, ignore_case=True):
     &#34;&#34;&#34;
     Predicate factory, returns true if the element name matches the pred parameter
-    :param name_p: something that can be converted into a string compare predicate
 
-    :param ignore_case: should the comparison be case sensitive (default: ignore case)
-    :return:
+    * **name_p**: something that can be converted into a string compare predicate
+    * **ignore_case**: should the comparison be case sensitive (default: ignore case)
+    * **return**:
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; doc = &#39;&lt;html&gt;&lt;span&gt;s1&lt;/span&gt;&lt;SPAN&gt;s2&lt;/SPAN&gt;&lt;/html&gt;&#39;
@@ -1053,9 +1111,11 @@ False
 <dd>
 <div class="desc"><p>Tries to check if the element is a tag
 It checks by verifying that the element has a
-not None name that is the string '[doc]'.
-:param elm: the element to be checked
-:return: True if the element looks like a BeautifulSoup object</p></div>
+not None name that is the string '[doc]'.</p>
+<ul>
+<li><strong>elm</strong>: the element to be checked</li>
+<li><strong>return</strong>: True if the element looks like a BeautifulSoup object</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1064,8 +1124,9 @@ not None name that is the string '[doc]'.
     &#34;&#34;&#34;
     Tries to check if the element is a tag
     It checks by verifying that the element has a  not None name that is the string &#39;[doc]&#39;.
-    :param elm: the element to be checked
-    :return: True if the element looks like a BeautifulSoup object
+
+    * **elm**: the element to be checked
+    * **return**: True if the element looks like a BeautifulSoup object
     &#34;&#34;&#34;
     return elm is not None and elm.name is not None and elm.name == &#34;[doc]&#34;</code></pre>
 </details>
@@ -1075,9 +1136,11 @@ not None name that is the string '[doc]'.
 </code></dt>
 <dd>
 <div class="desc"><p>Tries to check if the element is a NavigableString
-It checks by verifying that the element has a None name
-:param elm: the element
-:return: True if the element looks like a NavigableString</p></div>
+It checks by verifying that the element has a None name</p>
+<ul>
+<li><strong>elm</strong>: the element</li>
+<li><strong>return</strong>: True if the element looks like a NavigableString</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1086,8 +1149,9 @@ It checks by verifying that the element has a None name
     &#34;&#34;&#34;
     Tries to check if the element is a NavigableString
     It checks by verifying that the element has a None name
-    :param elm: the element
-    :return: True if the element looks like a NavigableString
+
+    * **elm**: the element
+    * **return**: True if the element looks like a NavigableString
     &#34;&#34;&#34;
     return elm is not None and elm.name is None</code></pre>
 </details>
@@ -1097,9 +1161,11 @@ It checks by verifying that the element has a None name
 </code></dt>
 <dd>
 <div class="desc"><p>Tries to check if the element is either a Tag or a BeautifulSoup element
-It checks by verifying that the element has a non None name.
-:param elm: the element
-:return: True if the element is either a Tag or a BeautifulSoup element</p></div>
+It checks by verifying that the element has a non None name.</p>
+<ul>
+<li><strong>elm</strong>: the element</li>
+<li><strong>return</strong>: True if the element is either a Tag or a BeautifulSoup element</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1108,8 +1174,9 @@ It checks by verifying that the element has a non None name.
     &#34;&#34;&#34;
     Tries to check if the element is either a Tag or a BeautifulSoup element
     It checks by verifying that the element has a non None name.
-    :param elm: the element
-    :return: True if the element is either a Tag or a BeautifulSoup element
+
+    * **elm**: the element
+    * **return**: True if the element is either a Tag or a BeautifulSoup element
     &#34;&#34;&#34;
     return elm is not None and elm.name is not None</code></pre>
 </details>
@@ -1120,9 +1187,11 @@ It checks by verifying that the element has a non None name.
 <dd>
 <div class="desc"><p>Tries to check if the element is a tag
 It checks by verifying that the element has a
-not None name that is not the string '[doc]'.
-:param elm: the element to be checked
-:return: True if the element looks like a tag</p></div>
+not None name that is not the string '[doc]'.</p>
+<ul>
+<li><strong>elm</strong>: the element to be checked</li>
+<li><strong>return</strong>: True if the element looks like a tag</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1131,8 +1200,9 @@ not None name that is not the string '[doc]'.
     &#34;&#34;&#34;
     Tries to check if the element is a tag
     It checks by verifying that the element has a  not None name that is not the string &#39;[doc]&#39;.
-    :param elm: the element to be checked
-    :return: True if the element looks like a tag
+
+    * **elm**: the element to be checked
+    * **return**: True if the element looks like a tag
     &#34;&#34;&#34;
     if elm is not None and elm.name is not None and elm.name != &#34;[doc]&#34;:
         return True
@@ -1143,9 +1213,11 @@ not None name that is not the string '[doc]'.
 <span>def <span class="ident">not_pf</span></span>(<span>predicate: Callable[[Any], bool])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Negates the predicate
-:param predicate: predicate to be tested
-:return: the negated value returned by the predicate</p>
+<div class="desc"><p>Negates the predicate</p>
+<ul>
+<li><strong>predicate</strong>: predicate to be tested</li>
+<li><strong>return</strong>: a predicate that is the negation of the passed predicate</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; p = not_pf(true_p)
 &gt;&gt;&gt; p(1)
 False
@@ -1160,8 +1232,9 @@ True
 <pre><code class="python">def not_pf(predicate: Callable[[Any], bool]):
     &#34;&#34;&#34;
     Negates the predicate
-    :param predicate: predicate to be tested
-    :return: the negated value returned by the predicate
+
+    * **predicate**: predicate to be tested
+    * **return**: a predicate that is the negation of the passed predicate
 
     &gt;&gt;&gt; p = not_pf(true_p)
     &gt;&gt;&gt; p(1)
@@ -1183,9 +1256,11 @@ True
 </code></dt>
 <dd>
 <div class="desc"><p>Does a logical or of the results of the predicates, it shortcuts the processing (returns True as
-soon as one predicate succeeds). If no predicate is passed it returns False
-:param args: the predicates
-:return: a logical or of the results of the predicates applied on the passed elment</p>
+soon as one predicate succeeds). If no predicate is passed it returns False</p>
+<ul>
+<li><strong>args</strong>: the predicates</li>
+<li><strong>return</strong>: a logical or of the results of the predicates applied on the passed elment</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; p = or_pf(true_p, true_p)
 &gt;&gt;&gt; p(1)
 True
@@ -1210,8 +1285,9 @@ False
     &#34;&#34;&#34;
     Does a logical or of the results of the predicates, it shortcuts the processing (returns True as
     soon as one predicate succeeds). If no predicate is passed it returns False
-    :param args: the predicates
-    :return: a logical or of the results of the predicates applied on the passed elment
+
+    * **args**: the predicates
+    * **return**: a logical or of the results of the predicates applied on the passed elment
 
     &gt;&gt;&gt; p = or_pf(true_p, true_p)
     &gt;&gt;&gt; p(1)
@@ -1244,16 +1320,24 @@ False
 <span>def <span class="ident">to_string_compare_predicate</span></span>(<span>pred, ignore_case=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Turns the passed parameter into a string compare predicate
-:param name_p: can be one of:
-- a string ( will compare to the string) (e.g. has_name_pf( 'div') &hellip; predicate checking if the tag is a <div>
-- a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
+<div class="desc"><p>Turns the passed parameter into a string compare predicate</p>
+<ul>
+<li>
+<p><strong>name_p</strong>: can be one of:</p>
+<ul>
+<li>a string ( will compare to the string) (e.g. has_name_pf( 'div') &hellip; predicate checking if the tag is a <div></li>
+<li>a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
 (e.g.
-has_name_pf(['div','span','p') checks if the tag is one of <div>,<span>,<p>)
-- a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
-where the second parameter is the ignore_case param from the factory.</p>
-<p>:param ignore_case: should the comparison be case sensitive (default: ignore case)
-:return: a predicate that expects a string like object</p>
+has_name_pf(['div','span','p') checks if the tag is one of <div>,<span>,<p>)</li>
+<li>a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
+where the second parameter is the ignore_case param from the factory.</li>
+</ul>
+</li>
+<li>
+<p><strong>ignore_case</strong>: should the comparison be case sensitive (default: ignore case)</p>
+</li>
+<li><strong>return</strong>: a predicate that expects a string like object</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; e1 = 'span'
 &gt;&gt;&gt; e2 = 'SPAN'
 &gt;&gt;&gt; e3 = &quot;ul&quot;
@@ -1322,15 +1406,16 @@ False
 <pre><code class="python">def to_string_compare_predicate(pred, ignore_case=True):
     &#34;&#34;&#34;
     Turns the passed parameter into a string compare predicate
-    :param name_p: can be one of:
+
+    * **name_p**: can be one of:
         - a string ( will compare to the string) (e.g. has_name_pf( &#39;div&#39;) ... predicate checking if the tag is a &lt;div&gt;
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
             (e.g.  has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;) checks if the tag is one of &lt;div&gt;,&lt;span&gt;,&lt;p&gt;)
         - a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
             where the second parameter is the ignore_case param from the factory.
 
-    :param ignore_case: should the comparison be case sensitive (default: ignore case)
-    :return: a predicate that expects a string like object
+    * **ignore_case**: should the comparison be case sensitive (default: ignore case)
+    * **return**: a predicate that expects a string like object
 
     &gt;&gt;&gt; e1 = &#39;span&#39;
     &gt;&gt;&gt; e2 = &#39;SPAN&#39;

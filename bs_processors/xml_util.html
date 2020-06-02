@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>bs_processors.xml_util API documentation</title>
-<meta name="description" content="Useful utilities for working with BeautifulSoup trees" />
+<meta name="description" content="Utilities for working with BeautifulSoup trees …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,15 +20,16 @@
 <h1 class="title">Module <code>bs_processors.xml_util</code></h1>
 </header>
 <section id="section-intro">
-<p>Useful utilities for working with BeautifulSoup trees</p>
+<p>Utilities for working with BeautifulSoup trees</p>
+<p>This module contains utilities useful for implementing custom processors and predicates.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Useful utilities for working with BeautifulSoup trees
+Utilities for working with BeautifulSoup trees
 
-
+This module contains utilities useful for implementing custom processors and predicates.
 &#34;&#34;&#34;
 from typing import Any, Callable, List
 
@@ -38,9 +39,10 @@ from bs4 import BeautifulSoup
 def set_new_children(elm, children):
     &#34;&#34;&#34;
     Sets new children to an element
-    :param elm: the element to have its children set
-    :param children: a sequence of children
-    :return: the element
+
+    * **elm**: the element to have its children set
+    * **children**: a sequence of children
+    * **return**: the element
 
     &gt;&gt;&gt; xml = BeautifulSoup(&#34;&lt;root&gt;X&lt;a/&gt;X&lt;b/&gt;X&lt;/root&gt;&#34;,&#39;xml&#39;)
     &gt;&gt;&gt; xml
@@ -66,9 +68,10 @@ def set_new_children(elm, children):
 def process_children(processor: Callable[[Any], List[Any]], elm):
     &#34;&#34;&#34;
     Processes the children of an element
-    :param processor: A processor that takes an element and returns a list of elements
-    :param elm: the element to process
-    :return: A list with the joined results of processing each child with the provided processor
+
+    * **processor**: A processor that takes an element and returns a list of elements
+    * **elm**: the element to process
+    * **return**: A list with the joined results of processing each child with the provided processor
 
     &gt;&gt;&gt; doc = BeautifulSoup(&#34;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt;c&lt;p&gt;d&lt;span&gt;e&lt;/span&gt;f&lt;a/&gt;g&lt;/p&gt;h&lt;/div&gt;&#34;, &#34;html.parser&#34;)
     &gt;&gt;&gt; counter = [0]
@@ -90,6 +93,11 @@ def process_children(processor: Callable[[Any], List[Any]], elm):
 
 def is_tag(elm):
     &#34;&#34;&#34;
+    True if the passed object is a HTML/XML tag
+
+    * **elm**:
+    * **return**:
+
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
     &gt;&gt;&gt; doc = bs(&#34;&lt;span&gt;&lt;/span&gt;&lt;p&gt;bubu&lt;/p&gt;&#34;, &#34;html.parser&#34;)
     &gt;&gt;&gt; span = doc.span
@@ -99,9 +107,6 @@ def is_tag(elm):
     True
     &gt;&gt;&gt; is_tag(list(doc.p.children)[0])
     False
-
-    :param elm:
-    :return:
     &#34;&#34;&#34;
     return elm is not None and elm.name is not None
 
@@ -111,6 +116,8 @@ _bs = BeautifulSoup(&#34;&lt;a/&gt;&#34;, &#34;html.parser&#34;)
 
 def copy_element_type(elm):
     &#34;&#34;&#34;
+    Creates a new element with the same tag name as the passed element
+
     &gt;&gt;&gt; xml = BeautifulSoup(&#34;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&#34;, &#34;xml&#34;)
     &gt;&gt;&gt; copy_element_type(xml.root.abc)
     &lt;abc/&gt;
@@ -129,7 +136,8 @@ def copy_element_type(elm):
 <span>def <span class="ident">copy_element_type</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
-<div class="desc"><pre><code class="python">&gt;&gt;&gt; xml = BeautifulSoup(&quot;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&quot;, &quot;xml&quot;)
+<div class="desc"><p>Creates a new element with the same tag name as the passed element</p>
+<pre><code class="python">&gt;&gt;&gt; xml = BeautifulSoup(&quot;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&quot;, &quot;xml&quot;)
 &gt;&gt;&gt; copy_element_type(xml.root.abc)
 &lt;abc/&gt;
 </code></pre></div>
@@ -139,6 +147,8 @@ def copy_element_type(elm):
 </summary>
 <pre><code class="python">def copy_element_type(elm):
     &#34;&#34;&#34;
+    Creates a new element with the same tag name as the passed element
+
     &gt;&gt;&gt; xml = BeautifulSoup(&#34;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&#34;, &#34;xml&#34;)
     &gt;&gt;&gt; copy_element_type(xml.root.abc)
     &lt;abc/&gt;
@@ -150,7 +160,12 @@ def copy_element_type(elm):
 <span>def <span class="ident">is_tag</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
-<div class="desc"><pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+<div class="desc"><p>True if the passed object is a HTML/XML tag</p>
+<ul>
+<li><strong>elm</strong>:</li>
+<li><strong>return</strong>:</li>
+</ul>
+<pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
 &gt;&gt;&gt; doc = bs(&quot;&lt;span&gt;&lt;/span&gt;&lt;p&gt;bubu&lt;/p&gt;&quot;, &quot;html.parser&quot;)
 &gt;&gt;&gt; span = doc.span
 &gt;&gt;&gt; is_tag(doc.span)
@@ -159,15 +174,18 @@ True
 True
 &gt;&gt;&gt; is_tag(list(doc.p.children)[0])
 False
-</code></pre>
-<p>:param elm:
-:return:</p></div>
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def is_tag(elm):
     &#34;&#34;&#34;
+    True if the passed object is a HTML/XML tag
+
+    * **elm**:
+    * **return**:
+
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
     &gt;&gt;&gt; doc = bs(&#34;&lt;span&gt;&lt;/span&gt;&lt;p&gt;bubu&lt;/p&gt;&#34;, &#34;html.parser&#34;)
     &gt;&gt;&gt; span = doc.span
@@ -177,9 +195,6 @@ False
     True
     &gt;&gt;&gt; is_tag(list(doc.p.children)[0])
     False
-
-    :param elm:
-    :return:
     &#34;&#34;&#34;
     return elm is not None and elm.name is not None</code></pre>
 </details>
@@ -188,10 +203,12 @@ False
 <span>def <span class="ident">process_children</span></span>(<span>processor: Callable[[Any], List[Any]], elm)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Processes the children of an element
-:param processor: A processor that takes an element and returns a list of elements
-:param elm: the element to process
-:return: A list with the joined results of processing each child with the provided processor</p>
+<div class="desc"><p>Processes the children of an element</p>
+<ul>
+<li><strong>processor</strong>: A processor that takes an element and returns a list of elements</li>
+<li><strong>elm</strong>: the element to process</li>
+<li><strong>return</strong>: A list with the joined results of processing each child with the provided processor</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; doc = BeautifulSoup(&quot;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt;c&lt;p&gt;d&lt;span&gt;e&lt;/span&gt;f&lt;a/&gt;g&lt;/p&gt;h&lt;/div&gt;&quot;, &quot;html.parser&quot;)
 &gt;&gt;&gt; counter = [0]
 &gt;&gt;&gt; def processor(elm):
@@ -208,9 +225,10 @@ False
 <pre><code class="python">def process_children(processor: Callable[[Any], List[Any]], elm):
     &#34;&#34;&#34;
     Processes the children of an element
-    :param processor: A processor that takes an element and returns a list of elements
-    :param elm: the element to process
-    :return: A list with the joined results of processing each child with the provided processor
+
+    * **processor**: A processor that takes an element and returns a list of elements
+    * **elm**: the element to process
+    * **return**: A list with the joined results of processing each child with the provided processor
 
     &gt;&gt;&gt; doc = BeautifulSoup(&#34;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt;c&lt;p&gt;d&lt;span&gt;e&lt;/span&gt;f&lt;a/&gt;g&lt;/p&gt;h&lt;/div&gt;&#34;, &#34;html.parser&#34;)
     &gt;&gt;&gt; counter = [0]
@@ -234,10 +252,12 @@ False
 <span>def <span class="ident">set_new_children</span></span>(<span>elm, children)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sets new children to an element
-:param elm: the element to have its children set
-:param children: a sequence of children
-:return: the element</p>
+<div class="desc"><p>Sets new children to an element</p>
+<ul>
+<li><strong>elm</strong>: the element to have its children set</li>
+<li><strong>children</strong>: a sequence of children</li>
+<li><strong>return</strong>: the element</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; xml = BeautifulSoup(&quot;&lt;root&gt;X&lt;a/&gt;X&lt;b/&gt;X&lt;/root&gt;&quot;,'xml')
 &gt;&gt;&gt; xml
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
@@ -253,9 +273,10 @@ False
 <pre><code class="python">def set_new_children(elm, children):
     &#34;&#34;&#34;
     Sets new children to an element
-    :param elm: the element to have its children set
-    :param children: a sequence of children
-    :return: the element
+
+    * **elm**: the element to have its children set
+    * **children**: a sequence of children
+    * **return**: the element
 
     &gt;&gt;&gt; xml = BeautifulSoup(&#34;&lt;root&gt;X&lt;a/&gt;X&lt;b/&gt;X&lt;/root&gt;&#34;,&#39;xml&#39;)
     &gt;&gt;&gt; xml

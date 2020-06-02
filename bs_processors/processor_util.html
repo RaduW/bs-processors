@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>bs_processors.processor_util API documentation</title>
-<meta name="description" content="Generic util for processors" />
+<meta name="description" content="Generic utilities for processors …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,13 +20,16 @@
 <h1 class="title">Module <code>bs_processors.processor_util</code></h1>
 </header>
 <section id="section-intro">
-<p>Generic util for processors</p>
+<p>Generic utilities for processors</p>
+<p>Contains utilities for assembling and modifying processors</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-Generic util for processors
+Generic utilities for processors
+
+Contains utilities for assembling and modifying processors
 &#34;&#34;&#34;
 from typing import Sequence, Callable, Any, List
 
@@ -37,8 +40,9 @@ def join(processors: Sequence[Callable[[List[Any]], List[Any]]])-&gt; Callable[[
     The processor created is equivalent to applying each of the passed processor
     in sequence over the result of the previous processor (after the result is
     flattened)
-    :param processors: a list of processors
-    :return: a join processor
+
+    * **processors**: a list of processors
+    * **return** : a join processor
 
     &gt;&gt;&gt; def double( elms):
     ...     result = []
@@ -72,11 +76,14 @@ def join(processors: Sequence[Callable[[List[Any]], List[Any]]])-&gt; Callable[[
 
 def single_to_multiple(processor: Callable[[Any], List[Any]])-&gt;Callable[[List[Any]], List[Any]]:
     &#34;&#34;&#34;
+    Creates a processor that accepts a list of elements.
+
     Converts a processor that handles one element and returns a list of elements into
     a processor that handles a list of elements and returns a list of elements by calling
     each element in the list in turn and joining the intermediate results into one result
-    :param processor: a processor that operates on one element
-    :return: a processor that operates on a list of elements
+
+    * **processor**: a processor that operates on one element
+    * **return** : a processor that operates on a list of elements
 
     &gt;&gt;&gt; def square_pair(x):
     ...     return[x , x*x]
@@ -109,9 +116,11 @@ def single_to_multiple(processor: Callable[[Any], List[Any]])-&gt;Callable[[List
 <div class="desc"><p>Creates a processor from a list of processor.
 The processor created is equivalent to applying each of the passed processor
 in sequence over the result of the previous processor (after the result is
-flattened)
-:param processors: a list of processors
-:return: a join processor</p>
+flattened)</p>
+<ul>
+<li><strong>processors</strong>: a list of processors</li>
+<li><strong>return</strong> : a join processor</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; def double( elms):
 ...     result = []
 ...     for elm in elms:
@@ -144,8 +153,9 @@ flattened)
     The processor created is equivalent to applying each of the passed processor
     in sequence over the result of the previous processor (after the result is
     flattened)
-    :param processors: a list of processors
-    :return: a join processor
+
+    * **processors**: a list of processors
+    * **return** : a join processor
 
     &gt;&gt;&gt; def double( elms):
     ...     result = []
@@ -181,11 +191,14 @@ flattened)
 <span>def <span class="ident">single_to_multiple</span></span>(<span>processor: Callable[[Any], List[Any]]) -> Callable[[List[Any]], List[Any]]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Converts a processor that handles one element and returns a list of elements into
+<div class="desc"><p>Creates a processor that accepts a list of elements.</p>
+<p>Converts a processor that handles one element and returns a list of elements into
 a processor that handles a list of elements and returns a list of elements by calling
-each element in the list in turn and joining the intermediate results into one result
-:param processor: a processor that operates on one element
-:return: a processor that operates on a list of elements</p>
+each element in the list in turn and joining the intermediate results into one result</p>
+<ul>
+<li><strong>processor</strong>: a processor that operates on one element</li>
+<li><strong>return</strong> : a processor that operates on a list of elements</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; def square_pair(x):
 ...     return[x , x*x]
 &gt;&gt;&gt; mult = single_to_multiple(square_pair)
@@ -198,11 +211,14 @@ each element in the list in turn and joining the intermediate results into one r
 </summary>
 <pre><code class="python">def single_to_multiple(processor: Callable[[Any], List[Any]])-&gt;Callable[[List[Any]], List[Any]]:
     &#34;&#34;&#34;
+    Creates a processor that accepts a list of elements.
+
     Converts a processor that handles one element and returns a list of elements into
     a processor that handles a list of elements and returns a list of elements by calling
     each element in the list in turn and joining the intermediate results into one result
-    :param processor: a processor that operates on one element
-    :return: a processor that operates on a list of elements
+
+    * **processor**: a processor that operates on one element
+    * **return** : a processor that operates on a list of elements
 
     &gt;&gt;&gt; def square_pair(x):
     ...     return[x , x*x]
