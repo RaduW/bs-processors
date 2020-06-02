@@ -1,16 +1,27 @@
+"""
+Generic processor factories
+
+This module contains basic types of processor factories that can be used to
+generate typical processors ( like filter, flatten, local_modify ... )
+"""
+
 import functools
 from typing import Callable, Any, List, Sequence
 
 from .processor_util import single_to_multiple
 from .xml_util import set_new_children, process_children, copy_element_type
 
+# configure the documented entities
+__pdoc__={}
+
 
 def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
     """
     Conditionally filters an element based on the passed predicate
-    :param should_filter: predicate that returns True if the element should be filtered
-    :param elm: the element to check
-    :return: an empty array if the element should be filtered or an array with the passed element
+
+    * **should_filter**: predicate that returns True if the element should be filtered
+    * **elm**: the element to check
+    * **return**: an empty array if the element should be filtered or an array with the passed element
 
     >>> def should_filter(elm):
     ...     if elm.name in ['span', 'a']:
@@ -34,6 +45,9 @@ def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
 
 
 def filter_factory(should_filter):
+    """
+    Adaptor for single_filter_proc to accept multiple elements
+    """
     return single_to_multiple(functools.partial(single_filter_proc, should_filter))
 
 
@@ -41,9 +55,9 @@ def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -> List[Any]:
     """
     Conditionally unwraps an element and pushes all its unwrapped children to its parent
 
-    :param should_unwrap: predicate that returns true if the element should be unwrapped
-    :param elm: the element to be conditionally unwrapped
-    :return: either a list containing the element (if it wasn't unwrapped) or a list with all
+    * **should_unwrap**: predicate that returns true if the element should be unwrapped
+    * **elm**: the element to be conditionally unwrapped
+    * **return**: either a list containing the element (if it wasn't unwrapped) or a list with all
      the unwrapped children
 
     >>> from bs4 import BeautifulSoup
@@ -87,6 +101,9 @@ def single_unwrap_proc(should_unwrap: Callable[[Any], bool], elm) -> List[Any]:
 
 
 def unwrap_factory(should_unwrap):
+    """
+    Adaptor for single_unwrap_proc to accept multiple elements
+    """
     return single_to_multiple(functools.partial(single_unwrap_proc, should_unwrap))
 
 
@@ -94,13 +111,13 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
     """
     Flattens an element pulling out 'block' like elements that 'want' to be top level
 
-    :param flatten_children: Predicate that specifies whether the direct children of the current element can be
+    * **flatten_children**: Predicate that specifies whether the direct children of the current element can be
         flatten (i.e. taken outside of this element) (e.g. html, body and a do not allow their children to escape
         outside)
-    :param is_internal: Predicate that specifies whether a child 'wants' to stay inside its parent or not (i.e.
+    * **is_internal**: Predicate that specifies whether a child 'wants' to stay inside its parent or not (i.e.
         whether a child behaves like a block and wants out or an inline and stays in)
-    :param elm: the element to be flatten
-    :return: a list of flattened elements
+    * **elm**: the element to be flatten
+    * **return**: a list of flattened elements
 
     >>> from bs4 import BeautifulSoup
     >>> def flatten_children(elm):
@@ -176,15 +193,21 @@ def single_flatten_proc(flatten_children: Callable[[Any], bool], is_internal: Ca
 
 
 def flatten_factory(flatten_children, is_internal):
+    """
+    Adaptor for single_filter_proc to accept multiple elements
+    """
+    return single_to_multiple(functools.partial(single_filter_proc, should_filter))
+
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
 
 
 def single_local_modify(modify_func: Callable[[Any], bool], elm):
     """
+    Runs a modification function on each element and all tag children
 
-    :param modify_func:
-    :param elm:
-    :return:
+    * **modify_func**: the modification function
+    * **elm**: the top level element
+    * **return**: an array containing the original element
     """
     modify_func(elm)
     process_children(lambda child: single_local_modify(modify_func, child), elm)
@@ -192,10 +215,23 @@ def single_local_modify(modify_func: Callable[[Any], bool], elm):
 
 
 def local_modify_factory(modify_func):
+    """
+    Adaptor for single_local_modify to accept multiple elements
+    """
     return single_to_multiple(functools.partial(single_local_modify, modify_func))
 
 
-def single_join_children(join_children: Callable[[Any, Any], Any], elm):
+def single_join_children(join_children: Callable[[Any, Any], Any], elm)-> [Any]:
+    """
+    Processor that joins children
+    * **join_children**: a function that may join two children. If the children are
+    joined the function should return an array containing the joined element, if the
+    children are not joined the function should return an array containing the passed
+    children.
+    
+    * **elm**: the root element
+    * **return**: a sequence of elements
+    """
     new_children = process_children( join_children, elm)
 
     def reducer(accumulator, new_child):
@@ -214,6 +250,9 @@ def single_join_children(join_children: Callable[[Any, Any], Any], elm):
 
 
 def join_children_factory(join_children):
+    """
+    Adaptor for single_join_children to accept multiple elements
+    """
     return single_to_multiple(functools.partial(single_join_children, join_children))
 
 
@@ -222,5 +261,14 @@ def lateral_effect(lateral_effect_func, elms: Sequence[Any]) -> Sequence[Any]:
     return elms
 
 
+__pdoc__["lateral_effect"] = False  # do not document 
+
+
 def lateral_effect_factory(lateral_effect_func):
+    """
+    A processor factory that runs a lateral effect ( provided function) and the returns the
+    passed argument
+    """
     return functools.partial(lateral_effect, lateral_effect_func)
+
+

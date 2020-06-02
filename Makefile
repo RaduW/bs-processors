@@ -36,15 +36,13 @@ prose-docs:
 	.venv/bin/mkdocs build
 
 
-
-
-upload-docs: create-docs
+publish-docs: create-docs
 	# Use this for hotfixing docs, prefer a new release
 	$(PIP) install -U ghp-import
 	.venv/bin/ghp-import -pf html
 
 doc-server: create-docs
-	.venv/bin/mkdocs serve html
+	.venv/bin/mkdocs serve
 .PHONY: docserver
 
-.PHONY: dist publish config setup-venv upload-docs create-docs prose-docs api-docs
+.PHONY: dist publish config setup-venv publish-docs create-docs prose-docs api-docs

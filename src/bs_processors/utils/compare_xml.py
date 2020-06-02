@@ -1,14 +1,17 @@
+"""
+Xml comparison utility.
 
+"""
 from .util import normalize_string, is_non_empty_child
 
 
 def compare_xml(left, right, error_context = None):
     """
-    Compares to elements
-    :param left: the left element
-    :param right: the right element
-    :param error_context: error context should be None at top level
-    :return: None if contents are identical, an error message if they are not
+    Compares two elements
+    * **left**: the left element
+    * **right**: the right element
+    * **error_context**: error context should be None at top level
+    * **return**: None if contents are identical, an error message if they are not
 
     >>> from bs4 import BeautifulSoup as bs
     >>> doc1 = bs("<html> hello  </html>")

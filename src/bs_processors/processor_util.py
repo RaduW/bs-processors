@@ -1,5 +1,7 @@
 """
-Generic util for processors
+Generic utilities for processors
+
+Contains utilities for assembling and modifying processors
 """
 from typing import Sequence, Callable, Any, List
 
@@ -10,8 +12,9 @@ def join(processors: Sequence[Callable[[List[Any]], List[Any]]])-> Callable[[Lis
     The processor created is equivalent to applying each of the passed processor
     in sequence over the result of the previous processor (after the result is
     flattened)
-    :param processors: a list of processors
-    :return: a join processor
+
+    * **processors**: a list of processors
+    * **return** : a join processor
 
     >>> def double( elms):
     ...     result = []
@@ -45,11 +48,14 @@ def join(processors: Sequence[Callable[[List[Any]], List[Any]]])-> Callable[[Lis
 
 def single_to_multiple(processor: Callable[[Any], List[Any]])->Callable[[List[Any]], List[Any]]:
     """
+    Creates a processor that accepts a list of elements.
+
     Converts a processor that handles one element and returns a list of elements into
     a processor that handles a list of elements and returns a list of elements by calling
     each element in the list in turn and joining the intermediate results into one result
-    :param processor: a processor that operates on one element
-    :return: a processor that operates on a list of elements
+
+    * **processor**: a processor that operates on one element
+    * **return** : a processor that operates on a list of elements
 
     >>> def square_pair(x):
     ...     return[x , x*x]

@@ -1,7 +1,7 @@
 """
-Useful utilities for working with BeautifulSoup trees
+Utilities for working with BeautifulSoup trees
 
-
+This module contains utilities useful for implementing custom processors and predicates.
 """
 from typing import Any, Callable, List
 
@@ -11,9 +11,10 @@ from bs4 import BeautifulSoup
 def set_new_children(elm, children):
     """
     Sets new children to an element
-    :param elm: the element to have its children set
-    :param children: a sequence of children
-    :return: the element
+
+    * **elm**: the element to have its children set
+    * **children**: a sequence of children
+    * **return**: the element
 
     >>> xml = BeautifulSoup("<root>X<a/>X<b/>X</root>",'xml')
     >>> xml
@@ -39,9 +40,10 @@ def set_new_children(elm, children):
 def process_children(processor: Callable[[Any], List[Any]], elm):
     """
     Processes the children of an element
-    :param processor: A processor that takes an element and returns a list of elements
-    :param elm: the element to process
-    :return: A list with the joined results of processing each child with the provided processor
+
+    * **processor**: A processor that takes an element and returns a list of elements
+    * **elm**: the element to process
+    * **return**: A list with the joined results of processing each child with the provided processor
 
     >>> doc = BeautifulSoup("<div>a<span>b</span>c<p>d<span>e</span>f<a/>g</p>h</div>", "html.parser")
     >>> counter = [0]
@@ -63,6 +65,11 @@ def process_children(processor: Callable[[Any], List[Any]], elm):
 
 def is_tag(elm):
     """
+    True if the passed object is a HTML/XML tag
+
+    * **elm**:
+    * **return**:
+
     >>> from bs4 import BeautifulSoup as bs
     >>> doc = bs("<span></span><p>bubu</p>", "html.parser")
     >>> span = doc.span
@@ -72,9 +79,6 @@ def is_tag(elm):
     True
     >>> is_tag(list(doc.p.children)[0])
     False
-
-    :param elm:
-    :return:
     """
     return elm is not None and elm.name is not None
 
@@ -84,6 +88,8 @@ _bs = BeautifulSoup("<a/>", "html.parser")
 
 def copy_element_type(elm):
     """
+    Creates a new element with the same tag name as the passed element
+
     >>> xml = BeautifulSoup("<root><abc/></root>", "xml")
     >>> copy_element_type(xml.root.abc)
     <abc/>

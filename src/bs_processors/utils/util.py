@@ -1,13 +1,18 @@
+"""
+Various low level utilities
+"""
+
 import functools
 import itertools
 import re
-from os import path
 import string
 from typing import Optional, Any, List, Iterable
 
 
 def is_empty(s):
     """
+    True if None or string with whitespaces
+
     >>> is_empty(None)
     True
     >>> is_empty("hello")
@@ -21,8 +26,9 @@ def is_empty(s):
 def is_non_empty_child(elm):
     """
     Returns true if the child is an non empty Navigable string or an Tag,Soup...
-    :param elm: a Beautiful soup element
-    :return: True if the element is not an empty string
+
+    * **elm**: a Beautiful soup element
+    * **return**: True if the element is not an empty string
 
     >>> from bs4 import BeautifulSoup as bs
     >>> doc = bs("<html><div>   <span>hello</span> <p></p></div></html>", "html.parser")
@@ -60,30 +66,6 @@ def is_non_empty_child(elm):
     return not is_empty(elm)
 
 
-def join_strings(left: Optional[str], right: Optional[str]) -> Optional[str]:
-    """
-    :param left:
-    :param right:
-    :return:
-
-    >>> join_strings( None , 'abc')
-    'abc'
-    >>> join_strings( None , None) is None
-    True
-    >>> join_strings( 'abc' , None)
-    'abc'
-    >>> join_strings( 'abc' , 'cde')
-    'abc cde'
-    """
-    if left is None and right is None:
-        return None
-    if right is None:
-        return left
-    if left is None:
-        return right
-    return left + " " + right
-
-
 def _whitespace_regex():
     """
     >>> _whitespace_regex()
@@ -119,7 +101,3 @@ def flatten(val: Iterable[Iterable[Any]]) -> List[Any]:
     ['abc', 'def', 12, 34, 46, 3.14, 2.22]
     """
     return list(itertools.chain(*val))
-
-
-def path_resolver(*args):
-    return path.abspath(path.join(*args))
