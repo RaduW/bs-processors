@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>bs_processors.utils.util API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Various low level utilities" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,11 +20,16 @@
 <h1 class="title">Module <code>bs_processors.utils.util</code></h1>
 </header>
 <section id="section-intro">
+<p>Various low level utilities</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import functools
+<pre><code class="python">&#34;&#34;&#34;
+Various low level utilities
+&#34;&#34;&#34;
+
+import functools
 import itertools
 import re
 from os import path
@@ -34,6 +39,8 @@ from typing import Optional, Any, List, Iterable
 
 def is_empty(s):
     &#34;&#34;&#34;
+    True if None or string with whitespaces
+
     &gt;&gt;&gt; is_empty(None)
     True
     &gt;&gt;&gt; is_empty(&#34;hello&#34;)
@@ -47,8 +54,9 @@ def is_empty(s):
 def is_non_empty_child(elm):
     &#34;&#34;&#34;
     Returns true if the child is an non empty Navigable string or an Tag,Soup...
-    :param elm: a Beautiful soup element
-    :return: True if the element is not an empty string
+
+    * **elm*: a Beautiful soup element
+    * **return*: True if the element is not an empty string
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
     &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
@@ -84,30 +92,6 @@ def is_non_empty_child(elm):
     if elm.name is not None:
         return True
     return not is_empty(elm)
-
-
-def join_strings(left: Optional[str], right: Optional[str]) -&gt; Optional[str]:
-    &#34;&#34;&#34;
-    :param left:
-    :param right:
-    :return:
-
-    &gt;&gt;&gt; join_strings( None , &#39;abc&#39;)
-    &#39;abc&#39;
-    &gt;&gt;&gt; join_strings( None , None) is None
-    True
-    &gt;&gt;&gt; join_strings( &#39;abc&#39; , None)
-    &#39;abc&#39;
-    &gt;&gt;&gt; join_strings( &#39;abc&#39; , &#39;cde&#39;)
-    &#39;abc cde&#39;
-    &#34;&#34;&#34;
-    if left is None and right is None:
-        return None
-    if right is None:
-        return left
-    if left is None:
-        return right
-    return left + &#34; &#34; + right
 
 
 def _whitespace_regex():
@@ -148,7 +132,10 @@ def flatten(val: Iterable[Iterable[Any]]) -&gt; List[Any]:
 
 
 def path_resolver(*args):
-    return path.abspath(path.join(*args))</code></pre>
+    return path.abspath(path.join(*args))
+
+__pdoc__={}
+__pdoc__[&#34;bs_processors.utils.util.path_resolver&#34;] = False  # hide from doc</code></pre>
 </details>
 </section>
 <section>
@@ -184,7 +171,8 @@ def path_resolver(*args):
 <span>def <span class="ident">is_empty</span></span>(<span>s)</span>
 </code></dt>
 <dd>
-<div class="desc"><pre><code class="python">&gt;&gt;&gt; is_empty(None)
+<div class="desc"><p>True if None or string with whitespaces</p>
+<pre><code class="python">&gt;&gt;&gt; is_empty(None)
 True
 &gt;&gt;&gt; is_empty(&quot;hello&quot;)
 False
@@ -197,6 +185,8 @@ True
 </summary>
 <pre><code class="python">def is_empty(s):
     &#34;&#34;&#34;
+    True if None or string with whitespaces
+
     &gt;&gt;&gt; is_empty(None)
     True
     &gt;&gt;&gt; is_empty(&#34;hello&#34;)
@@ -211,9 +201,11 @@ True
 <span>def <span class="ident">is_non_empty_child</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns true if the child is an non empty Navigable string or an Tag,Soup&hellip;
-:param elm: a Beautiful soup element
-:return: True if the element is not an empty string</p>
+<div class="desc"><p>Returns true if the child is an non empty Navigable string or an Tag,Soup&hellip;</p>
+<ul>
+<li>*<em>elm</em>: a Beautiful soup element</li>
+<li>*<em>return</em>: True if the element is not an empty string</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
 &gt;&gt;&gt; doc = bs(&quot;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&quot;, &quot;html.parser&quot;)
 &gt;&gt;&gt; div = doc.html.div
@@ -250,8 +242,9 @@ True
 <pre><code class="python">def is_non_empty_child(elm):
     &#34;&#34;&#34;
     Returns true if the child is an non empty Navigable string or an Tag,Soup...
-    :param elm: a Beautiful soup element
-    :return: True if the element is not an empty string
+
+    * **elm*: a Beautiful soup element
+    * **return*: True if the element is not an empty string
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
     &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
@@ -287,50 +280,6 @@ True
     if elm.name is not None:
         return True
     return not is_empty(elm)</code></pre>
-</details>
-</dd>
-<dt id="bs_processors.utils.util.join_strings"><code class="name flex">
-<span>def <span class="ident">join_strings</span></span>(<span>left: Union[str, NoneType], right: Union[str, NoneType]) -> Union[str, NoneType]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>:param left:
-:param right:
-:return:</p>
-<pre><code class="python">&gt;&gt;&gt; join_strings( None , 'abc')
-'abc'
-&gt;&gt;&gt; join_strings( None , None) is None
-True
-&gt;&gt;&gt; join_strings( 'abc' , None)
-'abc'
-&gt;&gt;&gt; join_strings( 'abc' , 'cde')
-'abc cde'
-</code></pre></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def join_strings(left: Optional[str], right: Optional[str]) -&gt; Optional[str]:
-    &#34;&#34;&#34;
-    :param left:
-    :param right:
-    :return:
-
-    &gt;&gt;&gt; join_strings( None , &#39;abc&#39;)
-    &#39;abc&#39;
-    &gt;&gt;&gt; join_strings( None , None) is None
-    True
-    &gt;&gt;&gt; join_strings( &#39;abc&#39; , None)
-    &#39;abc&#39;
-    &gt;&gt;&gt; join_strings( &#39;abc&#39; , &#39;cde&#39;)
-    &#39;abc cde&#39;
-    &#34;&#34;&#34;
-    if left is None and right is None:
-        return None
-    if right is None:
-        return left
-    if left is None:
-        return right
-    return left + &#34; &#34; + right</code></pre>
 </details>
 </dd>
 <dt id="bs_processors.utils.util.normalize_string"><code class="name flex">
@@ -390,11 +339,10 @@ has all sequences of whitespaces reduced to one single space</p>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="bs_processors.utils.util.flatten" href="#bs_processors.utils.util.flatten">flatten</a></code></li>
 <li><code><a title="bs_processors.utils.util.is_empty" href="#bs_processors.utils.util.is_empty">is_empty</a></code></li>
 <li><code><a title="bs_processors.utils.util.is_non_empty_child" href="#bs_processors.utils.util.is_non_empty_child">is_non_empty_child</a></code></li>
-<li><code><a title="bs_processors.utils.util.join_strings" href="#bs_processors.utils.util.join_strings">join_strings</a></code></li>
 <li><code><a title="bs_processors.utils.util.normalize_string" href="#bs_processors.utils.util.normalize_string">normalize_string</a></code></li>
 <li><code><a title="bs_processors.utils.util.path_resolver" href="#bs_processors.utils.util.path_resolver">path_resolver</a></code></li>
 </ul>
