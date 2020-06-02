@@ -32,7 +32,6 @@ Various low level utilities
 import functools
 import itertools
 import re
-from os import path
 import string
 from typing import Optional, Any, List, Iterable
 
@@ -55,8 +54,8 @@ def is_non_empty_child(elm):
     &#34;&#34;&#34;
     Returns true if the child is an non empty Navigable string or an Tag,Soup...
 
-    * **elm*: a Beautiful soup element
-    * **return*: True if the element is not an empty string
+    * **elm**: a Beautiful soup element
+    * **return**: True if the element is not an empty string
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
     &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
@@ -196,8 +195,8 @@ True
 <dd>
 <div class="desc"><p>Returns true if the child is an non empty Navigable string or an Tag,Soup&hellip;</p>
 <ul>
-<li>*<em>elm</em>: a Beautiful soup element</li>
-<li>*<em>return</em>: True if the element is not an empty string</li>
+<li><strong>elm</strong>: a Beautiful soup element</li>
+<li><strong>return</strong>: True if the element is not an empty string</li>
 </ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
 &gt;&gt;&gt; doc = bs(&quot;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&quot;, &quot;html.parser&quot;)
@@ -236,8 +235,8 @@ True
     &#34;&#34;&#34;
     Returns true if the child is an non empty Navigable string or an Tag,Soup...
 
-    * **elm*: a Beautiful soup element
-    * **return*: True if the element is not an empty string
+    * **elm**: a Beautiful soup element
+    * **return**: True if the element is not an empty string
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
     &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
