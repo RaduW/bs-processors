@@ -128,14 +128,7 @@ def flatten(val: Iterable[Iterable[Any]]) -&gt; List[Any]:
     &gt;&gt;&gt; flatten( [[&#39;abc&#39;,&#39;def&#39;],[12,34,46],[3.14, 2.22]])
     [&#39;abc&#39;, &#39;def&#39;, 12, 34, 46, 3.14, 2.22]
     &#34;&#34;&#34;
-    return list(itertools.chain(*val))
-
-
-def path_resolver(*args):
-    return path.abspath(path.join(*args))
-
-__pdoc__={}
-__pdoc__[&#34;bs_processors.utils.util.path_resolver&#34;] = False  # hide from doc</code></pre>
+    return list(itertools.chain(*val))</code></pre>
 </details>
 </section>
 <section>
@@ -309,19 +302,6 @@ has all sequences of whitespaces reduced to one single space</p>
     return _whitespace.sub(&#39; &#39;, val)</code></pre>
 </details>
 </dd>
-<dt id="bs_processors.utils.util.path_resolver"><code class="name flex">
-<span>def <span class="ident">path_resolver</span></span>(<span>*args)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def path_resolver(*args):
-    return path.abspath(path.join(*args))</code></pre>
-</details>
-</dd>
 </dl>
 </section>
 <section>
@@ -344,7 +324,6 @@ has all sequences of whitespaces reduced to one single space</p>
 <li><code><a title="bs_processors.utils.util.is_empty" href="#bs_processors.utils.util.is_empty">is_empty</a></code></li>
 <li><code><a title="bs_processors.utils.util.is_non_empty_child" href="#bs_processors.utils.util.is_non_empty_child">is_non_empty_child</a></code></li>
 <li><code><a title="bs_processors.utils.util.normalize_string" href="#bs_processors.utils.util.normalize_string">normalize_string</a></code></li>
-<li><code><a title="bs_processors.utils.util.path_resolver" href="#bs_processors.utils.util.path_resolver">path_resolver</a></code></li>
 </ul>
 </li>
 </ul>
