@@ -224,11 +224,11 @@ def local_modify_factory(modify_func):
 def single_join_children(join_children: Callable[[Any, Any], Any], elm)-> [Any]:
     """
     Processor that joins children
+
     * **join_children**: a function that may join two children. If the children are
     joined the function should return an array containing the joined element, if the
     children are not joined the function should return an array containing the passed
     children.
-    
     * **elm**: the root element
     * **return**: a sequence of elements
     """
