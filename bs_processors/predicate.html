@@ -29,7 +29,7 @@ parameters and return predicates).</p>
 <p>A predicate factory generates predicates.</p>
 <p>For example, although the <code><a title="bs_processors.predicate.false_p" href="#bs_processors.predicate.false_p">false_p()</a></code> is already defined, one could define a functional <code><a title="bs_processors.predicate.false_p" href="#bs_processors.predicate.false_p">false_p()</a></code> predicate
 by using the <code><a title="bs_processors.predicate.not_pf" href="#bs_processors.predicate.not_pf">not_pf()</a></code> and the <code><a title="bs_processors.predicate.true_p" href="#bs_processors.predicate.true_p">true_p()</a></code> predicate like this:</p>
-<pre><code>my_true_p = not_pf(true_p)
+<pre><code>my_true_p = not_pf(false_p)
 </code></pre>
 <details class="source">
 <summary>
@@ -50,7 +50,7 @@ A predicate factory generates predicates.
 For example, although the `false_p` is already defined, one could define a functional `false_p` predicate
 by using the `not_pf` and the `true_p` predicate like this:
 
-    my_true_p = not_pf(true_p)
+    my_true_p = not_pf(false_p)
 
 &#34;&#34;&#34;
 from typing import Callable, Any, Sequence
@@ -472,8 +472,8 @@ def to_string_compare_predicate(pred, ignore_case=True):
     * **name_p**: can be one of:
         - a string ( will compare to the string) (e.g. has_name_pf( &#39;div&#39;) ... predicate checking if the tag is a &lt;div&gt;
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
-            (e.g.  has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;) checks if the tag is one of &lt;div&gt;,&lt;span&gt;,&lt;p&gt;)
-        - a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
+            (e.g.  `has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;)` checks if the tag is one of `[div, span, p]`)
+        - a predicate `Callable[[string,bool],bool]`, checks if the passed element has a name that satisfies the predicate
             where the second parameter is the ignore_case param from the factory.
 
     * **ignore_case**: should the comparison be case sensitive (default: ignore case)
@@ -1328,8 +1328,8 @@ False
 <li>a string ( will compare to the string) (e.g. has_name_pf( 'div') &hellip; predicate checking if the tag is a <div></li>
 <li>a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
 (e.g.
-has_name_pf(['div','span','p') checks if the tag is one of <div>,<span>,<p>)</li>
-<li>a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
+<code>has_name_pf(['div','span','p')</code> checks if the tag is one of <code>[div, span, p]</code>)</li>
+<li>a predicate <code>Callable[[string,bool],bool]</code>, checks if the passed element has a name that satisfies the predicate
 where the second parameter is the ignore_case param from the factory.</li>
 </ul>
 </li>
@@ -1410,8 +1410,8 @@ False
     * **name_p**: can be one of:
         - a string ( will compare to the string) (e.g. has_name_pf( &#39;div&#39;) ... predicate checking if the tag is a &lt;div&gt;
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
-            (e.g.  has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;) checks if the tag is one of &lt;div&gt;,&lt;span&gt;,&lt;p&gt;)
-        - a predicate Callable[[string,bool],bool], checks if the passed element has a name that satisfies the predicate
+            (e.g.  `has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;)` checks if the tag is one of `[div, span, p]`)
+        - a predicate `Callable[[string,bool],bool]`, checks if the passed element has a name that satisfies the predicate
             where the second parameter is the ignore_case param from the factory.
 
     * **ignore_case**: should the comparison be case sensitive (default: ignore case)
