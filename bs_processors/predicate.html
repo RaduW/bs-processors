@@ -252,7 +252,7 @@ def has_name_pf(name_p, ignore_case=True):
 
     &#34;&#34;&#34;
     # pred is a string
-    pred = to_string_compare_predicate(name_p, ignore_case)
+    pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
         if not is_tag_or_soup(elm):
@@ -292,7 +292,7 @@ def has_attribute_pf(attr_p):
     True
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(attr_p, ignore_case=False)
+    pred = to_string_compare_predicate_pf(attr_p, ignore_case=False)
 
     def internal(elm):
         if not is_tag(elm):
@@ -337,8 +337,8 @@ def has_attribute_value_pf(attr_p, value_p, ignore_case_value=False):
     True
 
     &#34;&#34;&#34;
-    pred_a = to_string_compare_predicate(attr_p, ignore_case=False)
-    pred_v = to_string_compare_predicate(value_p, ignore_case=ignore_case_value)
+    pred_a = to_string_compare_predicate_pf(attr_p, ignore_case=False)
+    pred_v = to_string_compare_predicate_pf(value_p, ignore_case=ignore_case_value)
 
     def internal(elm):
         if not is_tag(elm):
@@ -378,7 +378,7 @@ def has_class_pf( class_p):
     False
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(class_p)
+    pred = to_string_compare_predicate_pf(class_p)
 
     def internal(elm):
         if not is_tag(elm):
@@ -419,7 +419,7 @@ def has_children_of_type_pf(name_p, ignore_case=True):
     False
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(name_p, ignore_case)
+    pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
         if not is_tag_or_soup(elm):
@@ -449,7 +449,7 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
     &gt;&gt;&gt; e2 = s.html.div
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(name_p, ignore_case)
+    pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
         if not is_tag_or_soup(elm):
@@ -465,27 +465,27 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
     return internal
 
 
-def to_string_compare_predicate(pred, ignore_case=True):
+def to_string_compare_predicate_pf(pred, ignore_case=True):
     &#34;&#34;&#34;
     Turns the passed parameter into a string compare predicate
 
-    * **name_p**: can be one of:
-        - a string ( will compare to the string) (e.g. has_name_pf( &#39;div&#39;) ... predicate checking if the tag is a &lt;div&gt;
+    * **pred**: can be one of:
+        - a string ( will compare to the string) (e.g. `to_string_compare_predicate_pf( &#39;div&#39;)` ... predicate
+            checking if the passed argument is `&#34;div&#34;`
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
-            (e.g.  `has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;)` checks if the tag is one of `[div, span, p]`)
-        - a predicate `Callable[[string,bool],bool]`, checks if the passed element has a name that satisfies the predicate
-            where the second parameter is the ignore_case param from the factory.
-
+            (e.g.  `to_string_compare_predicate_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;)` checks if the passed argument is one of `[div, span, p]`)
+        - a predicate `Callable[[string,bool],bool]`, checks if the passed argument has a name that satisfies the
+        predicate (where the second parameter is the ignore_case param from the factory).
     * **ignore_case**: should the comparison be case sensitive (default: ignore case)
     * **return**: a predicate that expects a string like object
 
     &gt;&gt;&gt; e1 = &#39;span&#39;
     &gt;&gt;&gt; e2 = &#39;SPAN&#39;
     &gt;&gt;&gt; e3 = &#34;ul&#34;
-    &gt;&gt;&gt; p1 = to_string_compare_predicate(&#39;span&#39;)
-    &gt;&gt;&gt; p2 = to_string_compare_predicate(&#39;span&#39;, False)
-    &gt;&gt;&gt; p3 = to_string_compare_predicate(&#39;x&#39;)
-    &gt;&gt;&gt; p4 = to_string_compare_predicate(&#39;X&#39;, False)
+    &gt;&gt;&gt; p1 = to_string_compare_predicate_pf(&#39;span&#39;)
+    &gt;&gt;&gt; p2 = to_string_compare_predicate_pf(&#39;span&#39;, False)
+    &gt;&gt;&gt; p3 = to_string_compare_predicate_pf(&#39;x&#39;)
+    &gt;&gt;&gt; p4 = to_string_compare_predicate_pf(&#39;X&#39;, False)
     &gt;&gt;&gt; p1(e1)
     True
     &gt;&gt;&gt; p2(e1)
@@ -499,9 +499,9 @@ def to_string_compare_predicate(pred, ignore_case=True):
     &gt;&gt;&gt; p4(e1)
     False
 
-    &gt;&gt;&gt; p5 = to_string_compare_predicate([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;])
-    &gt;&gt;&gt; p6 = to_string_compare_predicate([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;], False)
-    &gt;&gt;&gt; p7 = to_string_compare_predicate([&#39;i&#39;,&#39;x&#39;,&#39;a&#39;])
+    &gt;&gt;&gt; p5 = to_string_compare_predicate_pf([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;])
+    &gt;&gt;&gt; p6 = to_string_compare_predicate_pf([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;], False)
+    &gt;&gt;&gt; p7 = to_string_compare_predicate_pf([&#39;i&#39;,&#39;x&#39;,&#39;a&#39;])
     &gt;&gt;&gt; p5(e1)
     True
     &gt;&gt;&gt; p5(e2)
@@ -512,13 +512,13 @@ def to_string_compare_predicate(pred, ignore_case=True):
     False
     &gt;&gt;&gt; p7(e1)
     False
-    &gt;&gt;&gt; p8 = to_string_compare_predicate({&#39;i&#39;,&#39;span&#39;,&#39;a&#39;})
+    &gt;&gt;&gt; p8 = to_string_compare_predicate_pf({&#39;i&#39;,&#39;span&#39;,&#39;a&#39;})
     &gt;&gt;&gt; p8(e1)
     True
-    &gt;&gt;&gt; p9 = to_string_compare_predicate((&#39;i&#39;,&#39;span&#39;,&#39;a&#39;))
+    &gt;&gt;&gt; p9 = to_string_compare_predicate_pf((&#39;i&#39;,&#39;span&#39;,&#39;a&#39;))
     &gt;&gt;&gt; p9(e1)
     True
-    &gt;&gt;&gt; p10 = to_string_compare_predicate(frozenset([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;]))
+    &gt;&gt;&gt; p10 = to_string_compare_predicate_pf(frozenset([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;]))
     &gt;&gt;&gt; p10(e1)
     True
     &gt;&gt;&gt; p10(e2)
@@ -527,8 +527,8 @@ def to_string_compare_predicate(pred, ignore_case=True):
     ...    if elm_name == &#39;span&#39; or elm_name == &#39;x&#39;:
     ...        return True
     ...    return False
-    &gt;&gt;&gt; p11 = to_string_compare_predicate(pred)
-    &gt;&gt;&gt; p12 = to_string_compare_predicate(pred, ignore_case=False)
+    &gt;&gt;&gt; p11 = to_string_compare_predicate_pf(pred)
+    &gt;&gt;&gt; p12 = to_string_compare_predicate_pf(pred, ignore_case=False)
     &gt;&gt;&gt; p11(e1)
     True
     &gt;&gt;&gt; p11(e2)
@@ -732,7 +732,7 @@ True
     True
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(attr_p, ignore_case=False)
+    pred = to_string_compare_predicate_pf(attr_p, ignore_case=False)
 
     def internal(elm):
         if not is_tag(elm):
@@ -815,8 +815,8 @@ True
     True
 
     &#34;&#34;&#34;
-    pred_a = to_string_compare_predicate(attr_p, ignore_case=False)
-    pred_v = to_string_compare_predicate(value_p, ignore_case=ignore_case_value)
+    pred_a = to_string_compare_predicate_pf(attr_p, ignore_case=False)
+    pred_v = to_string_compare_predicate_pf(value_p, ignore_case=ignore_case_value)
 
     def internal(elm):
         if not is_tag(elm):
@@ -886,7 +886,7 @@ False
     False
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(name_p, ignore_case)
+    pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
         if not is_tag_or_soup(elm):
@@ -959,7 +959,7 @@ False
     False
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(class_p)
+    pred = to_string_compare_predicate_pf(class_p)
 
     def internal(elm):
         if not is_tag(elm):
@@ -1011,7 +1011,7 @@ satisfies name_p (it will go deep looking for the elements).</p>
     &gt;&gt;&gt; e2 = s.html.div
 
     &#34;&#34;&#34;
-    pred = to_string_compare_predicate(name_p, ignore_case)
+    pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
         if not is_tag_or_soup(elm):
@@ -1095,7 +1095,7 @@ False
 
     &#34;&#34;&#34;
     # pred is a string
-    pred = to_string_compare_predicate(name_p, ignore_case)
+    pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
         if not is_tag_or_soup(elm):
@@ -1316,35 +1316,32 @@ False
     return internal</code></pre>
 </details>
 </dd>
-<dt id="bs_processors.predicate.to_string_compare_predicate"><code class="name flex">
-<span>def <span class="ident">to_string_compare_predicate</span></span>(<span>pred, ignore_case=True)</span>
+<dt id="bs_processors.predicate.to_string_compare_predicate_pf"><code class="name flex">
+<span>def <span class="ident">to_string_compare_predicate_pf</span></span>(<span>pred, ignore_case=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Turns the passed parameter into a string compare predicate</p>
 <ul>
-<li>
-<p><strong>name_p</strong>: can be one of:</p>
-<ul>
-<li>a string ( will compare to the string) (e.g. has_name_pf( 'div') &hellip; predicate checking if the tag is a <div></li>
+<li><strong>pred</strong>: can be one of:<ul>
+<li>a string ( will compare to the string) (e.g. <code>to_string_compare_predicate_pf( 'div')</code> &hellip; predicate
+checking if the passed argument is <code>"div"</code></li>
 <li>a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
 (e.g.
-<code>has_name_pf(['div','span','p')</code> checks if the tag is one of <code>[div, span, p]</code>)</li>
-<li>a predicate <code>Callable[[string,bool],bool]</code>, checks if the passed element has a name that satisfies the predicate
-where the second parameter is the ignore_case param from the factory.</li>
+<code>to_string_compare_predicate_pf(['div','span','p')</code> checks if the passed argument is one of <code>[div, span, p]</code>)</li>
+<li>a predicate <code>Callable[[string,bool],bool]</code>, checks if the passed argument has a name that satisfies the
+predicate (where the second parameter is the ignore_case param from the factory).</li>
 </ul>
 </li>
-<li>
-<p><strong>ignore_case</strong>: should the comparison be case sensitive (default: ignore case)</p>
-</li>
+<li><strong>ignore_case</strong>: should the comparison be case sensitive (default: ignore case)</li>
 <li><strong>return</strong>: a predicate that expects a string like object</li>
 </ul>
 <pre><code class="python">&gt;&gt;&gt; e1 = 'span'
 &gt;&gt;&gt; e2 = 'SPAN'
 &gt;&gt;&gt; e3 = &quot;ul&quot;
-&gt;&gt;&gt; p1 = to_string_compare_predicate('span')
-&gt;&gt;&gt; p2 = to_string_compare_predicate('span', False)
-&gt;&gt;&gt; p3 = to_string_compare_predicate('x')
-&gt;&gt;&gt; p4 = to_string_compare_predicate('X', False)
+&gt;&gt;&gt; p1 = to_string_compare_predicate_pf('span')
+&gt;&gt;&gt; p2 = to_string_compare_predicate_pf('span', False)
+&gt;&gt;&gt; p3 = to_string_compare_predicate_pf('x')
+&gt;&gt;&gt; p4 = to_string_compare_predicate_pf('X', False)
 &gt;&gt;&gt; p1(e1)
 True
 &gt;&gt;&gt; p2(e1)
@@ -1358,9 +1355,9 @@ False
 &gt;&gt;&gt; p4(e1)
 False
 </code></pre>
-<pre><code class="python">&gt;&gt;&gt; p5 = to_string_compare_predicate(['i','span','a'])
-&gt;&gt;&gt; p6 = to_string_compare_predicate(['i','span','a'], False)
-&gt;&gt;&gt; p7 = to_string_compare_predicate(['i','x','a'])
+<pre><code class="python">&gt;&gt;&gt; p5 = to_string_compare_predicate_pf(['i','span','a'])
+&gt;&gt;&gt; p6 = to_string_compare_predicate_pf(['i','span','a'], False)
+&gt;&gt;&gt; p7 = to_string_compare_predicate_pf(['i','x','a'])
 &gt;&gt;&gt; p5(e1)
 True
 &gt;&gt;&gt; p5(e2)
@@ -1371,13 +1368,13 @@ True
 False
 &gt;&gt;&gt; p7(e1)
 False
-&gt;&gt;&gt; p8 = to_string_compare_predicate({'i','span','a'})
+&gt;&gt;&gt; p8 = to_string_compare_predicate_pf({'i','span','a'})
 &gt;&gt;&gt; p8(e1)
 True
-&gt;&gt;&gt; p9 = to_string_compare_predicate(('i','span','a'))
+&gt;&gt;&gt; p9 = to_string_compare_predicate_pf(('i','span','a'))
 &gt;&gt;&gt; p9(e1)
 True
-&gt;&gt;&gt; p10 = to_string_compare_predicate(frozenset(['i','span','a']))
+&gt;&gt;&gt; p10 = to_string_compare_predicate_pf(frozenset(['i','span','a']))
 &gt;&gt;&gt; p10(e1)
 True
 &gt;&gt;&gt; p10(e2)
@@ -1386,8 +1383,8 @@ True
 ...    if elm_name == 'span' or elm_name == 'x':
 ...        return True
 ...    return False
-&gt;&gt;&gt; p11 = to_string_compare_predicate(pred)
-&gt;&gt;&gt; p12 = to_string_compare_predicate(pred, ignore_case=False)
+&gt;&gt;&gt; p11 = to_string_compare_predicate_pf(pred)
+&gt;&gt;&gt; p12 = to_string_compare_predicate_pf(pred, ignore_case=False)
 &gt;&gt;&gt; p11(e1)
 True
 &gt;&gt;&gt; p11(e2)
@@ -1403,27 +1400,27 @@ False
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def to_string_compare_predicate(pred, ignore_case=True):
+<pre><code class="python">def to_string_compare_predicate_pf(pred, ignore_case=True):
     &#34;&#34;&#34;
     Turns the passed parameter into a string compare predicate
 
-    * **name_p**: can be one of:
-        - a string ( will compare to the string) (e.g. has_name_pf( &#39;div&#39;) ... predicate checking if the tag is a &lt;div&gt;
+    * **pred**: can be one of:
+        - a string ( will compare to the string) (e.g. `to_string_compare_predicate_pf( &#39;div&#39;)` ... predicate
+            checking if the passed argument is `&#34;div&#34;`
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
-            (e.g.  `has_name_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;)` checks if the tag is one of `[div, span, p]`)
-        - a predicate `Callable[[string,bool],bool]`, checks if the passed element has a name that satisfies the predicate
-            where the second parameter is the ignore_case param from the factory.
-
+            (e.g.  `to_string_compare_predicate_pf([&#39;div&#39;,&#39;span&#39;,&#39;p&#39;)` checks if the passed argument is one of `[div, span, p]`)
+        - a predicate `Callable[[string,bool],bool]`, checks if the passed argument has a name that satisfies the
+        predicate (where the second parameter is the ignore_case param from the factory).
     * **ignore_case**: should the comparison be case sensitive (default: ignore case)
     * **return**: a predicate that expects a string like object
 
     &gt;&gt;&gt; e1 = &#39;span&#39;
     &gt;&gt;&gt; e2 = &#39;SPAN&#39;
     &gt;&gt;&gt; e3 = &#34;ul&#34;
-    &gt;&gt;&gt; p1 = to_string_compare_predicate(&#39;span&#39;)
-    &gt;&gt;&gt; p2 = to_string_compare_predicate(&#39;span&#39;, False)
-    &gt;&gt;&gt; p3 = to_string_compare_predicate(&#39;x&#39;)
-    &gt;&gt;&gt; p4 = to_string_compare_predicate(&#39;X&#39;, False)
+    &gt;&gt;&gt; p1 = to_string_compare_predicate_pf(&#39;span&#39;)
+    &gt;&gt;&gt; p2 = to_string_compare_predicate_pf(&#39;span&#39;, False)
+    &gt;&gt;&gt; p3 = to_string_compare_predicate_pf(&#39;x&#39;)
+    &gt;&gt;&gt; p4 = to_string_compare_predicate_pf(&#39;X&#39;, False)
     &gt;&gt;&gt; p1(e1)
     True
     &gt;&gt;&gt; p2(e1)
@@ -1437,9 +1434,9 @@ False
     &gt;&gt;&gt; p4(e1)
     False
 
-    &gt;&gt;&gt; p5 = to_string_compare_predicate([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;])
-    &gt;&gt;&gt; p6 = to_string_compare_predicate([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;], False)
-    &gt;&gt;&gt; p7 = to_string_compare_predicate([&#39;i&#39;,&#39;x&#39;,&#39;a&#39;])
+    &gt;&gt;&gt; p5 = to_string_compare_predicate_pf([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;])
+    &gt;&gt;&gt; p6 = to_string_compare_predicate_pf([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;], False)
+    &gt;&gt;&gt; p7 = to_string_compare_predicate_pf([&#39;i&#39;,&#39;x&#39;,&#39;a&#39;])
     &gt;&gt;&gt; p5(e1)
     True
     &gt;&gt;&gt; p5(e2)
@@ -1450,13 +1447,13 @@ False
     False
     &gt;&gt;&gt; p7(e1)
     False
-    &gt;&gt;&gt; p8 = to_string_compare_predicate({&#39;i&#39;,&#39;span&#39;,&#39;a&#39;})
+    &gt;&gt;&gt; p8 = to_string_compare_predicate_pf({&#39;i&#39;,&#39;span&#39;,&#39;a&#39;})
     &gt;&gt;&gt; p8(e1)
     True
-    &gt;&gt;&gt; p9 = to_string_compare_predicate((&#39;i&#39;,&#39;span&#39;,&#39;a&#39;))
+    &gt;&gt;&gt; p9 = to_string_compare_predicate_pf((&#39;i&#39;,&#39;span&#39;,&#39;a&#39;))
     &gt;&gt;&gt; p9(e1)
     True
-    &gt;&gt;&gt; p10 = to_string_compare_predicate(frozenset([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;]))
+    &gt;&gt;&gt; p10 = to_string_compare_predicate_pf(frozenset([&#39;i&#39;,&#39;span&#39;,&#39;a&#39;]))
     &gt;&gt;&gt; p10(e1)
     True
     &gt;&gt;&gt; p10(e2)
@@ -1465,8 +1462,8 @@ False
     ...    if elm_name == &#39;span&#39; or elm_name == &#39;x&#39;:
     ...        return True
     ...    return False
-    &gt;&gt;&gt; p11 = to_string_compare_predicate(pred)
-    &gt;&gt;&gt; p12 = to_string_compare_predicate(pred, ignore_case=False)
+    &gt;&gt;&gt; p11 = to_string_compare_predicate_pf(pred)
+    &gt;&gt;&gt; p12 = to_string_compare_predicate_pf(pred, ignore_case=False)
     &gt;&gt;&gt; p11(e1)
     True
     &gt;&gt;&gt; p11(e2)
@@ -1565,7 +1562,7 @@ True
 <li><code><a title="bs_processors.predicate.is_tag_p" href="#bs_processors.predicate.is_tag_p">is_tag_p</a></code></li>
 <li><code><a title="bs_processors.predicate.not_pf" href="#bs_processors.predicate.not_pf">not_pf</a></code></li>
 <li><code><a title="bs_processors.predicate.or_pf" href="#bs_processors.predicate.or_pf">or_pf</a></code></li>
-<li><code><a title="bs_processors.predicate.to_string_compare_predicate" href="#bs_processors.predicate.to_string_compare_predicate">to_string_compare_predicate</a></code></li>
+<li><code><a title="bs_processors.predicate.to_string_compare_predicate_pf" href="#bs_processors.predicate.to_string_compare_predicate_pf">to_string_compare_predicate_pf</a></code></li>
 <li><code><a title="bs_processors.predicate.true_p" href="#bs_processors.predicate.true_p">true_p</a></code></li>
 </ul>
 </li>
