@@ -120,7 +120,7 @@ def copy_element_type(elm):
 
     &gt;&gt;&gt; xml = BeautifulSoup(&#34;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&#34;, &#34;xml&#34;)
     &gt;&gt;&gt; copy_element_type(xml.root.abc)
-    &lt;abc/&gt;
+    &lt;abc&gt;&lt;/abc&gt;
     &#34;&#34;&#34;
     return _bs.new_tag(elm.name)</code></pre>
 </details>
@@ -139,7 +139,7 @@ def copy_element_type(elm):
 <div class="desc"><p>Creates a new element with the same tag name as the passed element</p>
 <pre><code class="python">&gt;&gt;&gt; xml = BeautifulSoup(&quot;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&quot;, &quot;xml&quot;)
 &gt;&gt;&gt; copy_element_type(xml.root.abc)
-&lt;abc/&gt;
+&lt;abc&gt;&lt;/abc&gt;
 </code></pre></div>
 <details class="source">
 <summary>
@@ -151,7 +151,7 @@ def copy_element_type(elm):
 
     &gt;&gt;&gt; xml = BeautifulSoup(&#34;&lt;root&gt;&lt;abc/&gt;&lt;/root&gt;&#34;, &#34;xml&#34;)
     &gt;&gt;&gt; copy_element_type(xml.root.abc)
-    &lt;abc/&gt;
+    &lt;abc&gt;&lt;/abc&gt;
     &#34;&#34;&#34;
     return _bs.new_tag(elm.name)</code></pre>
 </details>

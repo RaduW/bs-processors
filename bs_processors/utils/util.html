@@ -50,49 +50,6 @@ def is_empty(s):
     return s is None or len(s) == 0 or s.isspace()
 
 
-def is_non_empty_child(elm):
-    &#34;&#34;&#34;
-    Returns true if the child is an non empty Navigable string or an Tag,Soup...
-
-    * **elm**: a Beautiful soup element
-    * **return**: True if the element is not an empty string
-
-    &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
-    &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
-    &gt;&gt;&gt; div = doc.html.div
-    &gt;&gt;&gt; span = doc.html.div.span
-    &gt;&gt;&gt; p = doc.html.div.p
-    &gt;&gt;&gt; is_non_empty_child(div)
-    True
-    &gt;&gt;&gt; is_non_empty_child(span)
-    True
-    &gt;&gt;&gt; is_non_empty_child(p)
-    True
-    &gt;&gt;&gt; children = list(div.children)
-    &gt;&gt;&gt; children[0]
-    &#39; &#39;
-    &gt;&gt;&gt; is_non_empty_child(children[0])
-    False
-    &gt;&gt;&gt; children[1]
-    &lt;span&gt;hello&lt;/span&gt;
-    &gt;&gt;&gt; is_non_empty_child(children[1])
-    True
-    &gt;&gt;&gt; children[2]
-    &#39; &#39;
-    &gt;&gt;&gt; is_non_empty_child(children[2])
-    False
-    &gt;&gt;&gt; children[3]
-    &lt;p&gt;&lt;/p&gt;
-    &gt;&gt;&gt; is_non_empty_child(children[3])
-    True
-    &#34;&#34;&#34;
-    if elm is None:
-        return False
-    if elm.name is not None:
-        return True
-    return not is_empty(elm)
-
-
 def _whitespace_regex():
     &#34;&#34;&#34;
     &gt;&gt;&gt; _whitespace_regex()
@@ -189,91 +146,6 @@ True
     return s is None or len(s) == 0 or s.isspace()</code></pre>
 </details>
 </dd>
-<dt id="bs_processors.utils.util.is_non_empty_child"><code class="name flex">
-<span>def <span class="ident">is_non_empty_child</span></span>(<span>elm)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Returns true if the child is an non empty Navigable string or an Tag,Soup&hellip;</p>
-<ul>
-<li><strong>elm</strong>: a Beautiful soup element</li>
-<li><strong>return</strong>: True if the element is not an empty string</li>
-</ul>
-<pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
-&gt;&gt;&gt; doc = bs(&quot;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&quot;, &quot;html.parser&quot;)
-&gt;&gt;&gt; div = doc.html.div
-&gt;&gt;&gt; span = doc.html.div.span
-&gt;&gt;&gt; p = doc.html.div.p
-&gt;&gt;&gt; is_non_empty_child(div)
-True
-&gt;&gt;&gt; is_non_empty_child(span)
-True
-&gt;&gt;&gt; is_non_empty_child(p)
-True
-&gt;&gt;&gt; children = list(div.children)
-&gt;&gt;&gt; children[0]
-' '
-&gt;&gt;&gt; is_non_empty_child(children[0])
-False
-&gt;&gt;&gt; children[1]
-&lt;span&gt;hello&lt;/span&gt;
-&gt;&gt;&gt; is_non_empty_child(children[1])
-True
-&gt;&gt;&gt; children[2]
-' '
-&gt;&gt;&gt; is_non_empty_child(children[2])
-False
-&gt;&gt;&gt; children[3]
-&lt;p&gt;&lt;/p&gt;
-&gt;&gt;&gt; is_non_empty_child(children[3])
-True
-</code></pre></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def is_non_empty_child(elm):
-    &#34;&#34;&#34;
-    Returns true if the child is an non empty Navigable string or an Tag,Soup...
-
-    * **elm**: a Beautiful soup element
-    * **return**: True if the element is not an empty string
-
-    &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
-    &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
-    &gt;&gt;&gt; div = doc.html.div
-    &gt;&gt;&gt; span = doc.html.div.span
-    &gt;&gt;&gt; p = doc.html.div.p
-    &gt;&gt;&gt; is_non_empty_child(div)
-    True
-    &gt;&gt;&gt; is_non_empty_child(span)
-    True
-    &gt;&gt;&gt; is_non_empty_child(p)
-    True
-    &gt;&gt;&gt; children = list(div.children)
-    &gt;&gt;&gt; children[0]
-    &#39; &#39;
-    &gt;&gt;&gt; is_non_empty_child(children[0])
-    False
-    &gt;&gt;&gt; children[1]
-    &lt;span&gt;hello&lt;/span&gt;
-    &gt;&gt;&gt; is_non_empty_child(children[1])
-    True
-    &gt;&gt;&gt; children[2]
-    &#39; &#39;
-    &gt;&gt;&gt; is_non_empty_child(children[2])
-    False
-    &gt;&gt;&gt; children[3]
-    &lt;p&gt;&lt;/p&gt;
-    &gt;&gt;&gt; is_non_empty_child(children[3])
-    True
-    &#34;&#34;&#34;
-    if elm is None:
-        return False
-    if elm.name is not None:
-        return True
-    return not is_empty(elm)</code></pre>
-</details>
-</dd>
 <dt id="bs_processors.utils.util.normalize_string"><code class="name flex">
 <span>def <span class="ident">normalize_string</span></span>(<span>val: Union[str, NoneType])</span>
 </code></dt>
@@ -321,7 +193,6 @@ has all sequences of whitespaces reduced to one single space</p>
 <ul class="">
 <li><code><a title="bs_processors.utils.util.flatten" href="#bs_processors.utils.util.flatten">flatten</a></code></li>
 <li><code><a title="bs_processors.utils.util.is_empty" href="#bs_processors.utils.util.is_empty">is_empty</a></code></li>
-<li><code><a title="bs_processors.utils.util.is_non_empty_child" href="#bs_processors.utils.util.is_non_empty_child">is_non_empty_child</a></code></li>
 <li><code><a title="bs_processors.utils.util.normalize_string" href="#bs_processors.utils.util.normalize_string">normalize_string</a></code></li>
 </ul>
 </li>

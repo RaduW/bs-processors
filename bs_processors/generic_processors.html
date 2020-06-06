@@ -58,10 +58,10 @@ def single_filter_proc(should_filter: Callable[[Any], bool], elm) -&gt; List[Any
     ...     return False
     ...
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
-    &gt;&gt;&gt; doc = bs(&#39;&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;&#39;)
+    &gt;&gt;&gt; doc = bs(&#39;&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;&#39;,&#39;html.parser&#39;)
     &gt;&gt;&gt; filtered = single_filter_proc(should_filter, doc.html)
     &gt;&gt;&gt; filtered
-    [&lt;html&gt;&lt;body&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;]
+    [&lt;html&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/html&gt;]
 
     &#34;&#34;&#34;
     if should_filter(elm):
@@ -408,10 +408,10 @@ passed argument</p></div>
 ...     return False
 ...
 &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
-&gt;&gt;&gt; doc = bs('&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;')
+&gt;&gt;&gt; doc = bs('&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;','html.parser')
 &gt;&gt;&gt; filtered = single_filter_proc(should_filter, doc.html)
 &gt;&gt;&gt; filtered
-[&lt;html&gt;&lt;body&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;]
+[&lt;html&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/html&gt;]
 </code></pre></div>
 <details class="source">
 <summary>
@@ -431,10 +431,10 @@ passed argument</p></div>
     ...     return False
     ...
     &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
-    &gt;&gt;&gt; doc = bs(&#39;&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;&#39;)
+    &gt;&gt;&gt; doc = bs(&#39;&lt;html&gt;&lt;div&gt;a&lt;span&gt;b&lt;/span&gt; &lt;a&gt;&lt;/div&gt; &lt;p&gt;&lt;span&gt;x&lt;/span&gt;&lt;/p&gt;&lt;a&gt;&lt;/html&gt;&#39;,&#39;html.parser&#39;)
     &gt;&gt;&gt; filtered = single_filter_proc(should_filter, doc.html)
     &gt;&gt;&gt; filtered
-    [&lt;html&gt;&lt;body&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;]
+    [&lt;html&gt;&lt;div&gt;a &lt;/div&gt; &lt;p&gt;&lt;/p&gt;&lt;/html&gt;]
 
     &#34;&#34;&#34;
     if should_filter(elm):

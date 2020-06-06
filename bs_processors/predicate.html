@@ -55,6 +55,7 @@ by using the `not_pf` and the `true_p` predicate like this:
 &#34;&#34;&#34;
 from typing import Callable, Any, Sequence
 
+from .utils.util import is_empty
 from .xml_util import is_tag
 
 
@@ -198,7 +199,7 @@ def is_soup_p(elm):
     return elm is not None and elm.name is not None and elm.name == &#34;[doc]&#34;
 
 
-def is_tag_or_soup(elm):
+def is_tag_or_soup_p(elm):
     &#34;&#34;&#34;
     Tries to check if the element is either a Tag or a BeautifulSoup element
     It checks by verifying that the element has a non None name.
@@ -209,7 +210,7 @@ def is_tag_or_soup(elm):
     return elm is not None and elm.name is not None
 
 
-def is_string(elm):
+def is_string_p(elm):
     &#34;&#34;&#34;
     Tries to check if the element is a NavigableString
     It checks by verifying that the element has a None name
@@ -218,7 +219,6 @@ def is_string(elm):
     * **return**: True if the element looks like a NavigableString
     &#34;&#34;&#34;
     return elm is not None and elm.name is None
-
 
 def has_name_pf(name_p, ignore_case=True):
     &#34;&#34;&#34;
@@ -255,7 +255,7 @@ def has_name_pf(name_p, ignore_case=True):
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
         return pred(elm.name)
 
@@ -422,11 +422,11 @@ def has_children_of_type_pf(name_p, ignore_case=True):
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
 
         for child in elm.children:
-            if is_tag_or_soup(child) and pred(child.name):
+            if is_tag_or_soup_p(child) and pred(child.name):
                 return True
         return False
 
@@ -452,17 +452,61 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
 
         for child in elm.children:
-            if is_tag_or_soup(child) and pred(child.name):
+            if is_tag_or_soup_p(child) and pred(child.name):
                 return True
             if internal(child):
                 return True
         return False
 
     return internal
+
+
+def is_empty_p(elm):
+    &#34;&#34;&#34;
+    Returns true if the child is an empty Navigable string
+
+    * **elm**: a Beautiful soup element
+    * **return**: True if the element is an empty string
+
+    &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+    &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
+    &gt;&gt;&gt; div = doc.html.div
+    &gt;&gt;&gt; span = doc.html.div.span
+    &gt;&gt;&gt; p = doc.html.div.p
+    &gt;&gt;&gt; is_empty_p(div)
+    False
+    &gt;&gt;&gt; is_empty_p(span)
+    False
+    &gt;&gt;&gt; is_empty_p(p)
+    False
+    &gt;&gt;&gt; children = list(div.children)
+    &gt;&gt;&gt; children[0]
+    &#39; &#39;
+    &gt;&gt;&gt; is_empty_p(children[0])
+    True
+    &gt;&gt;&gt; children[1]
+    &lt;span&gt;hello&lt;/span&gt;
+    &gt;&gt;&gt; is_empty_p(children[1])
+    False
+    &gt;&gt;&gt; children[2]
+    &#39; &#39;
+    &gt;&gt;&gt; is_empty_p(children[2])
+    True
+    &gt;&gt;&gt; children[3]
+    &lt;p&gt;&lt;/p&gt;
+    &gt;&gt;&gt; is_empty_p(children[3])
+    False
+    &#34;&#34;&#34;
+    if elm is None:
+        return True
+    if elm.name is not None:
+        return False
+    return is_empty(elm)
+
 
 
 def to_string_compare_predicate_pf(pred, ignore_case=True):
@@ -889,11 +933,11 @@ False
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
 
         for child in elm.children:
-            if is_tag_or_soup(child) and pred(child.name):
+            if is_tag_or_soup_p(child) and pred(child.name):
                 return True
         return False
 
@@ -1014,11 +1058,11 @@ satisfies name_p (it will go deep looking for the elements).</p>
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
 
         for child in elm.children:
-            if is_tag_or_soup(child) and pred(child.name):
+            if is_tag_or_soup_p(child) and pred(child.name):
                 return True
             if internal(child):
                 return True
@@ -1098,11 +1142,96 @@ False
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
         return pred(elm.name)
 
     return internal</code></pre>
+</details>
+</dd>
+<dt id="bs_processors.predicate.is_empty_p"><code class="name flex">
+<span>def <span class="ident">is_empty_p</span></span>(<span>elm)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns true if the child is an empty Navigable string</p>
+<ul>
+<li><strong>elm</strong>: a Beautiful soup element</li>
+<li><strong>return</strong>: True if the element is an empty string</li>
+</ul>
+<pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+&gt;&gt;&gt; doc = bs(&quot;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&quot;, &quot;html.parser&quot;)
+&gt;&gt;&gt; div = doc.html.div
+&gt;&gt;&gt; span = doc.html.div.span
+&gt;&gt;&gt; p = doc.html.div.p
+&gt;&gt;&gt; is_empty_p(div)
+False
+&gt;&gt;&gt; is_empty_p(span)
+False
+&gt;&gt;&gt; is_empty_p(p)
+False
+&gt;&gt;&gt; children = list(div.children)
+&gt;&gt;&gt; children[0]
+' '
+&gt;&gt;&gt; is_empty_p(children[0])
+True
+&gt;&gt;&gt; children[1]
+&lt;span&gt;hello&lt;/span&gt;
+&gt;&gt;&gt; is_empty_p(children[1])
+False
+&gt;&gt;&gt; children[2]
+' '
+&gt;&gt;&gt; is_empty_p(children[2])
+True
+&gt;&gt;&gt; children[3]
+&lt;p&gt;&lt;/p&gt;
+&gt;&gt;&gt; is_empty_p(children[3])
+False
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_empty_p(elm):
+    &#34;&#34;&#34;
+    Returns true if the child is an empty Navigable string
+
+    * **elm**: a Beautiful soup element
+    * **return**: True if the element is an empty string
+
+    &gt;&gt;&gt; from bs4 import BeautifulSoup as bs
+    &gt;&gt;&gt; doc = bs(&#34;&lt;html&gt;&lt;div&gt;   &lt;span&gt;hello&lt;/span&gt; &lt;p&gt;&lt;/p&gt;&lt;/div&gt;&lt;/html&gt;&#34;, &#34;html.parser&#34;)
+    &gt;&gt;&gt; div = doc.html.div
+    &gt;&gt;&gt; span = doc.html.div.span
+    &gt;&gt;&gt; p = doc.html.div.p
+    &gt;&gt;&gt; is_empty_p(div)
+    False
+    &gt;&gt;&gt; is_empty_p(span)
+    False
+    &gt;&gt;&gt; is_empty_p(p)
+    False
+    &gt;&gt;&gt; children = list(div.children)
+    &gt;&gt;&gt; children[0]
+    &#39; &#39;
+    &gt;&gt;&gt; is_empty_p(children[0])
+    True
+    &gt;&gt;&gt; children[1]
+    &lt;span&gt;hello&lt;/span&gt;
+    &gt;&gt;&gt; is_empty_p(children[1])
+    False
+    &gt;&gt;&gt; children[2]
+    &#39; &#39;
+    &gt;&gt;&gt; is_empty_p(children[2])
+    True
+    &gt;&gt;&gt; children[3]
+    &lt;p&gt;&lt;/p&gt;
+    &gt;&gt;&gt; is_empty_p(children[3])
+    False
+    &#34;&#34;&#34;
+    if elm is None:
+        return True
+    if elm.name is not None:
+        return False
+    return is_empty(elm)</code></pre>
 </details>
 </dd>
 <dt id="bs_processors.predicate.is_soup_p"><code class="name flex">
@@ -1131,8 +1260,8 @@ not None name that is the string '[doc]'.</p>
     return elm is not None and elm.name is not None and elm.name == &#34;[doc]&#34;</code></pre>
 </details>
 </dd>
-<dt id="bs_processors.predicate.is_string"><code class="name flex">
-<span>def <span class="ident">is_string</span></span>(<span>elm)</span>
+<dt id="bs_processors.predicate.is_string_p"><code class="name flex">
+<span>def <span class="ident">is_string_p</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Tries to check if the element is a NavigableString
@@ -1145,7 +1274,7 @@ It checks by verifying that the element has a None name</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def is_string(elm):
+<pre><code class="python">def is_string_p(elm):
     &#34;&#34;&#34;
     Tries to check if the element is a NavigableString
     It checks by verifying that the element has a None name
@@ -1156,8 +1285,8 @@ It checks by verifying that the element has a None name</p>
     return elm is not None and elm.name is None</code></pre>
 </details>
 </dd>
-<dt id="bs_processors.predicate.is_tag_or_soup"><code class="name flex">
-<span>def <span class="ident">is_tag_or_soup</span></span>(<span>elm)</span>
+<dt id="bs_processors.predicate.is_tag_or_soup_p"><code class="name flex">
+<span>def <span class="ident">is_tag_or_soup_p</span></span>(<span>elm)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Tries to check if the element is either a Tag or a BeautifulSoup element
@@ -1170,7 +1299,7 @@ It checks by verifying that the element has a non None name.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def is_tag_or_soup(elm):
+<pre><code class="python">def is_tag_or_soup_p(elm):
     &#34;&#34;&#34;
     Tries to check if the element is either a Tag or a BeautifulSoup element
     It checks by verifying that the element has a non None name.
@@ -1556,9 +1685,10 @@ True
 <li><code><a title="bs_processors.predicate.has_class_pf" href="#bs_processors.predicate.has_class_pf">has_class_pf</a></code></li>
 <li><code><a title="bs_processors.predicate.has_descendents_of_type_pf" href="#bs_processors.predicate.has_descendents_of_type_pf">has_descendents_of_type_pf</a></code></li>
 <li><code><a title="bs_processors.predicate.has_name_pf" href="#bs_processors.predicate.has_name_pf">has_name_pf</a></code></li>
+<li><code><a title="bs_processors.predicate.is_empty_p" href="#bs_processors.predicate.is_empty_p">is_empty_p</a></code></li>
 <li><code><a title="bs_processors.predicate.is_soup_p" href="#bs_processors.predicate.is_soup_p">is_soup_p</a></code></li>
-<li><code><a title="bs_processors.predicate.is_string" href="#bs_processors.predicate.is_string">is_string</a></code></li>
-<li><code><a title="bs_processors.predicate.is_tag_or_soup" href="#bs_processors.predicate.is_tag_or_soup">is_tag_or_soup</a></code></li>
+<li><code><a title="bs_processors.predicate.is_string_p" href="#bs_processors.predicate.is_string_p">is_string_p</a></code></li>
+<li><code><a title="bs_processors.predicate.is_tag_or_soup_p" href="#bs_processors.predicate.is_tag_or_soup_p">is_tag_or_soup_p</a></code></li>
 <li><code><a title="bs_processors.predicate.is_tag_p" href="#bs_processors.predicate.is_tag_p">is_tag_p</a></code></li>
 <li><code><a title="bs_processors.predicate.not_pf" href="#bs_processors.predicate.not_pf">not_pf</a></code></li>
 <li><code><a title="bs_processors.predicate.or_pf" href="#bs_processors.predicate.or_pf">or_pf</a></code></li>
