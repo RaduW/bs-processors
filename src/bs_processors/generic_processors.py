@@ -29,10 +29,10 @@ def single_filter_proc(should_filter: Callable[[Any], bool], elm) -> List[Any]:
     ...     return False
     ...
     >>> from bs4 import BeautifulSoup as bs
-    >>> doc = bs('<html><div>a<span>b</span> <a></div> <p><span>x</span></p><a></html>')
+    >>> doc = bs('<html><div>a<span>b</span> <a></div> <p><span>x</span></p><a></html>','html.parser')
     >>> filtered = single_filter_proc(should_filter, doc.html)
     >>> filtered
-    [<html><body><div>a </div> <p></p></body></html>]
+    [<html><div>a </div> <p></p></html>]
 
     """
     if should_filter(elm):

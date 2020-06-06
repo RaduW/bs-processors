@@ -18,6 +18,7 @@ by using the `not_pf` and the `true_p` predicate like this:
 """
 from typing import Callable, Any, Sequence
 
+from .utils.util import is_empty
 from .xml_util import is_tag
 
 
@@ -161,7 +162,7 @@ def is_soup_p(elm):
     return elm is not None and elm.name is not None and elm.name == "[doc]"
 
 
-def is_tag_or_soup(elm):
+def is_tag_or_soup_p(elm):
     """
     Tries to check if the element is either a Tag or a BeautifulSoup element
     It checks by verifying that the element has a non None name.
@@ -172,7 +173,7 @@ def is_tag_or_soup(elm):
     return elm is not None and elm.name is not None
 
 
-def is_string(elm):
+def is_string_p(elm):
     """
     Tries to check if the element is a NavigableString
     It checks by verifying that the element has a None name
@@ -181,7 +182,6 @@ def is_string(elm):
     * **return**: True if the element looks like a NavigableString
     """
     return elm is not None and elm.name is None
-
 
 def has_name_pf(name_p, ignore_case=True):
     """
@@ -218,7 +218,7 @@ def has_name_pf(name_p, ignore_case=True):
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
         return pred(elm.name)
 
@@ -385,11 +385,11 @@ def has_children_of_type_pf(name_p, ignore_case=True):
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
 
         for child in elm.children:
-            if is_tag_or_soup(child) and pred(child.name):
+            if is_tag_or_soup_p(child) and pred(child.name):
                 return True
         return False
 
@@ -415,17 +415,61 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
     pred = to_string_compare_predicate_pf(name_p, ignore_case)
 
     def internal(elm):
-        if not is_tag_or_soup(elm):
+        if not is_tag_or_soup_p(elm):
             return False
 
         for child in elm.children:
-            if is_tag_or_soup(child) and pred(child.name):
+            if is_tag_or_soup_p(child) and pred(child.name):
                 return True
             if internal(child):
                 return True
         return False
 
     return internal
+
+
+def is_empty_p(elm):
+    """
+    Returns true if the child is an empty Navigable string
+
+    * **elm**: a Beautiful soup element
+    * **return**: True if the element is an empty string
+
+    >>> from bs4 import BeautifulSoup as bs
+    >>> doc = bs("<html><div>   <span>hello</span> <p></p></div></html>", "html.parser")
+    >>> div = doc.html.div
+    >>> span = doc.html.div.span
+    >>> p = doc.html.div.p
+    >>> is_empty_p(div)
+    False
+    >>> is_empty_p(span)
+    False
+    >>> is_empty_p(p)
+    False
+    >>> children = list(div.children)
+    >>> children[0]
+    ' '
+    >>> is_empty_p(children[0])
+    True
+    >>> children[1]
+    <span>hello</span>
+    >>> is_empty_p(children[1])
+    False
+    >>> children[2]
+    ' '
+    >>> is_empty_p(children[2])
+    True
+    >>> children[3]
+    <p></p>
+    >>> is_empty_p(children[3])
+    False
+    """
+    if elm is None:
+        return True
+    if elm.name is not None:
+        return False
+    return is_empty(elm)
+
 
 
 def to_string_compare_predicate_pf(pred, ignore_case=True):

@@ -92,6 +92,6 @@ def copy_element_type(elm):
 
     >>> xml = BeautifulSoup("<root><abc/></root>", "xml")
     >>> copy_element_type(xml.root.abc)
-    <abc/>
+    <abc></abc>
     """
     return _bs.new_tag(elm.name)

@@ -7,7 +7,7 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 pytest_plugins= (
-    "utils.pytest.fixtures"
+    "bs_processors.utils.pytest.fixtures"
 )
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
