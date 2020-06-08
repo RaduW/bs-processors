@@ -462,12 +462,9 @@ inside them.</p>
 text. For that we can use the
 <a href="bs-processors/bs_processors/generic_processors.html#bs_processors.generic_processors.filter_factory">filter_factory</a>
 processor.</p>
-<p>In the processor we need to pass a filter that checks if an element is a <code>&lt;font&gt;</code> element and if it is empty.</p>
-<p>Luckily we can construct this predicate from already available building blocks.
-The <a href="bs-processors/bs_processors/predicate.html#bs_processors.predicate.has_name_pf">has_name_pf</a> predicate factory can
-be used to check if the passed element is font and the
-<a href="bs-processors/bs_processors/predicate.html#bs_processors.predicate.is_empty_p">is_empty_p</a> can be used to check if
-the element is empty (contains at most white spaces).</p>
+<p>In the processor we need to pass a predicate that checks if an element is a <code>&lt;font&gt;</code> or if it is a `<div> with a
+marker class that designates it as not necessary.</p>
+<p>Luckily we can construct this predicate from already available building blocks.</p>
 <p>To construct our predicate we have the following code:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">and_pf</span><span class="p">,</span> <span class="n">has_name_pf</span><span class="p">,</span> <span class="n">is_empty_p</span><span class="p">,</span> <span class="n">or_pf</span><span class="p">,</span> <span class="n">has_class_pf</span>
 
@@ -480,7 +477,7 @@ the element is empty (contains at most white spaces).</p>
 <span class="p">)</span>
 </code></pre></div>
 
-<p>After constructing the predicate all that remains is to use it to create our filter</p>
+<p>After constructing the predicate all that remains is to use it to create our processor</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">unwrap_factory</span>
 
 <span class="n">remove_unnecessary_wrappers</span> <span class="o">=</span> <span class="n">unwrap_factory</span><span class="p">(</span><span class="n">should_uwrap_p</span><span class="p">)</span>
