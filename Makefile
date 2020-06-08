@@ -14,6 +14,10 @@ publish: dist
 	$(TWINE) upload dist/*
 
 
+publish-test: dist
+	@echo "--> Uploading to test pypi"
+	$(TWINE) upload --repository testpypi dist/*
+
 config: setup-venv
 
 setup-venv: .venv/bin/python
