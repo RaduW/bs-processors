@@ -438,13 +438,54 @@
                 
                 <h1 id="working-with-bs-processors">Working with bs-processors</h1>
 <h2 id="overview">Overview</h2>
-<p>... write overview</p>
+<p>bs-processors is a library for modifying/cleaning htm/xml files with minimum fuss.</p>
+<p>It is meant to be used as an alternative to something like XSLT for cases when achieving the desired result with XSLT is not possible or very difficult.</p>
+<p>The general idea is that one can combine the provided blocks and maybe write a moderate amount of custom code to create powerful document processors.</p>
 <h2 id="the-processors">The processors</h2>
-<p>TODO</p>
+<p>At the base of the library is a set of processors that can be configured to achieve typical processing steps.</p>
+<p>Processors can be assembled toghether into one combined processor in order to create the desired effect.</p>
+<p>Anybody can write a processor that can interoperate with the provided processors with relative ease.</p>
+<p>A processor is a function of the following signature:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">processor</span><span class="p">(</span><span class="n">elms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+</code></pre></div>
+
+<p>That is a processor takes a list of elements and returns a list of elements.</p>
+<p>Typically the processor will be passed just one element, the top level document (the BeautifulSoup object). </p>
+<p>It may seem an odd choice that the processor has the above signature since it would probably be more ergonomic to take a single element as input but the choice was made in order to easyly compose a chain of processors.</p>
+<p>Since a processor may return a list of elements (and there are real world cases when this is useful) a decision was taken to also accept as parameter a list of elements making it trivial to compose processors at the expense of the slight annoyance that instead of initially passing the top level element as <code>elm</code> one would pass it as <code>[elm]</code>.</p>
+<p>The library contains a set of processor factories that take specific configurations and return processor functions.</p>
+<p>As an example, the library contains a processor factory that can generate filter processors, that is processors that selectively filter documents of certain elements. By passing a filtering function to the filter factory one gets a processor that filters the desired elements.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">filter_div_and_span</span> <span class="o">=</span> <span class="n">filter_factory</span><span class="p">(</span><span class="n">has_name_pf</span><span class="p">([</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="s1">&#39;span&#39;</span><span class="p">]))</span>
+</code></pre></div>
+
+<p>In the example above <code>filter_div_and_span</code> is a processor that will remove all elements of type <code>div</code> or <code>span</code> from the passed elms ( <strong>Note</strong> that the filtering is going to be deep, the processor will descend all the way down looking for elements to filter).</p>
+<p>For a list of all available processors check the Api.</p>
+<p>For examples of using them check the examples section.</p>
 <h2 id="the-predicates">The predicates</h2>
-<p>TODO</p>
+<p>Predicates are functions that receive an argument of one of the BeautifulSoupe types ( i.e. <code>BeautifulSoup</code> <code>TagElement</code> or <code>NavigableString</code> ) and return a boolean value.  Predicates are used by most processor factory to configure their behaviour.</p>
 <h2 id="writing-your-own-predicates">Writing your own predicates</h2>
-<p>TODO </p>
+<p>Although there are a lot of predicates and predicate factories that can be combined to achive most common functionality it is quite trivial to write one yourself.</p>
+<p>In this example we will create a predicate that checks if the elment is a tag or the soup element and if the element is not span.</p>
+<p><strong>Note</strong> that you don't really need to write this particular predicate since it can be easyly created by composing the existing predicates like so <code>my_predicate = and_pf( is_tag_or_soup_p, not_pf(has_name_pf('span')))</code>.</p>
+<p>The desired predicate can be written from scratch like so:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">my_predicate</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">elm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># just to be sure we don&#39;t raise</span>
+  <span class="k">if</span> <span class="n">elm</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">False</span> <span class="c1"># this is a NavigableString (a tag or a soup have name)</span>
+  <span class="k">if</span> <span class="n">elm</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;span&#39;</span>
+    <span class="k">return</span> <span class="kc">False</span> <span class="c1"># we don&#39;t want span elements</span>
+  <span class="k">return</span> <span class="kc">True</span> <span class="c1"># anything else is fine</span>
+</code></pre></div>
+
+<p>Of course one can combine the custom predicate with already build predicates and predicate factories like so:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">is_span_p</span> <span class="o">=</span> <span class="n">has_name_pf</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_predicate</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tag_or_soup_p</span><span class="p">(</span><span class="n">elm</span><span class="p">):</span>
+    <span class="k">return</span> <span class="kc">False</span>
+  <span class="k">return</span> <span class="ow">not</span> <span class="n">is_span_p</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+</code></pre></div>
+
 <h2 id="writing-your-own-processors">Writing your own processors</h2>
 <p>TODO</p>
                 
