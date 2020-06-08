@@ -9,6 +9,9 @@ import os
 from os import path
 from os import walk
 import re
+import logging
+
+_log = logging.getLogger("bs-processors")
 
 start_markdown = re.compile(r"\s*(\"\"\"|''')\s*")
 section_start = re.compile(r"\s*#\s*SECTION_START\s*(?P<name>[^ \t\r\n]+)", re.IGNORECASE)
@@ -17,7 +20,7 @@ exclude_start = re.compile(r"\s*#\s*EXCLUDE_START", re.IGNORECASE)
 exclude_end = re.compile(r"\s*#\s*EXCLUDE_END", re.IGNORECASE)
 inject_file = re.compile(r"\s*{{\s*INJECT_FILE\s+(?P<code_type>[^ \t\r\n]+)\s+(?P<name>[^ \t]+)\s*}}", re.IGNORECASE)
 inject_code = re.compile(r"\s*{{\s*INJECT_CODE\s+(?P<name>[^ \t]+)\s*}}", re.IGNORECASE)
-
+no_processing = re.compile(r"(#\s*NO_PROCESSING)|({{\s*NO_PROCESSING\s*}})", re.IGNORECASE)
 
 class ReferenceType(Enum):
     Internal = {'id': "internal"}
@@ -36,9 +39,19 @@ def _load_file(directory, file_name) -> List[str]:
         return []
 
 
+def is_processing(lines: List[str]):
+    for line in lines:
+        if no_processing.match(line):
+            return False
+    return True
+
+
+
 def extract_example(file_name: str) -> List[str]:
     directory, f_name = path.split(file_name)
     content = _load_file(directory, f_name)
+    if not is_processing(content):
+        return None
     markdown = get_raw_markdown(content)
     code_segments = get_code_segments(content)
     references = get_references(markdown)
@@ -121,8 +134,10 @@ def get_references(text: List[str]) -> List[CodeReference]:
 
     """
     ret_val = []
+    if text is None:
+        return ret_val
     for line_idx, line in enumerate(text):
-        for ref_type, regex in [(ReferenceType.External, inject_file), (ReferenceType.Internal, inject_code)]:
+        for (ref_type, regex) in [(ReferenceType.External, inject_file), (ReferenceType.Internal, inject_code)]:
             match = regex.match(line)
             if match is not None:
                 if ref_type == ReferenceType.External:
@@ -249,16 +264,19 @@ def markdown_generator(input_dir, output_dir):
             os.mkdir(cur_output_dir)
 
         for file_name in filenames:
-            input_path = path.join(dirpath, file_name)
-            name, ext = path.splitext(file_name)
-            output_path = path.join(cur_output_dir, name + ".md")
-            if ext != '.py':
-                continue
-            markdown = extract_example(input_path)
+            try:
+                input_path = path.join(dirpath, file_name)
+                name, ext = path.splitext(file_name)
+                output_path = path.join(cur_output_dir, name + ".md")
+                if ext != '.py':
+                    continue
+                markdown = extract_example(input_path)
 
-            with open(output_path, "wt") as f:
-                f.writelines(markdown)
-
+                if markdown is not None:
+                    with open(output_path, "wt") as f:
+                        f.writelines(markdown)
+            except:
+                _log.error(f"Error while processing file: {file_name}", exc_info=True)
 
 if __name__ == '__main__':
     bs_processors_dir = path.abspath(path.join(__file__, '../../..'))

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bs-processors",
-    version="0.0.1pre06",
+    version="0.0.1pre07",
     author="RaduW",
     description="html/xml processors for using with BeautifulSoup",
     long_description=long_description,

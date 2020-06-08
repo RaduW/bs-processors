@@ -12,6 +12,7 @@ nav:
   - how_to.md
   - Examples:
       - examples/index.md
+      - examples/use_filter_proc.md
       - examples/remove.md
       - examples/flatten.md
       - examples/transform.md
