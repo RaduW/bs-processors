@@ -183,6 +183,7 @@ def is_string_p(elm):
     """
     return elm is not None and elm.name is None
 
+
 def has_name_pf(name_p, ignore_case=True):
     """
     Predicate factory, returns true if the element name matches the pred parameter
@@ -314,7 +315,7 @@ def has_attribute_value_pf(attr_p, value_p, ignore_case_value=False):
     return internal
 
 
-def has_class_pf( class_p):
+def has_class_pf(class_p):
     """
     A predicate factory that checks that an element has the desired class
 
@@ -430,7 +431,7 @@ def has_descendents_of_type_pf(name_p, ignore_case=True):
 
 def is_empty_p(elm):
     """
-    Returns true if the child is an empty Navigable string
+    Returns true if the elm  is an empty Navigable string or an elm with at most empty navigatable string chidlren
 
     * **elm**: a Beautiful soup element
     * **return**: True if the element is an empty string
@@ -466,10 +467,16 @@ def is_empty_p(elm):
     """
     if elm is None:
         return True
-    if elm.name is not None:
-        return False
-    return is_empty(elm)
+    if is_string_p(elm):
+        return is_empty(elm)
 
+    for child in elm.children:
+        if is_tag(child):
+            return False
+        if not is_empty(child):
+            return False
+
+    return True
 
 
 def to_string_compare_predicate_pf(pred, ignore_case=True):
@@ -480,7 +487,8 @@ def to_string_compare_predicate_pf(pred, ignore_case=True):
         - a string ( will compare to the string) (e.g. `to_string_compare_predicate_pf( 'div')` ... predicate
             checking if the passed argument is `"div"`
         - a list,tuple,set,frozenset : will create a predicate that checks if the tag is one of the passed tags
-            (e.g.  `to_string_compare_predicate_pf(['div','span','p')` checks if the passed argument is one of `[div, span, p]`)
+            (e.g.  `to_string_compare_predicate_pf(['div','span','p')` checks if the passed argument is one of `[div,
+            span, p]`)
         - a predicate `Callable[[string,bool],bool]`, checks if the passed argument has a name that satisfies the
         predicate (where the second parameter is the ignore_case param from the factory).
     * **ignore_case**: should the comparison be case sensitive (default: ignore case)
