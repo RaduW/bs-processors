@@ -13,6 +13,7 @@ nav:
   - Examples:
       - examples/index.md
       - examples/use_filter_proc.md
+      - examples/unwrap_tags.md
 
 
 markdown_extensions:

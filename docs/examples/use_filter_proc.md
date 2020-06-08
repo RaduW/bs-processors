@@ -59,9 +59,9 @@ Now we are ready to pass it our loaded soup and we are done
 import util
 
 def main():
-    doc = util.load_relative_html_file(__file__, "simple_filter.html")
+    doc = util.load_relative_html_file(__file__, "input/simple_filter.html")
     result = filter_empty_font_proc([doc])
-    util.save_relative_result(result, __file__, "simple_filter_result.html")
+    util.save_relative_result(result, __file__, "output/simple_filter_result.html")
 
 ```
 

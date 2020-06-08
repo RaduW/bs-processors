@@ -257,7 +257,11 @@ def markdown_generator(input_dir, output_dir):
     input_dir = path.abspath(input_dir)
 
     for dirpath, dirnames, filenames in walk(input_dir):
+
         rel_path = dirpath[len(input_dir):]
+        if rel_path.startswith('/'):
+            rel_path = rel_path[1:]
+
         cur_output_dir = path.join(output_dir, rel_path)
 
         if not path.isdir(cur_output_dir):
