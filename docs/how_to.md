@@ -54,7 +54,17 @@ Although there are a lot of predicates and predicate factories that can be combi
 
 In this example we will create a predicate that checks if the elment is a tag or the soup element and if the element is not span.
 
-**Note** that you don't really need to write this particular predicate since it can be easyly created by composing the existing predicates like so `my_predicate = and_pf( is_tag_or_soup_p, not_pf(has_name_pf('span')))`.
+**Note** that you don't really need to write this particular predicate since it can be easily created by composing the existing predicates like so:
+
+ ```python
+
+my_predicate = and_pf( 
+    is_tag_or_soup_p, 
+    not_pf(
+        has_name_pf('span')
+    )
+)
+```
 
 The desired predicate can be written from scratch like so:
 
@@ -65,7 +75,7 @@ def my_predicate(elm)->bool:
   if elm.name is None:
     return False # this is a NavigableString (a tag or a soup have name)
   if elm.name == 'span'
-  	return False # we don't want span elements
+    return False # we don't want span elements
   return True # anything else is fine
 ```
 
