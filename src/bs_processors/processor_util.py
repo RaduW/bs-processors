@@ -73,3 +73,5 @@ def single_to_multiple(processor: Callable[[Any], List[Any]])->Callable[[List[An
 
     return inner
 
+def process_file(processor: Callable[[Any], List[Any]], input_fname: str, output_fname: str):
+    pass

@@ -56,8 +56,7 @@ In this example we will create a predicate that checks if the elment is a tag or
 
 **Note** that you don't really need to write this particular predicate since it can be easily created by composing the existing predicates like so:
 
- ```python
-
+```python
 my_predicate = and_pf( 
     is_tag_or_soup_p, 
     not_pf(

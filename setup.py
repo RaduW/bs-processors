@@ -11,11 +11,17 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://raduw.github.io/bs-processors/",
+    entry_points = {
+      "console_scripts": ['bs-proc=bs_processors.cli.main:main'],
+    },
     project_urls = {
         "Documentation": "https://raduw.github.io/bs-processors/",
         "Source Code": "https://github.com/RaduW/bs-processors.git",
         "Bug Tracker": "https://github.com/RaduW/bs-processors/issues",
     },
+    install_requires=[
+        "click", "beautifulsoup4"
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
