@@ -466,18 +466,26 @@
 <h2 id="writing-your-own-predicates">Writing your own predicates</h2>
 <p>Although there are a lot of predicates and predicate factories that can be combined to achive most common functionality it is quite trivial to write one yourself.</p>
 <p>In this example we will create a predicate that checks if the elment is a tag or the soup element and if the element is not span.</p>
-<p><strong>Note</strong> that you don't really need to write this particular predicate since it can be easyly created by composing the existing predicates like so <code>my_predicate = and_pf( is_tag_or_soup_p, not_pf(has_name_pf('span')))</code>.</p>
-<p>The desired predicate can be written from scratch like so:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">my_predicate</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
-  <span class="k">if</span> <span class="n">elm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># just to be sure we don&#39;t raise</span>
-  <span class="k">if</span> <span class="n">elm</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">return</span> <span class="kc">False</span> <span class="c1"># this is a NavigableString (a tag or a soup have name)</span>
-  <span class="k">if</span> <span class="n">elm</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;span&#39;</span>
-    <span class="k">return</span> <span class="kc">False</span> <span class="c1"># we don&#39;t want span elements</span>
-  <span class="k">return</span> <span class="kc">True</span> <span class="c1"># anything else is fine</span>
-</code></pre></div>
+<p><strong>Note</strong> that you don't really need to write this particular predicate since it can be easily created by composing the existing predicates like so:</p>
+<p>```python</p>
+<p>my_predicate = and_pf( 
+    is_tag_or_soup_p, 
+    not_pf(
+        has_name_pf('span')
+    )
+)
+<div class="codehilite"><pre><span></span><code><span class="n">The</span> <span class="n">desired</span> <span class="n">predicate</span> <span class="n">can</span> <span class="n">be</span> <span class="n">written</span> <span class="k">from</span> <span class="n">scratch</span> <span class="k">like</span> <span class="n">so</span><span class="p">:</span>
 
+<span class="o">```</span><span class="n">python</span>
+<span class="n">def</span> <span class="n">my_predicate</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bool</span><span class="p">:</span>
+  <span class="k">if</span> <span class="n">elm</span> <span class="k">is</span> <span class="k">None</span><span class="p">:</span>
+    <span class="k">return</span> <span class="k">False</span>  <span class="o">#</span> <span class="n">just</span> <span class="k">to</span> <span class="n">be</span> <span class="n">sure</span> <span class="n">we</span> <span class="n">don</span><span class="s1">&#39;t raise</span>
+<span class="s1">  if elm.name is None:</span>
+<span class="s1">    return False # this is a NavigableString (a tag or a soup have name)</span>
+<span class="s1">  if elm.name == &#39;</span><span class="n">span</span><span class="s1">&#39;</span>
+<span class="s1">    return False # we don&#39;</span><span class="n">t</span> <span class="n">want</span> <span class="n">span</span> <span class="n">elements</span>
+  <span class="k">return</span> <span class="k">True</span> <span class="o">#</span> <span class="n">anything</span> <span class="k">else</span> <span class="k">is</span> <span class="n">fine</span>
+</code></pre></div></p>
 <p>Of course one can combine the custom predicate with already build predicates and predicate factories like so:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">is_span_p</span> <span class="o">=</span> <span class="n">has_name_pf</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">my_predicate</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
