@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>bs_processors API documentation</title>
+<title>bs_processors.cli.main API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,52 +17,31 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>bs_processors</code></h1>
+<h1 class="title">Module <code>bs_processors.cli.main</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .generic_processors import (
-    filter_factory, unwrap_factory, flatten_factory, local_modify_factory,
-    join_children_factory, lateral_effect_factory,
-)
-from .processor_util import join
-from .predicate import *
+<pre><code class="python">import click
 
-__pdoc__={}
-__pdoc__[&#34;bs_processors.utils.pytest&#34;] = False  # hide from doc</code></pre>
+
+
+@click.group()
+def main():
+    pass
+
+
+@click.option(&#34;--output-dir&#34;, prompt=&#34;output directory&#34;, help=&#34;the input directory&#34;)
+@click.option(&#34;--input-dir&#34;, prompt=&#34;input directory&#34;, help=&#34;the input directory&#34;)
+@click.option(&#34;--processor&#34;, prompt=&#34;processor file&#34;, help=&#34;the processor file&#34;)
+@main.command()
+def p_dir(input_dir, output_dir, processor):
+    click.echo(f&#34;hello {input_dir} from main&#34;)</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="bs_processors.cli" href="cli/index.html">bs_processors.cli</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="bs_processors.generic_processors" href="generic_processors.html">bs_processors.generic_processors</a></code></dt>
-<dd>
-<div class="desc"><p>Generic processor factories …</p></div>
-</dd>
-<dt><code class="name"><a title="bs_processors.predicate" href="predicate.html">bs_processors.predicate</a></code></dt>
-<dd>
-<div class="desc"><p>Generally useful predicates to be used when building and configuring processors …</p></div>
-</dd>
-<dt><code class="name"><a title="bs_processors.processor_util" href="processor_util.html">bs_processors.processor_util</a></code></dt>
-<dd>
-<div class="desc"><p>Generic utilities for processors …</p></div>
-</dd>
-<dt><code class="name"><a title="bs_processors.utils" href="utils/index.html">bs_processors.utils</a></code></dt>
-<dd>
-<div class="desc"><p>General utilities</p></div>
-</dd>
-<dt><code class="name"><a title="bs_processors.xml_util" href="xml_util.html">bs_processors.xml_util</a></code></dt>
-<dd>
-<div class="desc"><p>Utilities for working with BeautifulSoup trees …</p></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -77,14 +56,9 @@ __pdoc__[&#34;bs_processors.utils.pytest&#34;] = False  # hide from doc</code></
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="bs_processors.cli" href="cli/index.html">bs_processors.cli</a></code></li>
-<li><code><a title="bs_processors.generic_processors" href="generic_processors.html">bs_processors.generic_processors</a></code></li>
-<li><code><a title="bs_processors.predicate" href="predicate.html">bs_processors.predicate</a></code></li>
-<li><code><a title="bs_processors.processor_util" href="processor_util.html">bs_processors.processor_util</a></code></li>
-<li><code><a title="bs_processors.utils" href="utils/index.html">bs_processors.utils</a></code></li>
-<li><code><a title="bs_processors.xml_util" href="xml_util.html">bs_processors.xml_util</a></code></li>
+<li><code><a title="bs_processors.cli" href="index.html">bs_processors.cli</a></code></li>
 </ul>
 </li>
 </ul>

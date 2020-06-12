@@ -460,7 +460,7 @@ inside them.</p>
 
 <p>We noticed that the file has some empty <code>&lt;font&gt;</code> tags that we want to remove if they do not contain any
 text. For that we can use the
-<a href="bs-processors/bs_processors/generic_processors.html#bs_processors.generic_processors.filter_factory">filter_factory</a>
+<a href="bs-processors/bs_processors/generic_processors.html#bs_processors.generic_processors.unwrap_factory">filter_factory</a>
 processor.</p>
 <p>In the processor we need to pass a predicate that checks if an element is a <code>&lt;font&gt;</code> or if it is a `<div> with a
 marker class that designates it as not necessary.</p>

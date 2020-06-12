@@ -291,6 +291,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#composing-processors-in-processor-chains" class="md-nav__link">
+    Composing processors in processor chains
+  </a>
+  
+</li>
+      
       
       
       
@@ -417,6 +424,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#composing-processors-in-processor-chains" class="md-nav__link">
+    Composing processors in processor chains
+  </a>
+  
+</li>
+      
       
       
       
@@ -495,7 +509,59 @@
 </code></pre></div>
 
 <h2 id="writing-your-own-processors">Writing your own processors</h2>
-<p>TODO</p>
+<p>Writing your own processors is not much more complicated than writing custom predicates.</p>
+<p>In order for a custom processor to interact with other processors the custom processor has to have the following signature:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">processor</span><span class="p">(</span><span class="n">elms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+</code></pre></div>
+
+<p>For our example let's make a processor that adds a class attribute to all elements of type <code>&lt;div&gt;</code> from the passed elements as long as they do not have an id set. This is a rather contrived example that could be easyly implemented using the existing processors.</p>
+<p>We will only implement a simplified form that takes only one element and returns a list of elements and then we will use an already existing adaptor function to create the final processor</p>
+<p>Here's how one would write this:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors.xml_util</span> <span class="kn">import</span> <span class="n">set_new_children</span><span class="p">,</span> <span class="n">process_children</span>
+<span class="kn">from</span> <span class="nn">bs_processors.processor_util</span>
+
+<span class="k">def</span> <span class="nf">add_classes_to_div_single</span><span class="p">(</span> <span class="n">elm</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">is_tag_or_soup_p</span><span class="p">(</span><span class="n">elm</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">elm</span><span class="p">]</span>  <span class="c1"># nothing to proess further</span>
+  <span class="k">if</span> <span class="n">elm</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;div&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">elm</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">):</span>
+    <span class="n">clss</span> <span class="o">=</span> <span class="n">elm</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;my-class&#39;</span> <span class="ow">in</span> <span class="n">clss</span><span class="p">:</span>
+      <span class="n">clss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;my-class&#39;</span><span class="p">)</span>
+      <span class="n">elm</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clss</span>
+
+  <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">elm</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+    <span class="n">new_children</span> <span class="o">=</span> <span class="n">process_children</span><span class="p">(</span><span class="k">lambda</span> <span class="n">child</span><span class="p">:</span> <span class="n">single_filter_proc</span><span class="p">(</span><span class="n">should_filter</span><span class="p">,</span> <span class="n">child</span><span class="p">),</span> <span class="n">elm</span><span class="p">)</span>
+    <span class="n">set_new_children</span><span class="p">(</span><span class="n">elm</span><span class="p">,</span> <span class="n">new_children</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="p">[</span><span class="n">elm</span><span class="p">]</span>
+
+<span class="n">add_classes_to_div</span> <span class="o">=</span> <span class="n">single_to_multiple</span><span class="p">(</span><span class="n">add_classes_to_div_single</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="composing-processors-in-processor-chains">Composing processors in processor chains</h2>
+<p>Often we need to process documents in complex ways. Often a complex process can be broken down in a series of simple processes. As an example we may want to filter some elements, unwrap some other elements, add some attributes to other elements and finally flatten the whole result.</p>
+<p>bs-processors is designed to work with exactly this type of scenarios.</p>
+<p>All we need to do is create our processors and then chain them toghether to obtain a processor that will call all configured processors.</p>
+<p>In the example below we create a few processors and finally we chain them toghether to obtain our final processor.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">filter_bad_p</span> <span class="o">=</span> <span class="n">and_pf</span><span class="p">(</span> 
+    <span class="n">is_tag_p</span><span class="p">,</span> 
+    <span class="n">has_name_pf</span><span class="p">([</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="s1">&#39;div&#39;</span><span class="p">),</span>
+    <span class="n">has_class_pf</span><span class="p">([</span><span class="s1">&#39;bad-element&#39;</span><span class="p">])</span>
+<span class="p">)</span>
+
+<span class="n">filter_bad_proc</span> <span class="o">=</span> <span class="n">filter_factory</span><span class="p">(</span><span class="n">filter_bad_p</span><span class="p">)</span>
+
+<span class="n">should_unwrap_p</span> <span class="o">=</span> <span class="n">has_name_pf</span><span class="p">[</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+
+<span class="n">unwrap_proc</span> <span class="o">=</span> <span class="n">unwrap_factory</span><span class="p">(</span><span class="n">should_unwrap</span><span class="p">)</span>
+
+<span class="n">is_internal_child_p</span> <span class="o">=</span> <span class="n">has_name_pf</span><span class="p">([</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">])</span>
+<span class="n">flatten_children_p</span> <span class="o">=</span> <span class="n">has_name_pf</span><span class="p">([</span><span class="s1">&#39;div&#39;</span><span class="p">])</span>
+
+<span class="n">flatten_proc</span> <span class="o">=</span> <span class="n">flatten_factory</span><span class="p">(</span><span class="n">flatten_clhildren_p</span><span class="p">,</span> <span class="n">is_internal_child_p</span><span class="p">)</span>
+
+<span class="n">clean_html_proc</span> <span class="o">=</span> <span class="n">join</span><span class="p">([</span><span class="n">filter_bad_proc</span><span class="p">,</span> <span class="n">unwrap_proc</span><span class="p">,</span> <span class="n">flatten_proc</span><span class="p">])</span>
+</code></pre></div>
                 
                   
                 

@@ -99,7 +99,10 @@ def single_to_multiple(processor: Callable[[Any], List[Any]])-&gt;Callable[[List
                 result += processor(elm)
         return result
 
-    return inner</code></pre>
+    return inner
+
+def process_file(processor: Callable[[Any], List[Any]], input_fname: str, output_fname: str):
+    pass</code></pre>
 </details>
 </section>
 <section>
@@ -187,6 +190,19 @@ flattened)</p>
     return inner</code></pre>
 </details>
 </dd>
+<dt id="bs_processors.processor_util.process_file"><code class="name flex">
+<span>def <span class="ident">process_file</span></span>(<span>processor: Callable[[Any], List[Any]], input_fname: str, output_fname: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_file(processor: Callable[[Any], List[Any]], input_fname: str, output_fname: str):
+    pass</code></pre>
+</details>
+</dd>
 <dt id="bs_processors.processor_util.single_to_multiple"><code class="name flex">
 <span>def <span class="ident">single_to_multiple</span></span>(<span>processor: Callable[[Any], List[Any]]) -> Callable[[List[Any]], List[Any]]</span>
 </code></dt>
@@ -256,6 +272,7 @@ each element in the list in turn and joining the intermediate results into one r
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="bs_processors.processor_util.join" href="#bs_processors.processor_util.join">join</a></code></li>
+<li><code><a title="bs_processors.processor_util.process_file" href="#bs_processors.processor_util.process_file">process_file</a></code></li>
 <li><code><a title="bs_processors.processor_util.single_to_multiple" href="#bs_processors.processor_util.single_to_multiple">single_to_multiple</a></code></li>
 </ul>
 </li>
