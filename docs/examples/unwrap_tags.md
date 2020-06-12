@@ -47,7 +47,7 @@ Let's say we have the following file that we want to clean up:
 
 We noticed that the file has some empty `<font>` tags that we want to remove if they do not contain any
 text. For that we can use the
-[filter_factory](bs-processors/bs_processors/generic_processors.html#bs_processors.generic_processors.filter_factory)
+[filter_factory](bs-processors/bs_processors/generic_processors.html#bs_processors.generic_processors.unwrap_factory)
 processor.
 
 In the processor we need to pass a predicate that checks if an element is a `<font>` or if it is a `<div> with a

@@ -91,4 +91,71 @@ def my_predicate(elm)->bool:
 
 
 ## Writing your own processors
-TODO
+Writing your own processors is not much more complicated than writing custom predicates.
+
+In order for a custom processor to interact with other processors the custom processor has to have the following signature:
+
+```python
+def processor(elms: List[Any])->List[Any]
+```
+
+For our example let's make a processor that adds a class attribute to all elements of type `<div>` from the passed elements as long as they do not have an id set. This is a rather contrived example that could be easyly implemented using the existing processors.
+
+We will only implement a simplified form that takes only one element and returns a list of elements and then we will use an already existing adaptor function to create the final processor
+
+Here's how one would write this:
+
+```python
+from bs_processors.xml_util import set_new_children, process_children
+from bs_processors.processor_util
+
+def add_classes_to_div_single( elm: Any) -> List[Any]:
+  if not is_tag_or_soup_p(elm):
+    return [elm]  # nothing to proess further
+  if elm.name == 'div' and not elm.attrs.get("id"):
+    clss = elm.attrs.get("class", [""])
+    if not 'my-class' in clss:
+      clss.append('my-class')
+      elm.attrs.["class"] = clss
+      
+  for child in elm.children:
+    new_children = process_children(lambda child: single_filter_proc(should_filter, child), elm)
+    set_new_children(elm, new_children)
+
+  return [elm]
+  
+add_classes_to_div = single_to_multiple(add_classes_to_div_single)
+```
+
+## Composing processors in processor chains
+
+Often we need to process documents in complex ways. Often a complex process can be broken down in a series of simple processes. As an example we may want to filter some elements, unwrap some other elements, add some attributes to other elements and finally flatten the whole result.
+
+bs-processors is designed to work with exactly this type of scenarios.
+
+All we need to do is create our processors and then chain them toghether to obtain a processor that will call all configured processors.
+
+In the example below we create a few processors and finally we chain them toghether to obtain our final processor.
+
+```python
+filter_bad_p = and_pf( 
+    is_tag_p, 
+    has_name_pf(['span', 'div'),
+    has_class_pf(['bad-element'])
+)
+
+filter_bad_proc = filter_factory(filter_bad_p)
+
+should_unwrap_p = has_name_pf['font', 'i', 'b']
+
+unwrap_proc = unwrap_factory(should_unwrap)
+
+is_internal_child_p = has_name_pf(['span', 'a'])
+flatten_children_p = has_name_pf(['div'])
+
+flatten_proc = flatten_factory(flatten_clhildren_p, is_internal_child_p)
+
+clean_html_proc = join([filter_bad_proc, unwrap_proc, flatten_proc])
+
+```
+
