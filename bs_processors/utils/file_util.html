@@ -46,11 +46,11 @@ def process_directory(processor: Callable[[List[Any]], List[Any]], parser_type: 
     &#34;&#34;&#34;
     Processes a directory with the specified processor
 
-    :param processor: a file processor
-    :param parser_type: processor &#39;html.parser&#39;, &#39;html&#39;, &#39;xml&#39; ( BeautifulSoup parser)
-    :param input_dir: the input directory
-    :param output_dir: the output directory
-    :param file_selector: something that can be transformed into a file_name predicate
+    * **processor**: a file processor
+    * **parser_type**: processor &#39;html.parser&#39;, &#39;html&#39;, &#39;xml&#39; ( BeautifulSoup parser)
+    * **input_dir**: the input directory
+    * **output_dir**: the output directory
+    * **file_selector**: something that can be transformed into a file_name predicate
         if the predicate is true than the file will be processed if not the file will be
         copied from input dir to output dir, see to_file_selector_predicate for details
         about the file selector.
@@ -85,6 +85,7 @@ def process_file(processor: Callable[[List[Any]], List[Any]], parser_type: str, 
     * **parser_type**: BeautifulSoup parser type ( &#39;html&#39;, &#39;xml&#39;, &#39;html.parser&#39;, etc)
     * **input_file**: the input file name
     * **output_file**: the result file name
+
     &#34;&#34;&#34;
     with open(input_file, &#34;rt&#34;) as f:
         soup = BeautifulSoup(f, parser_type)
@@ -282,14 +283,16 @@ True
 </code></dt>
 <dd>
 <div class="desc"><p>Processes a directory with the specified processor</p>
-<p>:param processor: a file processor
-:param parser_type: processor 'html.parser', 'html', 'xml' ( BeautifulSoup parser)
-:param input_dir: the input directory
-:param output_dir: the output directory
-:param file_selector: something that can be transformed into a file_name predicate
+<ul>
+<li><strong>processor</strong>: a file processor</li>
+<li><strong>parser_type</strong>: processor 'html.parser', 'html', 'xml' ( BeautifulSoup parser)</li>
+<li><strong>input_dir</strong>: the input directory</li>
+<li><strong>output_dir</strong>: the output directory</li>
+<li><strong>file_selector</strong>: something that can be transformed into a file_name predicate
 if the predicate is true than the file will be processed if not the file will be
 copied from input dir to output dir, see to_file_selector_predicate for details
-about the file selector.</p></div>
+about the file selector.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -300,11 +303,11 @@ about the file selector.</p></div>
     &#34;&#34;&#34;
     Processes a directory with the specified processor
 
-    :param processor: a file processor
-    :param parser_type: processor &#39;html.parser&#39;, &#39;html&#39;, &#39;xml&#39; ( BeautifulSoup parser)
-    :param input_dir: the input directory
-    :param output_dir: the output directory
-    :param file_selector: something that can be transformed into a file_name predicate
+    * **processor**: a file processor
+    * **parser_type**: processor &#39;html.parser&#39;, &#39;html&#39;, &#39;xml&#39; ( BeautifulSoup parser)
+    * **input_dir**: the input directory
+    * **output_dir**: the output directory
+    * **file_selector**: something that can be transformed into a file_name predicate
         if the predicate is true than the file will be processed if not the file will be
         copied from input dir to output dir, see to_file_selector_predicate for details
         about the file selector.
@@ -354,6 +357,7 @@ about the file selector.</p></div>
     * **parser_type**: BeautifulSoup parser type ( &#39;html&#39;, &#39;xml&#39;, &#39;html.parser&#39;, etc)
     * **input_file**: the input file name
     * **output_file**: the result file name
+
     &#34;&#34;&#34;
     with open(input_file, &#34;rt&#34;) as f:
         soup = BeautifulSoup(f, parser_type)
