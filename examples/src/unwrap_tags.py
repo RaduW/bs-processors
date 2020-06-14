@@ -67,11 +67,12 @@ remove_unnecessary_wrappers = unwrap_factory(should_uwrap_p)
 
 # section_start main
 import util
+from bs_processors.utils.file_util import process_file
 
 def main():
-    doc = util.load_relative_html_file(__file__, "input/deeply_nested.html")
-    result = remove_unnecessary_wrappers([doc])
-    util.save_relative_result(result, __file__, "output/deeply_nested_result.html")
+    doc_name = util.relative_to_absolute_file_name(__file__, "input/deeply_nested.html")
+    result_name = util.relative_to_absolute_file_name(__file__, "output/deeply_nested_result.html")
+    process_file(remove_unnecessary_wrappers, 'html.parser', doc_name, result_name)
 # section_end
 
 if __name__ == '__main__':

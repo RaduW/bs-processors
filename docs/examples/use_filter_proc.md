@@ -57,24 +57,15 @@ Now we are ready to pass it our loaded soup and we are done
 ```python
 
 import util
+from bs_processors.utils.file_util import process_file
 
 def main():
-    doc = util.load_relative_html_file(__file__, "input/simple_filter.html")
-    result = filter_empty_font_proc([doc])
-    util.save_relative_result(result, __file__, "output/simple_filter_result.html")
+    doc_name = util.relative_to_absolute_file_name(__file__, "input/simple_filter.html")
+    result_name = util.relative_to_absolute_file_name( __file__, "output/simple_filter_result.html")
+    print(f"Processing {doc_name} to generate {result_name}")
+    process_file(filter_empty_font_proc,"html.processor",doc_name, result_name)
 
 ```
 
 ### The result is:
-
-```html
-
-<!DOCTYPE html>
-
-<html>
-<div>First line <font id="not-empty"> not empty</font> </div>
-<div>Second line  <span>end.</span></div>
-</html>
-
-```
 

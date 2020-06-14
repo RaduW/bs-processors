@@ -102,28 +102,6 @@ def main():
 
 <!DOCTYPE html>
 
-<html>
-<body>
-<div>
-
-    First line inside double font outside font.
-
-    <p>
-        Second line
-    </p>
-
-
-    <div>
-        <p>
-            Third line
-        </p>
-    </div>
-</div>
-<div>
-    Forth line inside font <span>end.</span>
-</div>
-</body>
-</html>
 
 ```
 
