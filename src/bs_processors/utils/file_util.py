@@ -1,6 +1,7 @@
 """
 Utilities for applying processors to files
 """
+import shutil
 from fnmatch import fnmatch
 from typing import Callable, List, Any, Sequence
 from bs4 import BeautifulSoup
@@ -12,30 +13,55 @@ import re
 _log = logging.getLogger("bs-processors")
 
 
-def process_directory(processor: Callable[[List[Any]], List[Any]], processor_type: str,
+def process_directory(processor: Callable[[List[Any]], List[Any]], parser_type: str,
                       input_dir: str, output_dir: str,
                       file_selector: Callable[[str], bool]):
+    """
+    Processes a directory with the specified processor
+
+    * **processor**: a file processor
+    * **parser_type**: processor 'html.parser', 'html', 'xml' ( BeautifulSoup parser)
+    * **input_dir**: the input directory
+    * **output_dir**: the output directory
+    * **file_selector**: something that can be transformed into a file_name predicate
+        if the predicate is true than the file will be processed if not the file will be
+        copied from input dir to output dir, see to_file_selector_predicate for details
+        about the file selector.
+    """
+
     for dirpath, dirnames, filenames in walk(input_dir):
-        print("NEW LINE")
-        print(f"dirpath {dirpath}")
-        print("Directories:")
-        for directory in dirnames:
-            print(f"\t ->{directory}")
-        print("Files")
-        for file in filenames:
-            print(f"\t ->{file}")
+        rel_path = dirpath[len(input_dir):]
+        if len(rel_path) > 0 and rel_path[0] == path.sep:
+            rel_path= rel_path[1:]  # remove start '/'
+
+        current_output_dir = path.join(output_dir, rel_path)
+
+        if not path.exists(current_output_dir):
+            os.makedirs(current_output_dir)
+
+        for fname in filenames:
+            input_fname = path.join(dirpath, fname)
+            output_fname = path.join(current_output_dir, fname)
+            if file_selector(input_fname):
+                _log.debug(f"processing '{input_fname}' into '{output_fname}'")
+                process_file(processor, parser_type, input_fname, output_fname)
+            else:
+                _log.debug(f"copying '{input_fname}' into '{output_fname}'")
+                shutil.copy(input_fname, output_fname)
 
 
-def process_file(processor: Callable[[List[Any]], List[Any]], processor_type: str, input_file: str, output_file: str):
+def process_file(processor: Callable[[List[Any]], List[Any]], parser_type: str, input_file: str, output_file: str):
     """
     Processes a file with the passed processor and saves the result in the output file
 
     * **processor**: the processor to be applied
+    * **parser_type**: BeautifulSoup parser type ( 'html', 'xml', 'html.parser', etc)
     * **input_file**: the input file name
-    * **param output_file**: the result file name
+    * **output_file**: the result file name
+
     """
     with open(input_file, "rt") as f:
-        soup = BeautifulSoup(f, processor_type)
+        soup = BeautifulSoup(f, parser_type)
 
     result = processor([soup])
 
@@ -52,7 +78,7 @@ def process_file(processor: Callable[[List[Any]], List[Any]], processor_type: st
 
     if result.name != '[document]':
         _log.warning(f"processing '{input_file}' did not yield a beautiful soup element creating one")
-        soup = BeautifulSoup(features=processor_type)
+        soup = BeautifulSoup(features=parser_type)
         result = soup.append(result)
 
     directory_name, f_name = path.split(output_file)
@@ -74,7 +100,7 @@ def to_file_selector_predicate(pred):
 
     * **pred**: something that can be transformed in a file name predicate
          * None: will match everything
-         * an str: will be interpreted as a unix file pattern (e.g. *.txt )
+         * a str: will be interpreted as a unix file pattern (e.g. *.txt )
          * a sequence: will be interpreted as a sequence of unix file patterns
                 (e.g. [*.txt, *.py]
          * a regular expression, will create a predicate with re.fullmath (i.e. full match
