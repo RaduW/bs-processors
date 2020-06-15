@@ -45,7 +45,7 @@ def save_relative_result(elms: List[Any], relative: str, file_name: str):
     * **relative**: the path of a module (passed as __file__)
     * **file_name**: a relative file name to that module
     """
-    return save_result( elms, relative_to_absolute_file_name(relative, file_name))
+    return save_result(elms, relative_to_absolute_path_name(relative, file_name))
 
 
 def load_html_file(file_name: str):
@@ -68,10 +68,10 @@ def load_relative_html_file(relative: str, file_name: str):
     * **file_name**: a relative file name to that module
     * **return** a BeautifulSoup object loaded with the file content
     """
-    return load_html_file(relative_to_absolute_file_name(relative, file_name))
+    return load_html_file(relative_to_absolute_path_name(relative, file_name))
 
 
-def relative_to_absolute_file_name(relative: str, file_name: str) -> str:
+def relative_to_absolute_path_name(relative: str, file_name: str) -> str:
     """
     Gets a file full path name relative to a module
 

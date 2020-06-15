@@ -48,7 +48,7 @@ Now we are ready to pass it our loaded soup and we are done
 
 
 # section_start construct_predicate
-from bs_processors import and_pf, has_name_pf, is_empty_p, or_pf, has_class_pf
+from bs_processors import and_pf, has_name_pf, or_pf, has_class_pf
 
 should_uwrap_p = or_pf(
     has_name_pf('font'),
@@ -70,8 +70,8 @@ import util
 from bs_processors.utils.file_util import process_file
 
 def main():
-    doc_name = util.relative_to_absolute_file_name(__file__, "input/deeply_nested.html")
-    result_name = util.relative_to_absolute_file_name(__file__, "output/deeply_nested_result.html")
+    doc_name = util.relative_to_absolute_path_name(__file__, "input/deeply_nested.html")
+    result_name = util.relative_to_absolute_path_name(__file__, "output/deeply_nested_result.html")
     process_file(remove_unnecessary_wrappers, 'html.parser', doc_name, result_name)
 # section_end
 

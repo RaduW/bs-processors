@@ -15,7 +15,7 @@ _log = logging.getLogger("bs-processors")
 
 def process_directory(processor: Callable[[List[Any]], List[Any]], parser_type: str,
                       input_dir: str, output_dir: str,
-                      file_selector: Callable[[str], bool]):
+                      file_selector):
     """
     Processes a directory with the specified processor
 
@@ -25,10 +25,10 @@ def process_directory(processor: Callable[[List[Any]], List[Any]], parser_type: 
     * **output_dir**: the output directory
     * **file_selector**: something that can be transformed into a file_name predicate
         if the predicate is true than the file will be processed if not the file will be
-        copied from input dir to output dir, see to_file_selector_predicate for details
+        copied from input dir to output dir, see `to_file_selector_predicate` for details
         about the file selector.
     """
-
+    file_selector = to_file_selector_predicate(file_selector)
     for dirpath, dirnames, filenames in walk(input_dir):
         rel_path = dirpath[len(input_dir):]
         if len(rel_path) > 0 and rel_path[0] == path.sep:

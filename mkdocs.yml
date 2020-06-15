@@ -14,6 +14,7 @@ nav:
       - examples/index.md
       - examples/use_filter_proc.md
       - examples/unwrap_tags.md
+      - examples/use_process_directory.md
 
 
 markdown_extensions:

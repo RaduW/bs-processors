@@ -60,8 +60,8 @@ import util
 from bs_processors.utils.file_util import process_file
 
 def main():
-    doc_name = util.relative_to_absolute_file_name(__file__, "input/simple_filter.html")
-    result_name = util.relative_to_absolute_file_name( __file__, "output/simple_filter_result.html")
+    doc_name = util.relative_to_absolute_path_name(__file__, "input/simple_filter.html")
+    result_name = util.relative_to_absolute_path_name(__file__, "output/simple_filter_result.html")
     process_file(filter_empty_font_proc,"html.parser",doc_name, result_name)
 
 ```
