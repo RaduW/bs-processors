@@ -466,7 +466,7 @@ processor.</p>
 marker class that designates it as not necessary.</p>
 <p>Luckily we can construct this predicate from already available building blocks.</p>
 <p>To construct our predicate we have the following code:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">and_pf</span><span class="p">,</span> <span class="n">has_name_pf</span><span class="p">,</span> <span class="n">is_empty_p</span><span class="p">,</span> <span class="n">or_pf</span><span class="p">,</span> <span class="n">has_class_pf</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">and_pf</span><span class="p">,</span> <span class="n">has_name_pf</span><span class="p">,</span> <span class="n">or_pf</span><span class="p">,</span> <span class="n">has_class_pf</span>
 
 <span class="n">should_uwrap_p</span> <span class="o">=</span> <span class="n">or_pf</span><span class="p">(</span>
     <span class="n">has_name_pf</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">),</span>
@@ -488,8 +488,8 @@ marker class that designates it as not necessary.</p>
 <span class="kn">from</span> <span class="nn">bs_processors.utils.file_util</span> <span class="kn">import</span> <span class="n">process_file</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">doc_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_file_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;input/deeply_nested.html&quot;</span><span class="p">)</span>
-    <span class="n">result_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_file_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;output/deeply_nested_result.html&quot;</span><span class="p">)</span>
+    <span class="n">doc_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_path_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;input/deeply_nested.html&quot;</span><span class="p">)</span>
+    <span class="n">result_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_path_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;output/deeply_nested_result.html&quot;</span><span class="p">)</span>
     <span class="n">process_file</span><span class="p">(</span><span class="n">remove_unnecessary_wrappers</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">,</span> <span class="n">doc_name</span><span class="p">,</span> <span class="n">result_name</span><span class="p">)</span>
 </code></pre></div>
 

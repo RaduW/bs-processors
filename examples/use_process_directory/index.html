@@ -38,7 +38,7 @@
     
     
       
-        <title>How to use the filter processor - bs-processors</title>
+        <title>How to use file and directory utilities - bs-processors</title>
       
     
     
@@ -81,7 +81,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#how-to-use-the-filter-processor" tabindex="0" class="md-skip">
+      <a href="#how-to-use-file-and-directory-utilities" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -107,7 +107,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                How to use the filter processor
+                How to use file and directory utilities
               
             </span>
           
@@ -240,12 +240,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       Examples
@@ -273,69 +271,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        How to use the filter processor
-      </label>
-    
-    <a href="./" title="How to use the filter processor" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../use_filter_proc/" title="How to use the filter processor" class="md-nav__link">
       How to use the filter processor
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#input" class="md-nav__link">
-    Input
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-result-is" class="md-nav__link">
-    The result is:
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -381,26 +321,6 @@
     Overview
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#input" class="md-nav__link">
-    Input
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-result-is" class="md-nav__link">
-    The result is:
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
       
@@ -419,70 +339,42 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/RaduW/bs-processors/edit/master/docs/examples/use_filter_proc.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/RaduW/bs-processors/edit/master/docs/examples/use_process_directory.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="how-to-use-the-filter-processor">How to use the filter processor</h1>
+                <h1 id="how-to-use-file-and-directory-utilities">How to use file and directory utilities</h1>
 <h2 id="overview">Overview</h2>
-<p>In this example we will use the filter processor to remove unwanted tags from a sample file</p>
-<p>Let's say we have the following file that we want to clean up:</p>
-<h3 id="input">Input</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>First line <span class="p">&lt;</span><span class="nt">font</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;not-empty&quot;</span><span class="p">&gt;</span> not empty<span class="p">&lt;/</span><span class="nt">font</span><span class="p">&gt;</span> <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>Second line <span class="p">&lt;</span><span class="nt">font</span><span class="p">&gt;</span> <span class="p">&lt;/</span><span class="nt">font</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>end.<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+<p>In this example we will use the process_directory utility function to process a directory.</p>
+<p>In order to simplify the application of filters bs-processor contains utilities for processing documents saved
+in files.</p>
+<p>The file_util module has two main entry points: <code>process_file</code> and <code>process_directory</code>.</p>
+<p><a href="bs-processors/bs_processors/utils/file_util.py#bs_processors.utils.file_util.process_file">process_file</a>
+takes as parameters the processor and the input and output file names.</p>
+<p><a href="bs-processors/bs_processors/utils/file_util.py#bs_processors.utils.file_util.process_directory">process_directory</a>
+is slightly more complex and it will be used in this example.</p>
+<p>In this example we will use the input directory used by all other examples and we will output the result to
+a new directory <code>output2</code> at the same level with <code>input</code>.</p>
+<p>To keep the focus on the directory function we will keep things simple and use a filter processor that
+filters empty tags.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors.predicate</span> <span class="kn">import</span> <span class="n">is_empty_p</span>
+<span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">filter_factory</span>
+<span class="n">filter_empty</span> <span class="o">=</span> <span class="n">filter_factory</span><span class="p">(</span><span class="n">is_empty_p</span><span class="p">)</span>
 </code></pre></div>
 
-<p>We noticed that the file has some empty <code>&lt;font&gt;</code> tags that we want to remove if they do not contain any
-text. For that we can use the
-<a href="bs-processors/bs_processors/generic_processors.html#bs_processors.generic_processors.filter_factory">filter_factory</a>
-processor.</p>
-<p>In the processor we need to pass a filter that checks if an element is a <code>&lt;font&gt;</code> element and if it is empty.</p>
-<p>Luckily we can construct this predicate from already available building blocks.
-The <a href="bs-processors/bs_processors/predicate.html#bs_processors.predicate.has_name_pf">has_name_pf</a> predicate factory can
-be used to check if the passed element is font and the
-<a href="bs-processors/bs_processors/predicate.html#bs_processors.predicate.is_empty_p">is_empty_p</a> can be used to check if
-the element is empty (contains at most white spaces).</p>
-<p>To construct our predicate we have the following code:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">and_pf</span><span class="p">,</span> <span class="n">has_name_pf</span><span class="p">,</span> <span class="n">is_empty_p</span>
-
-<span class="n">is_empty_font_p</span> <span class="o">=</span> <span class="n">and_pf</span><span class="p">(</span> <span class="n">has_name_pf</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">),</span> <span class="n">is_empty_p</span><span class="p">)</span>
-</code></pre></div>
-
-<p>After constructing the predicate all that remains is to use it to create our filter</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bs_processors</span> <span class="kn">import</span> <span class="n">filter_factory</span>
-
-<span class="n">filter_empty_font_proc</span> <span class="o">=</span> <span class="n">filter_factory</span><span class="p">(</span><span class="n">is_empty_font_p</span><span class="p">)</span>
-</code></pre></div>
-
-<p>Now we are ready to pass it our loaded soup and we are done</p>
+<p>In order to do our processing we'll use the following code:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">util</span>
-<span class="kn">from</span> <span class="nn">bs_processors.utils.file_util</span> <span class="kn">import</span> <span class="n">process_file</span>
+<span class="kn">from</span> <span class="nn">bs_processors.utils.file_util</span> <span class="kn">import</span> <span class="n">process_directory</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">doc_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_path_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;input/simple_filter.html&quot;</span><span class="p">)</span>
-    <span class="n">result_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_path_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;output/simple_filter_result.html&quot;</span><span class="p">)</span>
-    <span class="n">process_file</span><span class="p">(</span><span class="n">filter_empty_font_proc</span><span class="p">,</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span><span class="n">doc_name</span><span class="p">,</span> <span class="n">result_name</span><span class="p">)</span>
+    <span class="n">input_dir</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_path_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="p">)</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">relative_to_absolute_path_name</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;output2&quot;</span><span class="p">)</span>
+    <span class="n">process_directory</span><span class="p">(</span><span class="n">filter_empty</span><span class="p">,</span><span class="s1">&#39;html.parser&#39;</span><span class="p">,</span> <span class="n">input_dir</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span><span class="s2">&quot;*.html&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-<h3 id="the-result-is">The result is:</h3>
-<div class="codehilite"><pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
- <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
-  First line
-  <span class="p">&lt;</span><span class="nt">font</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;not-empty&quot;</span><span class="p">&gt;</span>
-   not empty
-  <span class="p">&lt;/</span><span class="nt">font</span><span class="p">&gt;</span>
- <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
- <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
-  Second line
-  <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>
-   end.
-  <span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
- <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</code></pre></div>
+<p>This will run all files that match <code>*.html</code> through the <code>filter_empty</code> processor and put the result in the <code>output2</code>
+directory.</p>
+<p><code>process_directory</code> will recreate the structure of the input directory in the output directory ( subdirectories from
+input will become subdirectories in output).</p>
                 
                   
                 
@@ -500,41 +392,6 @@ the element is empty (contains at most white spaces).</p>
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
-        
-          <a href="../" title="About" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
-            </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                About
-              </span>
-            </div>
-          </a>
-        
-        
-          <a href="../unwrap_tags/" title="How to unwrap unwanted tags" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                How to unwrap unwanted tags
-              </span>
-            </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
