@@ -1,5 +1,5 @@
 """
-# How to use file and directory utilities
+# How to use file utilities
 
 ## Overview
 In this example we will use the process_directory utility function to process a directory.
@@ -9,10 +9,10 @@ in files.
 
 The file_util module has two main entry points: `process_file` and `process_directory`.
 
-[process_file](bs-processors/bs_processors/utils/file_util.py#bs_processors.utils.file_util.process_file)
+[process_file](/bs-processors/bs_processors/utils/file_util.html#bs_processors.utils.file_util.process_file)
 takes as parameters the processor and the input and output file names.
 
-[process_directory](bs-processors/bs_processors/utils/file_util.py#bs_processors.utils.file_util.process_directory)
+[process_directory](/bs-processors/bs_processors/utils/file_util.html#bs_processors.utils.file_util.process_directory)
 is slightly more complex and it will be used in this example.
 
 In this example we will use the input directory used by all other examples and we will output the result to
