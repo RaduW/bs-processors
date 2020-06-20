@@ -230,7 +230,7 @@ def flatten_factory(flatten_children, is_internal):
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
 
 
-def single_local_modify(modify_func: Callable[[Any], bool], elm):
+def single_local_modify(modify_func: Callable[[Any], None], elm):
     &#34;&#34;&#34;
     Runs a modification function on each element and all tag children
 
@@ -250,7 +250,7 @@ def local_modify_factory(modify_func):
     return single_to_multiple(functools.partial(single_local_modify, modify_func))
 
 
-def single_join_children(join_children: Callable[[Any, Any], Any], elm)-&gt; [Any]:
+def single_join_children(join_children: Callable[[Any, Any], Any], elm)-&gt; List[Any]:
     &#34;&#34;&#34;
     Processor that joins children
 
@@ -590,7 +590,7 @@ whether a child behaves like a block and wants out or an inline and stays in)</l
 </details>
 </dd>
 <dt id="bs_processors.generic_processors.single_join_children"><code class="name flex">
-<span>def <span class="ident">single_join_children</span></span>(<span>join_children: Callable[[Any, Any], Any], elm) -> [typing.Any]</span>
+<span>def <span class="ident">single_join_children</span></span>(<span>join_children: Callable[[Any, Any], Any], elm) -> List[Any]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Processor that joins children</p>
@@ -606,7 +606,7 @@ children.</li>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def single_join_children(join_children: Callable[[Any, Any], Any], elm)-&gt; [Any]:
+<pre><code class="python">def single_join_children(join_children: Callable[[Any, Any], Any], elm)-&gt; List[Any]:
     &#34;&#34;&#34;
     Processor that joins children
 
@@ -635,7 +635,7 @@ children.</li>
 </details>
 </dd>
 <dt id="bs_processors.generic_processors.single_local_modify"><code class="name flex">
-<span>def <span class="ident">single_local_modify</span></span>(<span>modify_func: Callable[[Any], bool], elm)</span>
+<span>def <span class="ident">single_local_modify</span></span>(<span>modify_func: Callable[[Any], NoneType], elm)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Runs a modification function on each element and all tag children</p>
@@ -648,7 +648,7 @@ children.</li>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def single_local_modify(modify_func: Callable[[Any], bool], elm):
+<pre><code class="python">def single_local_modify(modify_func: Callable[[Any], None], elm):
     &#34;&#34;&#34;
     Runs a modification function on each element and all tag children
 
