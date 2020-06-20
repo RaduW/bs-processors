@@ -50,9 +50,9 @@ def modify_if_f(modifier: Callable[[Any], None], predicate: Callable[[Any], bool
     a modifier that sets the class to all elements that it receives and then use this function togehter with
     the `has_name_pf(&#39;p&#39;) to obtain the same result.
 
-    :param modifier: a modifier that applies the modification to all elements it is called with
-    :param predicate: a predicate that selects the elements to be modified
-    :return: a modifier that applies the modification to the elements selected by the predicate
+    * **modifier**: a modifier that applies the modification to all elements it is called with
+    * **predicate**: a predicate that selects the elements to be modified
+    * **return**: a modifier that applies the modification to the elements selected by the predicate
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; from bs_processors.predicate import has_name_pf
@@ -307,8 +307,8 @@ def to_string_gen(gen) -&gt; Callable[[Any], str]:
     &#34;&#34;&#34;
     Accepts a string or a function that returns a string and returns a function that returns a string
 
-    :param gen: either the string to be returned or a generator that accepts an element and returns a string
-    :return:  a string generator that accepts an element
+    * **gen**: either the string to be returned or a generator that accepts an element and returns a string
+    * **return**:  a string generator that accepts an element
 
     &gt;&gt;&gt; s_gen = to_string_gen(&#34;some_constant&#34;)
     &gt;&gt;&gt; s_gen(1)
@@ -485,9 +485,11 @@ that they receive and delegate the selection logic to the predicate</p>
 <p>If, for example, we need a modifier that sets a certain class to all elements of type <code>p</code> we can create
 a modifier that sets the class to all elements that it receives and then use this function togehter with
 the `has_name_pf('p') to obtain the same result.</p>
-<p>:param modifier: a modifier that applies the modification to all elements it is called with
-:param predicate: a predicate that selects the elements to be modified
-:return: a modifier that applies the modification to the elements selected by the predicate</p>
+<ul>
+<li><strong>modifier</strong>: a modifier that applies the modification to all elements it is called with</li>
+<li><strong>predicate</strong>: a predicate that selects the elements to be modified</li>
+<li><strong>return</strong>: a modifier that applies the modification to the elements selected by the predicate</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; from bs4 import BeautifulSoup
 &gt;&gt;&gt; from bs_processors.predicate import has_name_pf
 &gt;&gt;&gt; from bs_processors.generic_processors import local_modify_factory
@@ -521,9 +523,9 @@ the `has_name_pf('p') to obtain the same result.</p>
     a modifier that sets the class to all elements that it receives and then use this function togehter with
     the `has_name_pf(&#39;p&#39;) to obtain the same result.
 
-    :param modifier: a modifier that applies the modification to all elements it is called with
-    :param predicate: a predicate that selects the elements to be modified
-    :return: a modifier that applies the modification to the elements selected by the predicate
+    * **modifier**: a modifier that applies the modification to all elements it is called with
+    * **predicate**: a predicate that selects the elements to be modified
+    * **return**: a modifier that applies the modification to the elements selected by the predicate
 
     &gt;&gt;&gt; from bs4 import BeautifulSoup
     &gt;&gt;&gt; from bs_processors.predicate import has_name_pf
@@ -700,9 +702,11 @@ attribute is treated as a simple string and toggle_class will not function corre
 </code></dt>
 <dd>
 <div class="desc"><p>Accepts a string or a function that returns a string and returns a function that returns a string</p>
-<p>:param gen: either the string to be returned or a generator that accepts an element and returns a string
-:return:
-a string generator that accepts an element</p>
+<ul>
+<li><strong>gen</strong>: either the string to be returned or a generator that accepts an element and returns a string</li>
+<li><strong>return</strong>:
+a string generator that accepts an element</li>
+</ul>
 <pre><code class="python">&gt;&gt;&gt; s_gen = to_string_gen(&quot;some_constant&quot;)
 &gt;&gt;&gt; s_gen(1)
 'some_constant'
@@ -722,8 +726,8 @@ a string generator that accepts an element</p>
     &#34;&#34;&#34;
     Accepts a string or a function that returns a string and returns a function that returns a string
 
-    :param gen: either the string to be returned or a generator that accepts an element and returns a string
-    :return:  a string generator that accepts an element
+    * **gen**: either the string to be returned or a generator that accepts an element and returns a string
+    * **return**:  a string generator that accepts an element
 
     &gt;&gt;&gt; s_gen = to_string_gen(&#34;some_constant&#34;)
     &gt;&gt;&gt; s_gen(1)
