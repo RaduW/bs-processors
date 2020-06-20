@@ -1,7 +1,7 @@
 """
 Generally useful predicates to be used when building and configuring processors.
 
-This modules contains both predicates and predicate factories ( functions that take configuration
+This module contains both predicates and predicate factories ( functions that take configuration
 parameters and return predicates).
 
 A predicate name is terminated in `_p`  (e.g. `true_p`).

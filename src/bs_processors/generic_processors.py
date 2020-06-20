@@ -201,7 +201,7 @@ def flatten_factory(flatten_children, is_internal):
     return single_to_multiple(functools.partial(single_flatten_proc, flatten_children, is_internal))
 
 
-def single_local_modify(modify_func: Callable[[Any], bool], elm):
+def single_local_modify(modify_func: Callable[[Any], None], elm):
     """
     Runs a modification function on each element and all tag children
 
@@ -221,7 +221,7 @@ def local_modify_factory(modify_func):
     return single_to_multiple(functools.partial(single_local_modify, modify_func))
 
 
-def single_join_children(join_children: Callable[[Any, Any], Any], elm)-> [Any]:
+def single_join_children(join_children: Callable[[Any, Any], Any], elm)-> List[Any]:
     """
     Processor that joins children
 
