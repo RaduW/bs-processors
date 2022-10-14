@@ -21,9 +21,9 @@ def modify_if_f(modifier: Callable[[Any], None], predicate: Callable[[Any], bool
     a modifier that sets the class to all elements that it receives and then use this function togehter with
     the `has_name_pf('p') to obtain the same result.
 
-    :param modifier: a modifier that applies the modification to all elements it is called with
-    :param predicate: a predicate that selects the elements to be modified
-    :return: a modifier that applies the modification to the elements selected by the predicate
+    * **modifier**: a modifier that applies the modification to all elements it is called with
+    * **predicate**: a predicate that selects the elements to be modified
+    * **return**: a modifier that applies the modification to the elements selected by the predicate
 
     >>> from bs4 import BeautifulSoup
     >>> from bs_processors.predicate import has_name_pf
@@ -278,8 +278,8 @@ def to_string_gen(gen) -> Callable[[Any], str]:
     """
     Accepts a string or a function that returns a string and returns a function that returns a string
 
-    :param gen: either the string to be returned or a generator that accepts an element and returns a string
-    :return:  a string generator that accepts an element
+    * **gen**: either the string to be returned or a generator that accepts an element and returns a string
+    * **return**:  a string generator that accepts an element
 
     >>> s_gen = to_string_gen("some_constant")
     >>> s_gen(1)
@@ -298,4 +298,3 @@ def to_string_gen(gen) -> Callable[[Any], str]:
         return lambda x: gen
     else:
         return gen
-
